@@ -40,11 +40,20 @@ static rt_err_t adc_measure(adc_dev_t adc_dev, uint32_t channel, uint32_t* mVolt
 	uint32_t u32_dateAddr = 0x40B000F4;
 	uint32_t u32_SarAddr = 0x40B000EC;
 
-	adc_reg_wr32(u32_SarAddr, channel << 2);
-	systime_udelay(1);
-	uint32_t u32_recValue = adc_reg_read32(u32_dateAddr);
+    uint32_t u32_recValue = 0;
 
-    *mVolt = u32_recValue * 3300 / 1024;
+    if(channel > 9)
+    {
+        u32_recValue = 0;
+    }
+    else
+    {
+	    adc_reg_wr32(u32_SarAddr, channel << 2);
+	    systime_udelay(1);
+	    u32_recValue = adc_reg_read32(u32_dateAddr);
+    }
+
+    *mVolt = u32_recValue * 3300 / 1023;
 
     return RT_EOK;
 }

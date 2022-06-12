@@ -16,6 +16,7 @@
 #include <firmament.h>
 
 #include "module/task_manager/task_manager.h"
+#include "led.h"
 
 fmt_err_t task_local_init(void)
 {
@@ -27,13 +28,24 @@ char** str = (char*[]) { "Hello", "C++", "World", NULL };
 void task_local_entry(void* parameter)
 {
     printf("Hello FMT! This is a local demo task.\n");
+    printf("Hello ChuanYun! This is a local demo task.\n");
 
-    for (int i = 0; str[i] != NULL; i++) {
-        printf("%s\n", str[i]);
-    }
+    struct device_pin_mode r_pin_mode = { HAL_GPIO_NUM61, PIN_MODE_OUTPUT, PIN_OUT_TYPE_PP };
+    
+    static rt_device_t pin_dev;
+    /* configure led pin */
+    pin_dev = rt_device_find("pin");
+    RT_ASSERT(pin_dev != NULL);
+
+    RT_CHECK(rt_device_open(pin_dev, RT_DEVICE_OFLAG_RDWR));
+    led_init(r_pin_mode);
+    LED_ON(HAL_GPIO_NUM61);
+
 
     while (1) {
-        sys_msleep(1000);
+        LED_TOGGLE(HAL_GPIO_NUM61);
+
+        sys_msleep(100);
     }
 }
 

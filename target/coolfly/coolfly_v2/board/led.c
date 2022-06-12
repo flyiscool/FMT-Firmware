@@ -22,6 +22,8 @@
 static rt_device_t pin_dev;
 static rt_device_t rgb_led_dev;
 
+static uint16_t gpio_status[128];
+
 static void run_led(void* parameter)
 {
     LED_TOGGLE(FMU_LED_BLUE_PIN);
@@ -85,6 +87,7 @@ void vehicle_state_change_cb(uint8_t mode)
 }
 fmt_err_t led_set(struct device_pin_status pin_sta)
 {
+    gpio_status[pin_sta.pin] = pin_sta.status;
     if (pin_dev->write(pin_dev, 0, (void*)&pin_sta, sizeof(&pin_sta)) != sizeof(&pin_sta)) {
         return FMT_ERROR;
     }
@@ -95,12 +98,16 @@ fmt_err_t led_set(struct device_pin_status pin_sta)
 fmt_err_t led_toggle(uint32_t pin)
 {
     struct device_pin_status pin_sta = { .pin = pin };
-
-    if (pin_dev->read(pin_dev, 0, (void*)&pin_sta, sizeof(&pin_sta)) != sizeof(&pin_sta)) {
-        return FMT_ERROR;
-    }
+    
+    // if (pin_dev->read(pin_dev, 0, (void*)&pin_sta, sizeof(&pin_sta)) != sizeof(&pin_sta)) {
+    //     return FMT_ERROR;
+    // }
+    pin_sta.status = gpio_status[pin];
 
     pin_sta.status = !pin_sta.status;
+
+    gpio_status[pin] = pin_sta.status;
+
     if (pin_dev->write(pin_dev, 0, (void*)&pin_sta, sizeof(&pin_sta)) != sizeof(&pin_sta)) {
         return FMT_ERROR;
     }
@@ -110,6 +117,8 @@ fmt_err_t led_toggle(uint32_t pin)
 
 fmt_err_t led_init(struct device_pin_mode pin_mode)
 {
+    gpio_status[pin_mode.pin] = 0;
+
     if (pin_dev->control(pin_dev, 0, &pin_mode) != RT_EOK) {
         return FMT_ERROR;
     }

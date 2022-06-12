@@ -67,7 +67,10 @@
 #include "model/plant/plant_interface.h"
 #endif
 
-
+#include  "ar1002_hal.h"
+#include  "ar1002_chip.h"
+#include  "cmd_line.h"
+#include  "debuglog.h"
 
 #define MATCH(a, b) (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
@@ -314,10 +317,7 @@ void SystemClock_Config(void)
 
 
 
-#include  "ar1002_hal.h"
-#include  "ar1002_chip.h"
-#include  "cmd_line.h"
-#include  "debuglog.h"
+
 
 void delay_ms(uint32_t num)
 {
@@ -362,8 +362,6 @@ void bsp_early_initialize(void)
 
     HAL_GPIO_OutPut(HAL_GPIO_NUM61);     // red led close
     HAL_GPIO_SetPin(HAL_GPIO_NUM61, HAL_GPIO_PIN_SET);
-
-
 
 
     HAL_GPIO_OutPut(HAL_GPIO_NUM97);     // rgb1 R led close
@@ -421,12 +419,10 @@ void bsp_early_initialize(void)
 
     /* system time module init */
     FMT_CHECK(systime_init());
-
     console_println("systime_init~");
 
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
-
     console_println("drv_gpio_init~");
 
     /* spi driver init */

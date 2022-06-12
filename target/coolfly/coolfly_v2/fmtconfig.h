@@ -13,29 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#ifndef FMTCONFIG_H__
+#define FMTCONFIG_H__
 
-fmt_err_t task_fmtio_init(void)
-{
-    return fmtio_init(FMTIO_DEVICE_NAME);
-}
+#define FMT_USING_CHECKED
 
-void task_fmtio_entry(void* parameter)
-{
-    /* execute fmtio main loop */
-    fmtio_loop();
-}
+/* HIL simulation */
+// #define FMT_USING_HIL
+/* SIG simulation */
+// #define FMT_USING_SIH
 
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+/* Mavlink */
+#define FMT_USING_MAVLINK_V2
+#define FMT_MAVLINK_SYS_ID  1
+#define FMT_MAVLINK_COMP_ID 1
+
+/* Send out pilot cmd via mavlink */
+#define FMT_OUTPUT_PILOT_CMD
+
+/* MLog */
+#define MLOG_BUFFER_SIZE         80 * 1024
+#define MLOG_SECTOR_SIZE         4096
+#define MLOG_MAX_SECTOR_TO_WRITE 5
+
+/* ULog */
+#define FMT_USING_ULOG
+#ifdef FMT_USING_ULOG
+// #define ENABLE_ULOG_FS_BACKEND
+#define ENABLE_ULOG_CONSOLE_BACKEND
+#endif
+
+/* Cortex-M Backtrace */
+#define FMT_USING_CM_BACKTRACE
+
+/* Unit Test */
+// #define FMT_USING_UNIT_TEST
+
+// #define FMT_RECORD_CALIBRATION_DATA
+
+#endif

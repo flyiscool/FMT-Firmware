@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 The Firmament Authors. All Rights Reserved.
+ * Copyright 2020-2021 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
+#ifndef DRV_PWM_H__
+#define DRV_PWM_H__
+
 #include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-fmt_err_t task_fmtio_init(void)
-{
-    return fmtio_init(FMTIO_DEVICE_NAME);
+rt_err_t drv_pwm_init(void);
+
+#ifdef __cplusplus
 }
+#endif
 
-void task_fmtio_entry(void* parameter)
-{
-    /* execute fmtio main loop */
-    fmtio_loop();
-}
-
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+#endif

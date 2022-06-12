@@ -15,27 +15,21 @@
  *****************************************************************************/
 #include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#include "module/syscmd/syscmd.h"
+#include "ar1002_chip.h"
 
-fmt_err_t task_fmtio_init(void)
+static int handle_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
-    return fmtio_init(FMTIO_DEVICE_NAME);
+	printf("rebooting...\n");
+	sys_msleep(10);
+
+	NVIC_SystemReset();
+
+	return 0;
 }
 
-void task_fmtio_entry(void* parameter)
+int cmd_reboot(int argc, char** argv)
 {
-    /* execute fmtio main loop */
-    fmtio_loop();
+	return syscmd_process(argc, argv, handle_cmd);
 }
-
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+FINSH_FUNCTION_EXPORT_ALIAS(cmd_reboot, __cmd_reboot, reboot the system);

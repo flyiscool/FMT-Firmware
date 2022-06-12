@@ -13,29 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#ifndef BOARD_DEVICE_H__
+#define BOARD_DEVICE_H__
 
-fmt_err_t task_fmtio_init(void)
-{
-    return fmtio_init(FMTIO_DEVICE_NAME);
-}
+// Device Name
+#define FMTIO_DEVICE_NAME          "serial5"
 
-void task_fmtio_entry(void* parameter)
-{
-    /* execute fmtio main loop */
-    fmtio_loop();
-}
+#define SPI1_SPEED_HZ 7000000
 
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+#endif

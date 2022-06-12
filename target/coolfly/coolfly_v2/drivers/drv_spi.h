@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
+#ifndef DRV_SPI_H__
+#define DRV_SPI_H__
+
 #include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#include "board.h"
 
-fmt_err_t task_fmtio_init(void)
-{
-    return fmtio_init(FMTIO_DEVICE_NAME);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+rt_err_t drv_spi_init(void);
+
+#ifdef __cplusplus
 }
+#endif
 
-void task_fmtio_entry(void* parameter)
-{
-    /* execute fmtio main loop */
-    fmtio_loop();
-}
-
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+#endif

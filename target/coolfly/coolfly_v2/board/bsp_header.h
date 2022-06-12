@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#include <firmament.h>
 
-#include "board_device.h"
-#include "module/fmtio/fmtio.h"
-#include "module/task_manager/task_manager.h"
+#ifndef FMT_BSP_HEADER_H__
+#define FMT_BSP_HEADER_H__
 
-fmt_err_t task_fmtio_init(void)
-{
-    return fmtio_init(FMTIO_DEVICE_NAME);
-}
+/* stm32 peripheral library */
+// #include <artosyn.h>
 
-void task_fmtio_entry(void* parameter)
-{
-    /* execute fmtio main loop */
-    fmtio_loop();
-}
+/* FPU Library */
+#include <arm_math.h>
 
-// TASK_EXPORT __fmt_task_desc = {
-//     .name = "fmtio",
-//     .init = task_fmtio_init,
-//     .entry = task_fmtio_entry,
-//     .priority = FMTIO_THREAD_PRIORITY,
-//     .stack_size = 2048,
-//     .param = NULL,
-//     .dependency = NULL
-// };
+// #include "stm32f7xx_hal.h"
+// #include "stm32f7xx_ll_rcc.h"
+// #include "stm32f7xx_ll_bus.h"
+// #include "stm32f7xx_ll_system.h"
+// #include "stm32f7xx_ll_exti.h"
+// #include "stm32f7xx_ll_cortex.h"
+// #include "stm32f7xx_ll_utils.h"
+// #include "stm32f7xx_ll_pwr.h"
+// #include "stm32f7xx_ll_dma.h"
+// #include "stm32f7xx_ll_gpio.h"
+
+#endif

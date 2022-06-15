@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
+
+
 #include "drv_i2c.h"
 #include "hal/i2c/i2c.h"
 
 #include "ar1002_hal.h"
+#include "i2c.h"
 
 // #define DRV_DBG(...) console_printf(__VA_ARGS__)
 #define DRV_DBG(...)
@@ -25,30 +28,61 @@
  * relatively short */
 #define I2C_TIMEOUT_US (1000)
 
+
+#ifndef BIT
+#define BIT(n)    ((uint32_t)1 << (n))
+#endif/* BIT */
+
 struct ar1002_i2c_bus {
     struct rt_i2c_bus parent;
     ENUM_HAL_I2C_COMPONENT I2C;
 };
 
-static void i2c1_hw_init(void)
+
+static void put_reg32_mask(uint32_t regAddr, uint32_t regData, uint32_t regDataMask)
 {
-    // LIUWEI TODO
+	uint32_t u32_regDataTmp;
+
+	u32_regDataTmp = *((volatile uint32_t *)regAddr);
+	u32_regDataTmp &= ~regDataMask;
+	u32_regDataTmp |= regData & regDataMask;
+
+	*((volatile uint32_t *)regAddr) = u32_regDataTmp;
 }
 
-static void i2c2_hw_init(void)
+
+
+extern void cf_delay_ms(uint32_t num);
+
+// i2c2  prevent lock fucntion
+static void reset_i2c2(void)
 {
-    // LIUWEI TODO
+	uint8_t i = 0;
+
+	for (i = 0; i < 10; i++) {
+		HAL_GPIO_OutPut(120);	// fix the i2c 2  lock bug
+		HAL_GPIO_SetPin(120, HAL_GPIO_PIN_RESET);
+		cf_delay_ms(10);
+		put_reg32_mask(SFR_PAD_CTRL7_REG, 0, BIT(14) | BIT(15) | BIT(16) | BIT(17));
+		cf_delay_ms(10);
+	}
+
+	HAL_GPIO_OutPut(119);	// fix the i2c 2  lock bug
+	HAL_GPIO_SetPin(119, HAL_GPIO_PIN_RESET);
+	cf_delay_ms(10);
+	HAL_GPIO_OutPut(120);	// fix the i2c 2  lock bug
+	HAL_GPIO_SetPin(120, HAL_GPIO_PIN_RESET);
+	cf_delay_ms(10);
+
+	put_reg32_mask(SFR_PAD_CTRL7_REG, 0, BIT(16) | BIT(17));
+	cf_delay_ms(10);
+
+	put_reg32_mask(SFR_PAD_CTRL7_REG, 0, BIT(14) | BIT(15));
+	cf_delay_ms(10);
+
 }
 
-static void i2c3_hw_init(void)
-{
-    // LIUWEI TODO
-}
 
-static void i2c4_hw_init(void)
-{
-    // LIUWEI TODO
-}
 
 static fmt_err_t wait_TXIS_flag_until_timeout(ENUM_HAL_I2C_COMPONENT I2Cx, uint32_t status, uint32_t timeout)
 {
@@ -95,87 +129,79 @@ static void i2c_flush_TXDR(ENUM_HAL_I2C_COMPONENT I2Cx)
 
 static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_addr, struct rt_i2c_msg msgs[], rt_uint32_t num)
 {
-//     struct rt_i2c_msg* msg;
+    struct rt_i2c_msg* msg;
     uint32_t msg_idx = 0;
-//     struct ar1002_i2c_bus* ar1002_i2c = (struct ar1002_i2c_bus*)bus;
+    struct ar1002_i2c_bus* ar1002_i2c = (struct ar1002_i2c_bus*)bus;
 
-//     /* wait until bus is free. If timeout, generate stop again */
-//     if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_BUSY, 1, I2C_TIMEOUT_US) != FMT_EOK) {
-//         DRV_DBG("I2C wait BUSY timeout\n");
-//         goto _stop;
-//     }
 
-//     for (msg_idx = 0; msg_idx < num; msg_idx++) {
-//         msg = &msgs[msg_idx];
-//         uint16_t nbytes = msg->len;
+    // console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
 
-//         /* TODO: add support for 10bit addr */
-//         RT_ASSERT(!(msg->flags & RT_I2C_ADDR_10BIT));
+    for (msg_idx = 0; msg_idx < num; msg_idx++) {
+        msg = &msgs[msg_idx];
+        // uint16_t nbytes = msg->len;
+
+        /* TODO: add support for 10bit addr */
+        RT_ASSERT(!(msg->flags & RT_I2C_ADDR_10BIT));
         
-//         if (msg->flags & RT_I2C_RD) {
-//             /* start/restart read operation */
-//             LL_I2C_HandleTransfer(ar1002_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
-//                 LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_READ);
 
-//             while (nbytes--) {
-//                 /* wait data received */
-//                 if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_RXNE, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-//                     DRV_DBG("I2C wait RXNE timeout\n");
-//                     goto _stop;
-//                 }
-//                 /* receive data */
-//                 *(msg->buf++) = LL_I2C_ReceiveData8(ar1002_i2c->I2C);
-//             }
+        if(ar1002_i2c->I2C == HAL_I2C_COMPONENT_2)
+        {
+            // console_println("msg_idx = %d flags = %d  len = %d ", msg_idx, msg->flags, msg->len);
+            
+            // for(int i = 0; i< msg->len; i++)
+            // {
+            //     console_println("i = %d  =  %02x \r\n", i, msg->buf[i]);
+            // }
+        }
 
-//             /* Wait transmit complete */
-//             if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_TC, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-//                 DRV_DBG("I2C wait RX TC timeout\n");
-//                 goto _stop;
-//             }
-//         } else {
-//             /* start/restart write operation */
-//             LL_I2C_HandleTransfer(ar1002_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
-//                 LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+        
 
-//             while (nbytes--) {
-//                 if (wait_TXIS_flag_until_timeout(ar1002_i2c->I2C, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-//                     DRV_DBG("I2C wait TXIS timeout\n");
-//                     goto _stop;
-//                 }
-//                 /* transmit data */
-//                 LL_I2C_TransmitData8(ar1002_i2c->I2C, *(msg->buf++));
-//             }
+        if(msg->len != 1)
+        {
+            console_println("!!!!! error msg-len msg_idx = %d flags = %d  len = %d \r\n!!!!!", msg_idx, msg->flags, msg->len);
+        }
 
-//             /* Wait transmit complete */
-//             if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_TC, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-//                 DRV_DBG("I2C wait TC timeout\n");
-//                 goto _stop;
-//             }
-//         }
-//     }
 
-// _stop:
-//     /* in master transmit, a STOP condition is automatically sent after the NACK reception */
-//     if (!LL_I2C_IsActiveFlag_NACK(ar1002_i2c->I2C)) {
-//         /* generate stop condition, NACK is automatically generated before stop */
-//         LL_I2C_HandleTransfer(ar1002_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, 0,
-//             LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_STOP);
-//     }
+        if (msg->flags & RT_I2C_RD) {
+            /* start/restart read operation */
 
-//     /* wait until stop flag is set */
-//     if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_STOPF, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-//         DRV_DBG("I2C wait STOP timeout\n");
-//     }
-//     /* clear stop flag */
-//     LL_I2C_ClearFlag_STOP(ar1002_i2c->I2C);
 
-//     if (LL_I2C_IsActiveFlag_NACK(ar1002_i2c->I2C)) {
-//         LL_I2C_ClearFlag_NACK(ar1002_i2c->I2C);
-//         i2c_flush_TXDR(ar1002_i2c->I2C);
-//     }
+            // LL_I2C_HandleTransfer(ar1002_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
+            //     LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_READ);
 
-//     /* clear CR2 register */
-//     CLEAR_BIT(ar1002_i2c->I2C->CR2, I2C_CR2_SADD | I2C_CR2_HEAD10R | I2C_CR2_NBYTES | I2C_CR2_RELOAD | I2C_CR2_RD_WRN);
+            // while (nbytes--) {
+            //     /* wait data received */
+            //     if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_RXNE, 0, I2C_TIMEOUT_US) != FMT_EOK) {
+            //         DRV_DBG("I2C wait RXNE timeout\n");
+            //         goto _stop;
+            //     }
+            //     /* receive data */
+            //     *(msg->buf++) = LL_I2C_ReceiveData8(ar1002_i2c->I2C);
+            // }
+
+            // /* Wait transmit complete */
+            // if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_TC, 0, I2C_TIMEOUT_US) != FMT_EOK) {
+            //     DRV_DBG("I2C wait RX TC timeout\n");
+            //     goto _stop;
+            // }
+        } else {
+
+            // only support msg = 1 just for now
+
+            HAL_RET_T ret = HAL_I2C_MasterWriteData(ar1002_i2c->I2C,
+						slave_addr >> 1,
+						msg->buf,
+						msg->len,
+						I2C_TIMEOUT_US);
+            if(ret != HAL_OK)
+            {
+                console_println("--------ret = %d  \r\n", ret);
+            }
+            
+
+        }
+    }
+
 
     return msg_idx;
 }
@@ -186,61 +212,64 @@ static const struct rt_i2c_bus_device_ops i2c_bus_ops = {
     RT_NULL
 };
 
-/* i2c bus instances */
-static struct ar1002_i2c_bus ar1002_i2c1 = {
-    .parent.ops = &i2c_bus_ops,
-    .I2C = HAL_I2C_COMPONENT_0
-};
+// /* i2c bus instances */
+// static struct ar1002_i2c_bus ar1002_i2c0 = {
+//     .parent.ops = &i2c_bus_ops,
+//     .I2C = HAL_I2C_COMPONENT_0
+// };
+
+// static struct ar1002_i2c_bus ar1002_i2c1 = {
+//     .parent.ops = &i2c_bus_ops,
+//     .I2C = HAL_I2C_COMPONENT_1
+// };
 
 static struct ar1002_i2c_bus ar1002_i2c2 = {
-    .parent.ops = &i2c_bus_ops,
-    .I2C = HAL_I2C_COMPONENT_1
-};
-
-static struct ar1002_i2c_bus ar1002_i2c3 = {
     .parent.ops = &i2c_bus_ops,
     .I2C = HAL_I2C_COMPONENT_2
 };
 
-static struct ar1002_i2c_bus ar1002_i2c4 = {
+static struct ar1002_i2c_bus ar1002_i2c3 = {
     .parent.ops = &i2c_bus_ops,
     .I2C = HAL_I2C_COMPONENT_3
 };
 
-/* i2c device instances */
-static struct rt_i2c_device i2c1_dev1 = {
-    .slave_addr = IST8310_ADDRESS, /* 7 bit address */
-    .flags = 0
-};
 
-static struct rt_i2c_device i2c1_dev2 = {
-    .slave_addr = NCP5623C_ADDRESS, /* 7 bit address */
+
+// /* i2c device instances */
+// static struct rt_i2c_device i2c1_dev1 = {
+//     .slave_addr = IST8310_ADDRESS, /* 7 bit address */
+//     .flags = 0
+// };
+
+
+
+static struct rt_i2c_device i2c2_dev1 = {
+    .slave_addr = IST8310_ADDRESS, /* 7 bit address */
     .flags = 0
 };
 
 static struct rt_i2c_device i2c3_dev1 = {
-    .slave_addr = IST8310_ADDRESS, /* 7 bit address */
+    .slave_addr = NCP5623C_ADDRESS, /* 7 bit address */
     .flags = 0
 };
 
 rt_err_t drv_i2c_init(void)
 {
     /* i2c low-level initialization */
-    i2c1_hw_init();
-    i2c2_hw_init();
-    i2c3_hw_init();
-    i2c4_hw_init();
 
+    reset_i2c2();
+    HAL_I2C_MasterInit( ar1002_i2c2.I2C, i2c2_dev1.slave_addr, HAL_I2C_FAST_SPEED);
+    
+    HAL_I2C_MasterInit( ar1002_i2c3.I2C, i2c3_dev1.slave_addr, HAL_I2C_FAST_SPEED);
+    
     /* register i2c bus */
-    RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c1.parent, "i2c1"));
+    
     RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c2.parent, "i2c2"));
     RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c3.parent, "i2c3"));
-    RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c4.parent, "i2c4"));
 
     /* attach i2c devices */
-    RT_TRY(rt_i2c_bus_attach_device(&i2c1_dev1, "i2c1_dev1", "i2c1", RT_NULL));
-    RT_TRY(rt_i2c_bus_attach_device(&i2c1_dev2, "i2c1_dev2", "i2c1", RT_NULL));
 
+    RT_TRY(rt_i2c_bus_attach_device(&i2c2_dev1, "i2c2_dev1", "i2c2", RT_NULL));
     RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev1, "i2c3_dev1", "i2c3", RT_NULL));
 
     return RT_EOK;

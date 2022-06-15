@@ -319,7 +319,7 @@ void SystemClock_Config(void)
 
 
 
-void delay_ms(uint32_t num)
+void cf_delay_ms(uint32_t num)
 {
     volatile uint32_t i;
 
@@ -338,9 +338,9 @@ void test_led(void)
     while(i--)
     {
         HAL_GPIO_SetPin(HAL_GPIO_NUM61, HAL_GPIO_PIN_SET);
-        delay_ms(1000);
+        cf_delay_ms(1000);
         HAL_GPIO_SetPin(HAL_GPIO_NUM61, HAL_GPIO_PIN_RESET);
-        delay_ms(1000);
+        cf_delay_ms(1000);
     }
 }
 
@@ -486,8 +486,8 @@ void bsp_initialize(void)
     console_println("drv_adc_init~");
 
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
-    drv_ncp5623c_init("i2c1_dev2");
-    console_println("i2c1_dev2~");
+    drv_ncp5623c_init("i2c3_dev1");
+    console_println("drv_ncp5623c_init i2c3_dev1~");
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
     FMT_CHECK(advertise_sensor_imu(0));
@@ -503,6 +503,10 @@ void bsp_initialize(void)
     // if (drv_ist8310_init("i2c1_dev1", "mag0") != FMT_EOK) {
         // RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
     // }
+
+    drv_ist8310_init("i2c2_dev1", "mag0");
+    console_println("drv_ist8310_init i2c2_dev1~");
+
     // RT_CHECK(gps_m8n_init("serial3", "gps"));
 // 
     // /* register sensor to sensor hub */

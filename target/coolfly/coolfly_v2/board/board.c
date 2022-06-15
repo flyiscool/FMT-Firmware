@@ -504,14 +504,21 @@ void bsp_initialize(void)
         // RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
     // }
 
-    drv_ist8310_init("i2c2_dev1", "mag0");
-    console_println("drv_ist8310_init i2c2_dev1~");
+
+    if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
+        console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
+    }
+    else
+    {
+         console_println("drv_ist8310_init i2c2_dev1~");
+    }
+   
 
     // RT_CHECK(gps_m8n_init("serial3", "gps"));
-// 
+
     // /* register sensor to sensor hub */
     // FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
-    // FMT_CHECK(register_sensor_mag("mag0", 0));
+    FMT_CHECK(register_sensor_mag("mag0", 0));
     // FMT_CHECK(register_sensor_barometer("barometer"));
 #endif
 

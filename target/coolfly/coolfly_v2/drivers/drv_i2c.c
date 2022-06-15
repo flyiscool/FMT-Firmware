@@ -129,79 +129,60 @@ static void i2c_flush_TXDR(ENUM_HAL_I2C_COMPONENT I2Cx)
 
 static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_addr, struct rt_i2c_msg msgs[], rt_uint32_t num)
 {
-    struct rt_i2c_msg* msg;
+    
     uint32_t msg_idx = 0;
     struct ar1002_i2c_bus* ar1002_i2c = (struct ar1002_i2c_bus*)bus;
 
+    console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
 
-    // console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
-
-    for (msg_idx = 0; msg_idx < num; msg_idx++) {
-        msg = &msgs[msg_idx];
-        // uint16_t nbytes = msg->len;
-
-        /* TODO: add support for 10bit addr */
-        RT_ASSERT(!(msg->flags & RT_I2C_ADDR_10BIT));
-        
-
-        if(ar1002_i2c->I2C == HAL_I2C_COMPONENT_2)
-        {
-            // console_println("msg_idx = %d flags = %d  len = %d ", msg_idx, msg->flags, msg->len);
-            
-            // for(int i = 0; i< msg->len; i++)
-            // {
-            //     console_println("i = %d  =  %02x \r\n", i, msg->buf[i]);
-            // }
-        }
-
-        
-
-        if(msg->len != 1)
-        {
-            console_println("!!!!! error msg-len msg_idx = %d flags = %d  len = %d \r\n!!!!!", msg_idx, msg->flags, msg->len);
-        }
-
-
+    if(num == 1){
+        struct rt_i2c_msg* msg;
+        msg = &msgs[0];
+    
         if (msg->flags & RT_I2C_RD) {
-            /* start/restart read operation */
-
-
-            // LL_I2C_HandleTransfer(ar1002_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
-            //     LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_READ);
-
-            // while (nbytes--) {
-            //     /* wait data received */
-            //     if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_RXNE, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-            //         DRV_DBG("I2C wait RXNE timeout\n");
-            //         goto _stop;
-            //     }
-            //     /* receive data */
-            //     *(msg->buf++) = LL_I2C_ReceiveData8(ar1002_i2c->I2C);
-            // }
-
-            // /* Wait transmit complete */
-            // if (wait_flag_until_timeout(ar1002_i2c->I2C, I2C_ISR_TC, 0, I2C_TIMEOUT_US) != FMT_EOK) {
-            //     DRV_DBG("I2C wait RX TC timeout\n");
-            //     goto _stop;
-            // }
-        } else {
-
+            console_println("error---------(msg->flags & RT_I2C_RD) 1 \r\n");
+        }
+        else{
             // only support msg = 1 just for now
-
             HAL_RET_T ret = HAL_I2C_MasterWriteData(ar1002_i2c->I2C,
 						slave_addr >> 1,
 						msg->buf,
 						msg->len,
 						I2C_TIMEOUT_US);
-            if(ret != HAL_OK)
-            {
-                console_println("--------ret = %d  \r\n", ret);
+            if(ret != HAL_OK){
+                console_println("1 ret = %d  \r\n", ret);
             }
-            
 
         }
+        msg_idx = 1;
     }
+    else if(num == 2){
+        struct rt_i2c_msg* msg0;
+        struct rt_i2c_msg* msg1;
+        msg0 = &msgs[0];
+        msg1 = &msgs[1];
 
+        if(!(msg0->flags & RT_I2C_RD) && (msg1->flags & RT_I2C_RD)){
+
+            HAL_RET_T ret = HAL_I2C_MasterReadData(ar1002_i2c->I2C, 
+                            slave_addr >> 1, 
+                            msg0->buf, 
+                            msg0->len, 
+                            msg1->buf, 
+                            msg1->len, 
+                            I2C_TIMEOUT_US);
+
+            if(ret != HAL_OK){
+                console_println("2 ret = %d  \r\n", ret);
+            }
+
+        }
+        msg_idx = 2;
+    }
+    else{
+         console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
+         msg_idx = 0;
+    }
 
     return msg_idx;
 }

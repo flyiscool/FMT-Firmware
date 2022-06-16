@@ -82,58 +82,13 @@ static void reset_i2c2(void)
 
 }
 
-
-
-static fmt_err_t wait_TXIS_flag_until_timeout(ENUM_HAL_I2C_COMPONENT I2Cx, uint32_t status, uint32_t timeout)
-{
-    // uint32_t time_start = systime_now_ms();
-
-    // while (((READ_BIT(I2Cx->ISR, I2C_ISR_TXIS) == I2C_ISR_TXIS) ? 1UL : 0UL) == status) {
-    //     /*  TXIS bit is not set when a NACK is received */
-    //     if (LL_I2C_IsActiveFlag_NACK(I2Cx)) {
-    //         return FMT_ERROR;
-    //     }
-
-    //     if ((systime_now_ms() - time_start) > timeout) {
-    //         return FMT_ETIMEOUT;
-    //     }
-    // }
-    return FMT_EOK;
-}
-
-static fmt_err_t wait_flag_until_timeout(ENUM_HAL_I2C_COMPONENT I2Cx, uint32_t flag, uint32_t status, uint64_t timeout_us)
-{
-    // uint64_t time_start = systime_now_us();
-
-    // while (((READ_BIT(I2Cx->ISR, flag) == flag) ? 1UL : 0UL) == status) {
-    //     if ((systime_now_us() - time_start) > timeout_us) {
-    //         return FMT_ETIMEOUT;
-    //     }
-    // }
-    return FMT_EOK;
-}
-
-static void i2c_flush_TXDR(ENUM_HAL_I2C_COMPONENT I2Cx)
-{
-    // /* If a pending TXIS flag is set */
-    // /* Write a dummy data in TXDR to clear it */
-    // if (LL_I2C_IsActiveFlag_TXIS(I2Cx)) {
-    //     LL_I2C_TransmitData8(I2Cx, 0x00);
-    // }
-
-    // /* Flush TX register if not empty */
-    // if (!LL_I2C_IsActiveFlag_TXE(I2Cx)) {
-    //     LL_I2C_ClearFlag_TXE(I2Cx);
-    // }
-}
-
 static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_addr, struct rt_i2c_msg msgs[], rt_uint32_t num)
 {
     
     uint32_t msg_idx = 0;
     struct ar1002_i2c_bus* ar1002_i2c = (struct ar1002_i2c_bus*)bus;
 
-    console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
+    // console_println("bus = %d slave_addr = %04x  num = %d \r\n", ar1002_i2c->I2C, slave_addr, num);
 
     if(num == 1){
         struct rt_i2c_msg* msg;
@@ -152,7 +107,6 @@ static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_a
             if(ret != HAL_OK){
                 console_println("1 ret = %d  \r\n", ret);
             }
-
         }
         msg_idx = 1;
     }
@@ -215,14 +169,11 @@ static struct ar1002_i2c_bus ar1002_i2c3 = {
 };
 
 
-
 // /* i2c device instances */
 // static struct rt_i2c_device i2c1_dev1 = {
 //     .slave_addr = IST8310_ADDRESS, /* 7 bit address */
 //     .flags = 0
 // };
-
-
 
 static struct rt_i2c_device i2c2_dev1 = {
     .slave_addr = IST8310_ADDRESS, /* 7 bit address */
@@ -239,19 +190,17 @@ rt_err_t drv_i2c_init(void)
     /* i2c low-level initialization */
 
     reset_i2c2();
-    HAL_I2C_MasterInit( ar1002_i2c2.I2C, i2c2_dev1.slave_addr, HAL_I2C_FAST_SPEED);
-    
+    HAL_I2C_MasterInit( ar1002_i2c2.I2C, i2c2_dev1.slave_addr, HAL_I2C_FAST_SPEED);    
     HAL_I2C_MasterInit( ar1002_i2c3.I2C, i2c3_dev1.slave_addr, HAL_I2C_FAST_SPEED);
     
     /* register i2c bus */
-    
     RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c2.parent, "i2c2"));
     RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c3.parent, "i2c3"));
 
     /* attach i2c devices */
-
     RT_TRY(rt_i2c_bus_attach_device(&i2c2_dev1, "i2c2_dev1", "i2c2", RT_NULL));
     RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev1, "i2c3_dev1", "i2c3", RT_NULL));
 
     return RT_EOK;
 }
+

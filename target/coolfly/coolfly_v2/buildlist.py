@@ -2,6 +2,7 @@
 # Modify this file to control which files/modules should be built
 
 DRIVERS = [
+    'imu/icm20600.c',
     'imu/icm20689.c',
     'imu/bmi055.c',
     'mag/ist8310.c',
@@ -19,7 +20,6 @@ HAL = [
     'systick/*.c',
     'sd/*.c',
     'usb/usbd_cdc.c',
-    'spi/spi_core.c',
     'spi/spi_dev.c',
     'i2c/*.c',
     'gyro/*.c',

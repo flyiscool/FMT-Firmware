@@ -25,7 +25,8 @@
 #endif
 
 #include "board_device.h"
-#include "driver/barometer/ms5611.h"
+#include "driver/barometer/spl06.h"
+// #include "driver/barometer/ms5611.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi055.h"
 #include "driver/imu/icm20689.h"
@@ -500,7 +501,8 @@ void bsp_initialize(void)
     RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_bmi055_init("spi1_dev3", "gyro1", "accel1"));
-    RT_CHECK(drv_ms5611_init("spi4_dev1", "barometer"));
+    // RT_CHECK(drv_ms5611_init("spi4_dev1", "barometer"));
+    RT_CHECK(drv_spl06_init("spi5_dev1", "barometer"));
     /* if no gps mag then use onboard mag */
     // if (drv_ist8310_init("i2c1_dev1", "mag0") != FMT_EOK) {
         // RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
@@ -515,11 +517,11 @@ void bsp_initialize(void)
     }
    
 
-    // RT_CHECK(gps_m8n_init("serial3", "gps"));
+    RT_CHECK(gps_m8n_init("serial1", "gps"));
 
     // /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
-    FMT_CHECK(register_sensor_mag("mag0", 0));
+    // FMT_CHECK(register_sensor_mag("mag0", 0));
     FMT_CHECK(register_sensor_barometer("barometer"));
 #endif
 

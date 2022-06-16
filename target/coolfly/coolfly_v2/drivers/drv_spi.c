@@ -138,9 +138,9 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
 
     	HAL_SPI_MasterInit(SPI_2, &st_spiInitInfo);
 
-    } else if (SPI == SPI_4) {
+    } else if (SPI == SPI_5) {
 
-        ar1002_spi->SPI = SPI_4;
+        ar1002_spi->SPI = SPI_5;
 
         /* SPI2 configure */
     	STRU_HAL_SPI_INIT st_spiInitInfo = {
@@ -149,7 +149,7 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
     		.e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
     	};
 
-    	HAL_SPI_MasterInit(SPI_4, &st_spiInitInfo);
+    	HAL_SPI_MasterInit(SPI_5, &st_spiInitInfo);
 
     } else {
         return RT_ENOSYS;
@@ -187,11 +187,10 @@ rt_err_t drv_spi_init(void)
     }
 
     /* register SPI bus */
-    static struct ar1002_spi_bus ar1002_spi4;
+    static struct ar1002_spi_bus ar1002_spi5;
 
-
-    /* register SPI2 bus */
-    ret = ar1002_spi_register(SPI_4, &ar1002_spi4, "spi4");
+    /* register SPI5 bus */
+    ret = ar1002_spi_register(SPI_5, &ar1002_spi5, "spi5");
     if (ret != RT_EOK) {
         return ret;
     }
@@ -200,7 +199,7 @@ rt_err_t drv_spi_init(void)
     {
         static struct rt_spi_device rt_spi_device_1;
 
-        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi4_dev1", "spi4", RT_NULL);
+        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi5_dev1", "spi5", RT_NULL);
         if (ret != RT_EOK) {
             return ret;
         }

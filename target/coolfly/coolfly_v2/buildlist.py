@@ -3,10 +3,11 @@
 
 DRIVERS = [
     'imu/icm20600.c',
-    'imu/icm20689.c',
-    'imu/bmi055.c',
+    # 'imu/icm20689.c',
+    # 'imu/bmi055.c',
     'mag/ist8310.c',
-    'barometer/ms5611.c',
+    # 'barometer/ms5611.c',
+    'barometer/spl06.c',
     'gps/gps_m8n.c',
     'rgb_led/ncp5623c.c',
     'mtd/ramtron.c',

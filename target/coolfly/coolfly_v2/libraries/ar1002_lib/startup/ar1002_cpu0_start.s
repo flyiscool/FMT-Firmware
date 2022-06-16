@@ -136,7 +136,7 @@ g_pfnVectors:
 
     /* External Interrupts */
   .word     UART0_IRQHandler
-  .word     IRQHandler_17
+  .word     UART1_IRQHandler
   .word     IRQHandler_18
   .word     IRQHandler_19
   .word     IRQHandler_20

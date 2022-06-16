@@ -269,7 +269,7 @@ rt_size_t rt_spi_transfer(struct rt_spi_device* device,
 	RT_ASSERT(device != RT_NULL);
 	RT_ASSERT(device->bus != RT_NULL);
 
-	console_println("rt_spi_transfer 			length %d", length);
+	// console_println("rt_spi_transfer 			length %d", length);
 
 	result = rt_mutex_take(&(device->bus->lock), RT_WAITING_FOREVER);
 

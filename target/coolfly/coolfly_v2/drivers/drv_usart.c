@@ -98,8 +98,19 @@ struct ar_uart {
     }
 
 
-// static char g_uart0rxbuffer[ARCFG_UART0_RXBUFF];
-// static char g_uart0txbuffer[ARCFG_UART0_TXBUFF];
+/* Default config for serial_configure structure */
+#define SERIAL1_DEFAULT_CONFIG                     \
+    {                                             \
+        BAUD_RATE_9600,     /* 57600 bits/s */   \
+            DATA_BITS_8,     /* 8 databits */     \
+            STOP_BITS_1,     /* 1 stopbit */      \
+            PARITY_NONE,     /* No parity  */     \
+            BIT_ORDER_LSB,   /* LSB first sent */ \
+            NRZ_NORMAL,      /* Normal mode */    \
+            SERIAL_RB_BUFSZ, /* Buffer size */    \
+            0                                    \
+    }
+
 
 
 
@@ -113,6 +124,7 @@ static void uart_isr(struct serial_device* serial);
 
 // #ifdef USING_UART7
 static struct serial_device serial0; // FMU Debug
+static struct serial_device serial1; // GPS
 
 /* UART0 device driver structure */
 struct ar_uart uart0 = {
@@ -120,6 +132,14 @@ struct ar_uart uart0 = {
     .irq = UART_INTR0_VECTOR_NUM,
     .dma = {0},
 };
+
+
+struct ar_uart uart1 = {
+    .uart_device = UART1_BASE,
+    .irq = UART_INTR1_VECTOR_NUM,
+    .dma = {0},
+};
+
 
 void UART0_IRQHandler(void)
 {
@@ -130,8 +150,16 @@ void UART0_IRQHandler(void)
     /* leave interrupt */
     rt_interrupt_leave();
 }
-// #endif // USING_UART7
 
+void UART1_IRQHandler(void)
+{
+    /* enter interrupt */
+    rt_interrupt_enter();
+    /* uart isr routine */
+    uart_isr(&serial1);
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
 
 
 # define getreg32(a)          (*(volatile uint32_t *)(a))
@@ -162,6 +190,10 @@ static int up_setup(struct up_dev_s *dev)
     if(priv->uartbase == AR_UART0_BASE)
     {
         up_serialout(priv, AR_UART_FCR_OFFSET, (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_0));
+    }
+    else
+    {
+        up_serialout(priv, AR_UART_FCR_OFFSET, (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_14));
     }
 
     priv->ier = up_serialin(priv, AR_UART_IER_OFFSET);
@@ -214,7 +246,7 @@ static int up_setup(struct up_dev_s *dev)
     else
     {
         up_serialout(priv, AR_UART_FCR_OFFSET,
-            (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
+            (UART_FCR_RXTRIGGER_14 | UART_FCR_TXRST | UART_FCR_RXRST |
                 UART_FCR_FIFOEN));
     }
     return 0;
@@ -315,9 +347,23 @@ static void uart_isr(struct serial_device* serial)
 {
     struct ar_uart* uart = (struct ar_uart*)serial->parent.user_data;
 
-    // BOOT_Printf("uart0: uart_isr-------------\r\n");
+    uint32_t uartbase;
+    if(uart->uart_device.uartbase == UART0_BASE)
+    {
+        uartbase = 0;
+    }
+    else if(uart->uart_device.uartbase == UART1_BASE)
+    {
+        uartbase = 1;
+    }
+    else
+    {
+        uartbase = 11;
+    }
 
-    uint32_t    status;
+    // BOOT_Printf("uart%d: \r\n",uartbase);
+
+    uint32_t            status;
     int                passes;
 
     for (passes = 0; passes < 256; passes++)
@@ -366,7 +412,7 @@ static void uart_isr(struct serial_device* serial)
             /* Read the modem status register (MSR) to clear */
 
             status = up_serialin(&uart->uart_device, AR_UART_MSR_OFFSET);
-            // _info("MSR: %02x\n", status);
+            // BOOT_Printf("MSR: %02x\n", status);
             break;
         }
 
@@ -377,14 +423,14 @@ static void uart_isr(struct serial_device* serial)
             /* Read the line status register (LSR) to clear */
 
             status = up_serialin(&uart->uart_device, AR_UART_LSR_OFFSET);
-            // _info("LSR: %02x\n", status);
+            // BOOT_Printf("LSR: %02x\n", status);
             break;
         }
         
         case UART_IIR_INTID_BUSY:
         {
             status = up_serialin(&uart->uart_device, AR_UART_USR_OFFSET);
-            // _err("ERROR: UART_IIR_INTID_BUSY: %02x\n", status);
+            // BOOT_Printf("ERROR: UART_IIR_INTID_BUSY: %02x\n", status);
             break;
         }
 
@@ -397,7 +443,7 @@ static void uart_isr(struct serial_device* serial)
         }
     }
 
-     }
+    }
 }
 
 
@@ -433,18 +479,32 @@ static rt_err_t usart_configure(struct serial_device* serial, struct serial_conf
     RT_ASSERT(cfg != RT_NULL);
 
     uart = (struct ar_uart*)serial->parent.user_data;
+    
+    uint32_t uartbase;
+    if(uart->uart_device.uartbase == UART0_BASE)
+    {
+        uartbase = 0;
+    }
+    else if(uart->uart_device.uartbase == UART1_BASE)
+    {
+        uartbase = 1;
+    }
+    else
+    {
+        uartbase = 11;
+    }
 
-
+    // BOOT_Printf("uart%d: baud = %ld \r\n",uartbase, uart->uart_device.baud);
 
     uart->uart_device.baud = cfg->baud_rate;
-    BOOT_Printf("uart0: baud = %ld \r\n",uart->uart_device.baud);
+    // BOOT_Printf("uart%d: baud = %ld \r\n",uartbase, uart->uart_device.baud);
 
     if (cfg->data_bits == DATA_BITS_8) {
         uart->uart_device.bits = 8;
     } else if (cfg->data_bits == DATA_BITS_9) {
         ;
     }
-    BOOT_Printf("uart0: data_bits = %ld \r\n", uart->uart_device.bits);
+    // BOOT_Printf("uart%d: data_bits = %ld \r\n", uartbase, uart->uart_device.bits);
 
     if (cfg->stop_bits == STOP_BITS_1) {
         uart->uart_device.stopbits2 = 0;
@@ -452,7 +512,7 @@ static rt_err_t usart_configure(struct serial_device* serial, struct serial_conf
         uart->uart_device.stopbits2 = 1;
     }
 
-    BOOT_Printf("uart0: data_bits2 = %ld \r\n", uart->uart_device.stopbits2);
+    // BOOT_Printf("uart%d: data_bits2 = %ld \r\n", uartbase, uart->uart_device.stopbits2);
 
     if (cfg->parity == PARITY_NONE) {
         uart->uart_device.parity = 0;
@@ -462,12 +522,12 @@ static rt_err_t usart_configure(struct serial_device* serial, struct serial_conf
         uart->uart_device.parity = 2;
     }
 
-    BOOT_Printf("uart0: parity = %ld \r\n", uart->uart_device.parity);
+    // BOOT_Printf("uart%d: parity = %ld \r\n", uartbase, uart->uart_device.parity);
 
     /* USART need be disabled first in order to configure it */
     up_setup(&uart->uart_device);
 
-    BOOT_Printf("uart0: usart_configure success \r\n");
+    // BOOT_Printf("uart%d : usart_configure success \r\n",uartbase);
     return RT_EOK;
 }
 
@@ -481,7 +541,9 @@ static rt_err_t usart_control(struct serial_device* serial, int cmd, void* arg)
     RT_ASSERT(serial != RT_NULL);
     uart = (struct ar_uart*)serial->parent.user_data;
 
-    BOOT_Printf("uart0: cmd =%ld \r\n" , cmd);
+
+
+    // BOOT_Printf("uart%d: cmd =%ld \r\n" , uartbase, cmd);
 
     switch (cmd) {
     case RT_DEVICE_CTRL_CLR_INT:
@@ -540,12 +602,6 @@ static int usart_getc(struct serial_device* serial)
     RT_ASSERT(serial != RT_NULL);
     uart = (struct ar_uart*)serial->parent.user_data;
 
-    // /* check if read data register is not empty */
-    // if (LL_USART_IsActiveFlag_RXNE(uart->uart_device)) {
-    //     /* read DR will clear RXNE */
-    //     ch = uart->uart_device->RDR & 0xff;
-    // }
-
 	volatile uint32_t status = up_serialin(&uart->uart_device, AR_UART_LSR_OFFSET);
 
 	uint32_t IIR_sta = up_serialin(&uart->uart_device, AR_UART_IIR_OFFSET);
@@ -563,15 +619,6 @@ static int usart_getc(struct serial_device* serial)
     return ch;
 }
 
-static rt_size_t usart_dma_transmit(struct serial_device* serial, rt_uint8_t* buf, rt_size_t size, int direction)
-{
-    // if (direction == SERIAL_DMA_TX) {
-    //     _dma_transmit(serial->parent.user_data, buf, size);
-    //     return size;
-    // }
-
-    return 0;
-}
 
 /* usart driver operations */
 static const struct usart_ops _usart_ops = {
@@ -579,36 +626,22 @@ static const struct usart_ops _usart_ops = {
     usart_control,
     usart_putc,
     usart_getc,
-    usart_dma_transmit
+    NULL
 };
 
 
-// void text_uart0(void);
-
-// extern int test_led();
 rt_err_t drv_usart_init(void)
 {
-    // test_led();
-    // text_uart0();
-
     rt_err_t rt_err = RT_EOK;
     
 
+    // DEBUG
     serial0.ops = &_usart_ops;
-#ifdef SERIAL0_DEFAULT_CONFIG
+
     struct serial_configure serial0_config = SERIAL0_DEFAULT_CONFIG;
     serial0.config = serial0_config;
-#else
-    struct serial_configure config = SERIAL_DEFAULT_CONFIG;
-    serial0.config = config;
-#endif
-
-
-    BOOT_Printf("1-----------\r\n");
 
     NVIC_Configuration(&uart0);
-
-    BOOT_Printf("2-----------\r\n");
 
     /* register serial device */
     rt_err |= hal_serial_register(&serial0,
@@ -616,22 +649,24 @@ rt_err_t drv_usart_init(void)
         RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
         &uart0);
 
-    BOOT_Printf("3-----------\r\n");
+    // GPS
+    serial1.ops = &_usart_ops;
+
+    struct serial_configure serial1_config = SERIAL1_DEFAULT_CONFIG;
+    serial1.config = serial1_config;
+
+    NVIC_Configuration(&uart1);
+
+    /* register serial device */
+    rt_err |= hal_serial_register(&serial1,
+        "serial1",
+        RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
+        &uart1);
+
+
 
     return rt_err;
 }
-
-
-// void text_uart0(void)
-// {
-//     ar_uart_init(0,460800);
-//     BOOT_Printf("hello-fmt---------------------------\r\n");
-//     BOOT_Printf("hello-fmt---------------------------\r\n");
-//     BOOT_Printf("hello-fmt---------------------------\r\n");
-//     BOOT_Printf("hello-fmt---------------------------\r\n");
-//     BOOT_Printf("hello-fmt---------------------------------------\r\n");
-// }
-
 
 
 void ar_uart_init(unsigned char index, unsigned int baud_rate)

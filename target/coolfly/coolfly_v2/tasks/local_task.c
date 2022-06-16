@@ -44,8 +44,7 @@ void task_local_entry(void* parameter)
 
     while (1) {
         LED_TOGGLE(HAL_GPIO_NUM61);
-
-        sys_msleep(100);
+        sys_msleep(1000);
     }
 }
 

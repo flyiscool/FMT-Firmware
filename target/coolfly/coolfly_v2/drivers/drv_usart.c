@@ -597,12 +597,12 @@ static int usart_getc(struct serial_device* serial)
     int ch = -1;
     struct ar_uart* uart;
 
-    // BOOT_Printf("usart_getc-------\r\n");
+    
 
     RT_ASSERT(serial != RT_NULL);
     uart = (struct ar_uart*)serial->parent.user_data;
 
-	volatile uint32_t status = up_serialin(&uart->uart_device, AR_UART_LSR_OFFSET);
+	// volatile uint32_t status = up_serialin(&uart->uart_device, AR_UART_LSR_OFFSET);
 
 	uint32_t IIR_sta = up_serialin(&uart->uart_device, AR_UART_IIR_OFFSET);
 
@@ -616,6 +616,8 @@ static int usart_getc(struct serial_device* serial)
         default : 
             break;
     }
+
+    
     return ch;
 }
 

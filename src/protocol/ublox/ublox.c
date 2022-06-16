@@ -422,7 +422,6 @@ void reset_ubx_decoder(ubx_decoder_t* ubx_decoder)
     /* flush read buffer */
     do {
         ret = rt_device_read(ubx_decoder->ubx_dev, 0, &c, 1);
-        DRV_DBG("ret -> %d  c = %c fail\n", ret, c);
     } while (ret);
 }
 

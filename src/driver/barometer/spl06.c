@@ -160,7 +160,6 @@ static rt_err_t _init(void)
         return ret;
     }
 
-    DRV_DBG("B1---------------\r\n");
     /* get chip ID */
     uint8_t chip_id;
     RT_TRY(spi_read_reg8(spi_device, 0x0d, &chip_id));
@@ -171,7 +170,6 @@ static rt_err_t _init(void)
 
     systime_mdelay(10);
 
-    DRV_DBG("B2---------------\r\n");
 	uint8_t buf[18] = { 0 };
 
 	spi_read_multi_reg8(spi_device, SPL06_REG_CALIB_COEFFS_START, buf, sizeof(buf));
@@ -194,7 +192,6 @@ static rt_err_t _init(void)
 	_spl.coe.c21 = (uint16_t)buf[14] << 8 | buf[15];
 	_spl.coe.c30 = (uint16_t)buf[16] << 8 | buf[17];
 
-    DRV_DBG("B2---------------\r\n");
     
     int state = 0;
 

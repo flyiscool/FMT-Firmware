@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020-2021 The Firmament Authors. All Rights Reserved.
+ * Copyright 2021 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#ifndef DRV_I2C_H__
-#define DRV_I2C_H__
+#ifndef MMC5983MA_H__
+#define MMC5983MA_H__
 
-#include <firmament.h>
+#include <rtthread.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* i2c slave device addresses */
-#define IST8310_ADDRESS  0x0C
-#define NCP5623C_ADDRESS 0x39
-#define MMC5983_7BITI2C_ADDRESS		0x30
-
-rt_err_t drv_i2c_init(void);
+rt_err_t drv_mmc5983ma_init(const char* i2c_device_name, const char* mag_device_name);
 
 #ifdef __cplusplus
 }

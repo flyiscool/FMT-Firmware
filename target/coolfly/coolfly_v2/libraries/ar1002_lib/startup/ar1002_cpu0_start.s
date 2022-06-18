@@ -137,13 +137,13 @@ g_pfnVectors:
     /* External Interrupts */
   .word     UART0_IRQHandler
   .word     UART1_IRQHandler
-  .word     IRQHandler_18
-  .word     IRQHandler_19
-  .word     IRQHandler_20
-  .word     IRQHandler_21
-  .word     IRQHandler_22
-  .word     IRQHandler_23
-  .word     IRQHandler_24
+  .word     UART2_IRQHandler
+  .word     UART3_IRQHandler
+  .word     UART4_IRQHandler
+  .word     UART5_IRQHandler
+  .word     UART6_IRQHandler
+  .word     UART7_IRQHandler
+  .word     UART8_IRQHandler
   .word     IRQHandler_25
   .word     IRQHandler_26
   .word     IRQHandler_27
@@ -250,5 +250,20 @@ g_pfnVectors:
 // .thumb_set SysTick_Handler,Default_Handler
 
 
-// .weak      UART0_IRQHandler
-// .thumb_set UART0_IRQHandler,IRQHandler_16
+.weak      UART2_IRQHandler
+.thumb_set UART2_IRQHandler,IRQHandler_18
+
+.weak      UART3_IRQHandler
+.thumb_set UART3_IRQHandler,IRQHandler_19
+
+.weak      UART5_IRQHandler
+.thumb_set UART5_IRQHandler,IRQHandler_21
+
+.weak      UART6_IRQHandler
+.thumb_set UART6_IRQHandler,IRQHandler_22
+
+.weak      UART7_IRQHandler
+.thumb_set UART7_IRQHandler,IRQHandler_23
+
+.weak      UART8_IRQHandler
+.thumb_set UART8_IRQHandler,IRQHandler_24

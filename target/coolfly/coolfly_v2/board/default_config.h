@@ -28,4 +28,18 @@ target = "COOLFLY_S1"\n
 	type = "mavlink"\n
 	name = "mav_console"\n
 	auto-switch = true\n
+[mavproxy]\n
+	[[mavproxy.devices]]\n
+	type = "serial"\n
+	name = "serial4"\n
+	baudrate = 460800\n
+[actuator]\n
+    [[actuator.devices]]\n
+    protocol = "pwm"\n
+    name = "main_out"\n
+    freq = 400\n
+    [[actuator.mappings]]\n
+    from = "control_out"\n
+    to = "main_out"\n
+    chan-map = [[1,2,3,4]]\n
 );

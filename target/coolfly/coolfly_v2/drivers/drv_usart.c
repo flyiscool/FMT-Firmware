@@ -101,7 +101,7 @@ struct ar_uart {
 /* Default config for serial_configure structure */
 #define SERIAL1_DEFAULT_CONFIG                     \
     {                                             \
-        BAUD_RATE_9600,     /* 57600 bits/s */   \
+        BAUD_RATE_115200,     /* 57600 bits/s */   \
             DATA_BITS_8,     /* 8 databits */     \
             STOP_BITS_1,     /* 1 stopbit */      \
             PARITY_NONE,     /* No parity  */     \
@@ -111,7 +111,18 @@ struct ar_uart {
             0                                    \
     }
 
-
+/* Default config for serial_configure structure */
+#define SERIAL4_DEFAULT_CONFIG                     \
+    {                                             \
+        BAUD_RATE_460800,     /* 57600 bits/s */   \
+            DATA_BITS_8,     /* 8 databits */     \
+            STOP_BITS_1,     /* 1 stopbit */      \
+            PARITY_NONE,     /* No parity  */     \
+            BIT_ORDER_LSB,   /* LSB first sent */ \
+            NRZ_NORMAL,      /* Normal mode */    \
+            SERIAL_RB_BUFSZ, /* Buffer size */    \
+            0                                    \
+    }
 
 
 
@@ -125,6 +136,7 @@ static void uart_isr(struct serial_device* serial);
 // #ifdef USING_UART7
 static struct serial_device serial0; // FMU Debug
 static struct serial_device serial1; // GPS
+static struct serial_device serial4; // MAVLINK
 
 /* UART0 device driver structure */
 struct ar_uart uart0 = {
@@ -137,6 +149,12 @@ struct ar_uart uart0 = {
 struct ar_uart uart1 = {
     .uart_device = UART1_BASE,
     .irq = UART_INTR1_VECTOR_NUM,
+    .dma = {0},
+};
+
+struct ar_uart uart4 = {
+    .uart_device = UART4_BASE,
+    .irq = UART_INTR4_VECTOR_NUM,
     .dma = {0},
 };
 
@@ -157,6 +175,16 @@ void UART1_IRQHandler(void)
     rt_interrupt_enter();
     /* uart isr routine */
     uart_isr(&serial1);
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
+
+void UART4_IRQHandler(void)
+{
+    /* enter interrupt */
+    rt_interrupt_enter();
+    /* uart isr routine */
+    uart_isr(&serial4);
     /* leave interrupt */
     rt_interrupt_leave();
 }
@@ -347,19 +375,19 @@ static void uart_isr(struct serial_device* serial)
 {
     struct ar_uart* uart = (struct ar_uart*)serial->parent.user_data;
 
-    uint32_t uartbase;
-    if(uart->uart_device.uartbase == UART0_BASE)
-    {
-        uartbase = 0;
-    }
-    else if(uart->uart_device.uartbase == UART1_BASE)
-    {
-        uartbase = 1;
-    }
-    else
-    {
-        uartbase = 11;
-    }
+    // uint32_t uartbase;
+    // if(uart->uart_device.uartbase == UART0_BASE)
+    // {
+    //     uartbase = 0;
+    // }
+    // else if(uart->uart_device.uartbase == UART1_BASE)
+    // {
+    //     uartbase = 1;
+    // }
+    // else
+    // {
+    //     uartbase = 11;
+    // }
 
     // BOOT_Printf("uart%d: \r\n",uartbase);
 
@@ -480,19 +508,19 @@ static rt_err_t usart_configure(struct serial_device* serial, struct serial_conf
 
     uart = (struct ar_uart*)serial->parent.user_data;
     
-    uint32_t uartbase;
-    if(uart->uart_device.uartbase == UART0_BASE)
-    {
-        uartbase = 0;
-    }
-    else if(uart->uart_device.uartbase == UART1_BASE)
-    {
-        uartbase = 1;
-    }
-    else
-    {
-        uartbase = 11;
-    }
+    // uint32_t uartbase;
+    // if(uart->uart_device.uartbase == UART0_BASE)
+    // {
+    //     uartbase = 0;
+    // }
+    // else if(uart->uart_device.uartbase == UART1_BASE)
+    // {
+    //     uartbase = 1;
+    // }
+    // else
+    // {
+    //     uartbase = 11;
+    // }
 
     // BOOT_Printf("uart%d: baud = %ld \r\n",uartbase, uart->uart_device.baud);
 
@@ -665,6 +693,20 @@ rt_err_t drv_usart_init(void)
         RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
         &uart1);
 
+
+    // GPS
+    serial4.ops = &_usart_ops;
+
+    struct serial_configure serial4_config = SERIAL4_DEFAULT_CONFIG;
+    serial4.config = serial1_config;
+
+    NVIC_Configuration(&uart4);
+
+    /* register serial device */
+    rt_err |= hal_serial_register(&serial4,
+        "serial4",
+        RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
+        &uart4);
 
 
     return rt_err;

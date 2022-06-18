@@ -18,7 +18,7 @@
 #include "hal/actuator/actuator.h"
 #include "ar1002_hal.h"
 
-// #define DRV_DBG(...) console_printf(__VA_ARGS__)
+// #define DRV_DBG(...) console_println(__VA_ARGS__)
 #define DRV_DBG(...)
 
 #define PWM_FREQ_50HZ  (50)
@@ -26,12 +26,12 @@
 #define PWM_FREQ_250HZ (250)
 #define PWM_FREQ_400HZ (400)
 
-#define MAX_PWM_OUT_CHAN      10             // AUX Out has 10 pwm channel
+#define MAX_PWM_OUT_CHAN      10            // AUX Out has 10 pwm channel
 #define PWM_DEFAULT_FREQUENCY PWM_FREQ_50HZ // pwm default frequqncy
 
 
-ENUM_HAL_PWM_NUM g_pwm_high_level[MAX_PWM_OUT_CHAN]; // high level of the pwm wave
-ENUM_HAL_PWM_NUM g_pwm_freq[MAX_PWM_OUT_CHAN];   // high level of the pwm wave
+uint32_t g_pwm_high_level[MAX_PWM_OUT_CHAN]; // high level of the pwm wave
+uint32_t g_pwm_freq[MAX_PWM_OUT_CHAN];   // high level of the pwm wave
 ENUM_HAL_PWM_NUM g_pwm_map[MAX_PWM_OUT_CHAN] = {    HAL_PWM_NUM0, HAL_PWM_NUM1, HAL_PWM_NUM2, HAL_PWM_NUM3, HAL_PWM_NUM4,
                                                     HAL_PWM_NUM5, HAL_PWM_NUM6, HAL_PWM_NUM7, HAL_PWM_NUM8, HAL_PWM_NUM9 };
 
@@ -44,15 +44,16 @@ void pwm_timer_init(void)
 {
 }
 
-
 rt_err_t __set_pwm_frequency(uint16_t freq)
 {
     if (freq < PWM_FREQ_50HZ || freq > PWM_FREQ_400HZ) {
         /* invalid frequency */
         return RT_EINVAL;
     }
-
-    memset(g_pwm_freq, freq, MAX_PWM_OUT_CHAN);
+    
+    for (rt_int32_t i = 0; i < MAX_PWM_OUT_CHAN; i++) {    
+        g_pwm_freq[i] = freq;
+	}
 
     rt_uint32_t pwm_period_us = 1* 1000000 / freq;
 
@@ -178,10 +179,11 @@ rt_err_t drv_pwm_init(void)
 {
     rt_err_t ret = RT_EOK;
 
-    /* init pwm setting */
-    memset(g_pwm_high_level, 1000, MAX_PWM_OUT_CHAN);
-    memset(g_pwm_freq, PWM_DEFAULT_FREQUENCY, MAX_PWM_OUT_CHAN);
-    
+    /* init pwm setting */    
+    for (rt_int32_t i = 0; i < MAX_PWM_OUT_CHAN; i++) {    
+        g_pwm_high_level[i] = 1000;
+        g_pwm_freq[i] = PWM_DEFAULT_FREQUENCY;
+	}
 
     /* init pwm gpio pin */
     pwm_gpio_init();
@@ -196,7 +198,7 @@ rt_err_t drv_pwm_init(void)
     }
 
     /* register actuator hal device */
-    ret = hal_actuator_register(&act_dev, "aux_out", RT_DEVICE_FLAG_RDWR, NULL);
+    ret = hal_actuator_register(&act_dev, "main_out", RT_DEVICE_FLAG_RDWR, NULL);
 
     return ret;
 }

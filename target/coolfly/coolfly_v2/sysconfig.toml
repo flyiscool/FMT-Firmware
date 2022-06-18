@@ -62,19 +62,19 @@ target = "COOLFLY_S1"
 #     channel = 6
 #     range = [1800,2000]
 
-# # Actuator Configuration
-# [actuator]
-#     [[actuator.devices]]
-#     protocol = "pwm"
-#     name = "main_out"
-#     freq = 400                  # pwm frequency in Hz
+# Actuator Configuration
+[actuator]
+    [[actuator.devices]]
+    protocol = "pwm"
+    name = "main_out"
+    freq = 400                  # pwm frequency in Hz
 
-#     [[actuator.devices]]
-#     protocol = "pwm"
-#     name = "aux_out"
-#     freq = 400                  # pwm frequency in Hz
+    [[actuator.devices]]
+    protocol = "pwm"
+    name = "aux_out"
+    freq = 400                  # pwm frequency in Hz
 
-#     [[actuator.mappings]]
-#     from = "control_out"
-#     to = "main_out"
-#     chan-map = [[1,2,3,4],[1,2,3,4]]
+    [[actuator.mappings]]
+    from = "control_out"
+    to = "main_out"
+    chan-map = [[1,2,3,4],[1,2,3,4]]

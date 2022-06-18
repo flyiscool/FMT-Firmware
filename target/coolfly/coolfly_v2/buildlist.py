@@ -29,7 +29,7 @@ HAL = [
     'accel/*.c',
     'mag/*.c',
     'barometer/*.c',
-    'fmtio_dev/*.c',
+    # 'fmtio_dev/*.c',
     'motor/*.c',
     'actuator/*.c',
     'rc/*.c',
@@ -58,7 +58,7 @@ MODULES = [
     'workqueue/*.c',
     'math/*.c',
     'filter/*.c',
-    'fmtio/*.c',
+    # 'fmtio/*.c',
     'task_manager/*.c',
     'pmu/*.c',
 ]
@@ -71,7 +71,7 @@ TASKS = [
     'simple/*.c',
     'comm/*.c',
     'logger/*.c',
-    'fmtio/*.c',
+    # 'fmtio/*.c',
     'status/*.c',
     'vehicle/multicopter/*.c',
 ]

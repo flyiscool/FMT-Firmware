@@ -231,8 +231,6 @@ HAL_RET_T HAL_SYS_CTL_Init(STRU_HAL_SYS_CTL_CONFIG *pst_usrHalSysCtlCfg)
     HAL_NVIC_SetPriorityGrouping(HAL_NVIC_PRIORITYGROUP_5);
     
 
-     
-
     // Default clock: CPU0 and CPU1 200M; CPU2 166M.
     HAL_SYS_CTL_SetCpuClk(pst_halSysCtlCfg->u16_cpu0cpu1Clk, pst_halSysCtlCfg->u16_cpu2Clk);
 
@@ -259,8 +257,8 @@ HAL_RET_T HAL_SYS_CTL_Init(STRU_HAL_SYS_CTL_CONFIG *pst_usrHalSysCtlCfg)
     // // Delay to PLL stable
     // SysTicks_DelayMS(10);
 
-    // CPUINFO_ICacheEnable(pst_halSysCtlCfg->u8_icacheEnable);
-    // CPUINFO_DCacheEnable(pst_halSysCtlCfg->u8_dcacheEnable);
+    CPUINFO_ICacheEnable(pst_halSysCtlCfg->u8_icacheEnable);
+    CPUINFO_DCacheEnable(pst_halSysCtlCfg->u8_dcacheEnable);
     
    
     // test_led();

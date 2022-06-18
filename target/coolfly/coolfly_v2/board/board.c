@@ -78,7 +78,7 @@
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
 static const struct dfs_mount_tbl mnt_table[] = {
-    // { "sd0", "/", "elm", 0, NULL },
+    { "mtdblk0", "/", "elm", 0, NULL },
     { NULL } /* NULL indicate the end */
 };
 
@@ -271,54 +271,7 @@ void Error_Handler(void)
   */
 void SystemClock_Config(void)
 {
-    // LL_FLASH_SetLatency(LL_FLASH_LATENCY_7);
-    // while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_7) {
-    // }
-    // LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
-    // LL_PWR_EnableOverDriveMode();
-    // LL_RCC_HSE_Enable();
-
-    // /* Wait till HSE is ready */
-    // while (LL_RCC_HSE_IsReady() != 1) {
-    // }
-    // LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 216, LL_RCC_PLLP_DIV_2);
-    // LL_RCC_PLL_ConfigDomain_48M(LL_RCC_PLLSOURCE_HSE, LL_RCC_PLLM_DIV_8, 216, LL_RCC_PLLQ_DIV_9);
-    // LL_RCC_PLL_Enable();
-
-    // /* Wait till PLL is ready */
-    // while (LL_RCC_PLL_IsReady() != 1) {
-    // }
-    // LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-    // LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_4);
-    // LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
-    // LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
-
-    // /* Wait till System clock is ready */
-    // while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) {
-    // }
-    // LL_SetSystemCoreClock(216000000);
-
-    // /* Update the time base */
-    // if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK) {
-    //     Error_Handler();
-    // }
-    // LL_RCC_SetCK48MClockSource(LL_RCC_CK48M_CLKSOURCE_PLL);
-    // LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_PLL);
-    // LL_RCC_SetSDMMCClockSource(LL_RCC_SDMMC1_CLKSOURCE_PLL48CLK);
-    // LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2);
-    // LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1);
-    // LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1);
-    // LL_RCC_SetUSARTClockSource(LL_RCC_USART6_CLKSOURCE_PCLK2);
-    // LL_RCC_SetUARTClockSource(LL_RCC_UART7_CLKSOURCE_PCLK1);
-    // LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1);
-    // LL_RCC_SetI2CClockSource(LL_RCC_I2C2_CLKSOURCE_PCLK1);
-    // LL_RCC_SetI2CClockSource(LL_RCC_I2C3_CLKSOURCE_PCLK1);
-    // LL_RCC_SetI2CClockSource(LL_RCC_I2C4_CLKSOURCE_PCLK1);
 }
-
-
-
-
 
 
 void cf_delay_ms(uint32_t num)
@@ -330,7 +283,6 @@ void cf_delay_ms(uint32_t num)
         ;
     }
 }
-
 
 void test_led(void)
 {
@@ -404,7 +356,6 @@ void bsp_early_initialize(void)
 
     // SystemClock_Config();
 
-
     /* usart driver init */
     RT_CHECK(drv_usart_init());
 
@@ -429,23 +380,19 @@ void bsp_early_initialize(void)
 
     /* spi driver init */
     RT_CHECK(drv_spi_init());
-
     console_println("drv_spi_init~");
 
 
     /* i2c driver init */
     RT_CHECK(drv_i2c_init());
-
     console_println("drv_i2c_init");
 
     /* pwm driver init */
     RT_CHECK(drv_pwm_init());
-
     console_println("drv_pwm_init");
 
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
-
     console_println("sys_stat_init");
 }
 
@@ -471,6 +418,9 @@ void bsp_initialize(void)
     /* init storage devices */
     // RT_CHECK(drv_sdio_init());
     // console_println("drv_sdio_init~");
+
+    /* fram init */
+    RT_CHECK(drv_ramtron_init("spi0_dev1"));
 
     /* init file system */
     FMT_CHECK(file_manager_init(mnt_table));
@@ -513,7 +463,7 @@ void bsp_initialize(void)
     }
     else
     {
-         console_println("drv_ist8310_init i2c2_dev1~");
+        console_println("drv_ist8310_init i2c2_dev1~");
     }
    
 

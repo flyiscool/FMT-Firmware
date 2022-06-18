@@ -41,10 +41,42 @@ void task_local_entry(void* parameter)
     led_init(r_pin_mode);
     LED_ON(HAL_GPIO_NUM61);
 
+    // sys_msleep(5000);
+    // // test_printf_sector0();
+
+    // rt_device_t dev_id = rt_device_find("mtdblk0");
+    // if(dev_id == NULL)
+    // {
+    //     console_println("can't find mtdblk0");
+    // }
+    // else
+    // {
+    //     console_println("find mtd success~ ");
+
+    //     if(rt_device_open(dev_id, RT_DEVICE_OFLAG_RDWR) != RT_EOK)
+    //     {
+    //         console_println("mtd open failed ");
+    //     }
+
+    //     console_println("open mtd success~ ");
+    
+    // }
+
 
     while (1) {
         LED_TOGGLE(HAL_GPIO_NUM61);
         sys_msleep(1000);
+
+        // rt_device_read(dev_id, 20, buf, 1);
+
+        // for(int m = 0; m<512; m++)
+        // {
+        //     buf[m] = m;
+        //     console_println(" buf[%d] = %d ", m, buf[m]);
+        // }   
+
+        // rt_device_write(dev_id, 20, buf, 1);
+
     }
 }
 

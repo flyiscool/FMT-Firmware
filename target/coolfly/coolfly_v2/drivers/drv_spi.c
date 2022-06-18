@@ -17,6 +17,10 @@
 #include "hal/spi/spi.h"
 #include "ar1002_hal.h"
 
+#define SPI0_CS1_Pin       HAL_GPIO_NUM70
+#define SPI2_CS1_Pin       HAL_GPIO_NUM72
+
+#define SPI5_CS1_Pin       HAL_GPIO_NUM50
 
 
 struct ar1002_spi_bus {
@@ -24,6 +28,9 @@ struct ar1002_spi_bus {
     ENUM_SPI_COMPONENT SPI;
 };
 
+struct ar1002_spi_cs {
+    ENUM_HAL_GPIO_NUM GPIO_Pin;
+};
 
 /**
  * @brief Configure spi device
@@ -50,60 +57,63 @@ static rt_uint32_t transfer(struct rt_spi_device* device, struct rt_spi_message*
 {
     struct ar1002_spi_bus* ar1002_spi_bus = (struct ar1002_spi_bus*)device->bus;
     ENUM_SPI_COMPONENT SPI = ar1002_spi_bus->SPI;
+    struct rt_spi_configuration* config = &device->config;
+    struct ar1002_spi_cs* ar1002_spi_cs = device->parent.user_data;
+    
+    HAL_RET_T ret = HAL_OK;
 
-    struct rt_spi_message* message_1;
-    struct rt_spi_message* message_2;
-
-
-    // rt_uint32_t size = message->length;
-    // console_println("SPI = %d  size = %d ",SPI, size);
-
-    if(message->next == NULL)   //
+    if(config->data_width > 8) 
     {
-        message_1 = message;
-        // case  juset send one package
-        if((message->cs_take == 1) && (message->cs_release == 1) )
-        {
-            HAL_RET_T ret = HAL_SPI_MasterWriteRead(SPI, (uint8_t *)message_1->send_buf, message_1->length, (uint8_t *)message_1->recv_buf, 0, 100);
-            if(ret != HAL_OK)
-            {
-                console_println("!!! case  juset send one package error");
-                return 0;
-            }
-            else
-            {
-                return message->length;
-            }
-        }
-    }
-    else
-    {
-        message_1 = message;
-        message_2 = message->next;
+        console_println("-----------------SPI!!!! %D BIT---------------------",config->data_width);
     }
 
-    // case  send and recv 
-    if((message_1->cs_take == 1) && (message_1->cs_release == 0) 
-    && (message_2->cs_take == 0) && (message_2->cs_release == 1) )
+
+    /* take CS */
+    if (message->cs_take) {
+        HAL_GPIO_SetPin(ar1002_spi_cs->GPIO_Pin, HAL_GPIO_PIN_RESET);
+    }
+
+    if((message->send_buf != NULL) && (message->recv_buf == NULL))  // write 
     {
-        HAL_RET_T ret = HAL_SPI_MasterWriteRead(SPI, (uint8_t *)message_1->send_buf, message_1->length, (uint8_t *)message_2->recv_buf, message_2->length, 100);
+        // console_println("only write");
+        ret = HAL_SPI_MasterWriteRead(SPI, 
+                message->send_buf,
+                message->length,
+                NULL,
+                0,
+                100);
+
         if(ret != HAL_OK)
         {
-            console_println("!!! // case  send and recv   error");
-            return 0;
+            console_println(" SPI WRITE FAILED!!!");
         }
-        else
-        {
-            return message_2->length;
-        }
-    }else if((message_1->cs_take == 1) && (message_1->cs_release == 0) 
-        && (message_2->cs_take == 1) && (message_2->cs_release == 1) )
+    }
+    else if((message->send_buf == NULL) && (message->recv_buf != NULL))  // read 
     {
-        console_println("LIUWEI TODO // case  send and send   error");
+        // console_println("only read");
+        HAL_SPI_MasterWriteRead(SPI, 
+                NULL,
+                0,
+                message->recv_buf,
+                message->length,
+                100);
+        if(ret != HAL_OK)
+        {
+            console_println(" SPI READ FAILED!!!");
+        }
+    }
+    else if((message->send_buf != NULL) && (message->recv_buf != NULL))  // read 
+    {
+        console_println("write & read");
+        console_println(" SPI write & read FAILED!!!");
     }
     else
     {
-        console_println("2---case spi no defined");
+        console_println("(message->send_buf == NULL) && (message->recv_buf == NULL)");    
+    }
+    /* release CS */
+    if (message->cs_release) {
+        HAL_GPIO_SetPin(ar1002_spi_cs->GPIO_Pin, HAL_GPIO_PIN_SET);
     }
 
     return message->length;
@@ -125,8 +135,20 @@ static struct rt_spi_ops ar1002_spi_ops = {
 static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
     struct ar1002_spi_bus* ar1002_spi,
     const char* spi_bus_name)
-{
-    if (SPI == SPI_2) {
+{   
+    if (SPI == SPI_0) {
+        ar1002_spi->SPI = SPI_0;
+
+        /* SPI2 configure */
+    	STRU_HAL_SPI_INIT st_spiInitInfo = {
+    		.u16_halSpiBaudr = 9,
+    		.e_halSpiPolarity = HAL_SPI_POLARITY_HIGH,
+    		.e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
+    	};
+
+    	HAL_SPI_MasterInit(SPI_0, &st_spiInitInfo);
+
+    } else if (SPI == SPI_2) {
         ar1002_spi->SPI = SPI_2;
 
         /* SPI2 configure */
@@ -166,6 +188,30 @@ rt_err_t drv_spi_init(void)
 {
     rt_err_t ret;
 
+
+    /* register SPI bus */
+    static struct ar1002_spi_bus ar1002_spi0;
+
+    /* register SPI0 bus */
+    ret = ar1002_spi_register(SPI_0, &ar1002_spi0, "spi0");
+    if (ret != RT_EOK) {
+        return ret;
+    }
+
+    /* attach spi_device_1 to spi0 */
+    {
+        static struct rt_spi_device rt_spi_device_1;
+        static struct ar1002_spi_cs ar1002_spi_cs_1;
+        ar1002_spi_cs_1.GPIO_Pin = SPI0_CS1_Pin;
+
+        HAL_GPIO_OutPut(ar1002_spi_cs_1.GPIO_Pin);
+        HAL_GPIO_SetPin(ar1002_spi_cs_1.GPIO_Pin, HAL_GPIO_PIN_SET);
+        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi0_dev1", "spi0", (void*)&ar1002_spi_cs_1);
+        if (ret != RT_EOK) {
+            return ret;
+        }
+    }
+
     /* register SPI bus */
     static struct ar1002_spi_bus ar1002_spi2;
 
@@ -176,11 +222,16 @@ rt_err_t drv_spi_init(void)
         return ret;
     }
 
-    /* attach spi_device_1 to spi1 */
+    /* attach spi_device_1 to spi2 */
     {
         static struct rt_spi_device rt_spi_device_1;
+        static struct ar1002_spi_cs ar1002_spi_cs_1;
+        ar1002_spi_cs_1.GPIO_Pin = SPI2_CS1_Pin;
 
-        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi2_dev1", "spi2", RT_NULL);
+        HAL_GPIO_OutPut(ar1002_spi_cs_1.GPIO_Pin);
+        HAL_GPIO_SetPin(ar1002_spi_cs_1.GPIO_Pin, HAL_GPIO_PIN_SET);
+        
+        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi2_dev1", "spi2", (void*)&ar1002_spi_cs_1);
         if (ret != RT_EOK) {
             return ret;
         }
@@ -195,21 +246,20 @@ rt_err_t drv_spi_init(void)
         return ret;
     }
 
-    /* attach spi_device_1 to spi1 */
+    /* attach spi_device_1 to spi5 */
     {
         static struct rt_spi_device rt_spi_device_1;
+        static struct ar1002_spi_cs ar1002_spi_cs_1;
+        ar1002_spi_cs_1.GPIO_Pin = SPI5_CS1_Pin;
 
-        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi5_dev1", "spi5", RT_NULL);
+        HAL_GPIO_OutPut(ar1002_spi_cs_1.GPIO_Pin);
+        HAL_GPIO_SetPin(ar1002_spi_cs_1.GPIO_Pin, HAL_GPIO_PIN_SET);
+        
+        ret = rt_spi_bus_attach_device(&rt_spi_device_1, "spi5_dev1", "spi5", (void*)&ar1002_spi_cs_1);
         if (ret != RT_EOK) {
             return ret;
         }
     }
-
-
-
-
-
-
 
 
     return RT_EOK;

@@ -28,8 +28,8 @@
 #include "driver/barometer/spl06.h"
 // #include "driver/barometer/ms5611.h"
 #include "driver/gps/gps_m8n.h"
-#include "driver/imu/bmi055.h"
-#include "driver/imu/icm20689.h"
+// #include "driver/imu/bmi055.h"
+// #include "driver/imu/icm20689.h"
 #include "driver/imu/icm20600.h"
 // #include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
@@ -439,8 +439,8 @@ void bsp_initialize(void)
     console_println("drv_adc_init~");
 
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
-    drv_ncp5623c_init("i2c3_dev1");
-    console_println("drv_ncp5623c_init i2c3_dev1~");
+    // drv_ncp5623c_init("i2c3_dev1");
+    // console_println("drv_ncp5623c_init i2c3_dev1~");
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
     FMT_CHECK(advertise_sensor_imu(0));

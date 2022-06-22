@@ -320,7 +320,7 @@ void DMA_init(void)
 
         /* register the irq handler */
         reg_IrqHandle(DMA_INTR_N_VECTOR_NUM, DMA_irqISR, NULL);
-        NVIC_SetPriority(DMA_INTR_N_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_DMA_DEFAULT,0));
+        NVIC_SetPriority(DMA_INTR_N_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_DMA_DEFAULT,0));
         NVIC_EnableIRQ(DMA_INTR_N_VECTOR_NUM);
     }
 }

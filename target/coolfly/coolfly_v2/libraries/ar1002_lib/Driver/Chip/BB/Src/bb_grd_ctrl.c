@@ -292,7 +292,7 @@ void BB_GRD_start(void)
     BB_WriteRegMask(PAGE2, MCS_INDEX_MODE,context.enable_non_lbt ? 0x40 : 0x00,0x40);
 
     reg_IrqHandle(BB_TX_ENABLE_VECTOR_NUM, wimax_vsoc_tx_isr, NULL);
-    NVIC_SetPriority(BB_TX_ENABLE_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_BB_TX,0));
+    NVIC_SetPriority(BB_TX_ENABLE_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_BB_TX,0));
     NVIC_EnableIRQ(BB_TX_ENABLE_VECTOR_NUM);
     PWR_CTRL_Init(pstru_pwr_ctrl_cfg);
 	
@@ -1531,7 +1531,7 @@ static void Grd_Timer2_7_Init(void)
     grd_timer2_7.ctrl |= TIME_ENABLE | USER_DEFINED;
     TIM_RegisterTimer(grd_timer2_7, 1250); //1.25ms
     reg_IrqHandle(TIMER_INTR27_VECTOR_NUM, Grd_TIM2_7_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR27_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER01,0));
+    NVIC_SetPriority(TIMER_INTR27_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER01,0));
 }
 
 void Grd_Timer2_6_Init(void)
@@ -1543,7 +1543,7 @@ void Grd_Timer2_6_Init(void)
     
     TIM_RegisterTimer(grd_timer2_6, 3500); //2.5s
     reg_IrqHandle(TIMER_INTR26_VECTOR_NUM, Grd_TIM2_6_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR26_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER00,0));
+    NVIC_SetPriority(TIMER_INTR26_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER00,0));
 }
 
 static void Grd_Timer2_3_Init(void)
@@ -1551,14 +1551,14 @@ static void Grd_Timer2_3_Init(void)
     TIM_RegisterTimer(timer2_3, 200000);
 
     reg_IrqHandle(TIMER_INTR23_VECTOR_NUM, Grd_TIM2_3_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR23_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_BB_TX,0));
+    NVIC_SetPriority(TIMER_INTR23_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_BB_TX,0));
 }
 static void Grd_Timer2_2_Init(void)
 {
     TIM_RegisterTimer(timer2_2, 200000);
 
     reg_IrqHandle(TIMER_INTR22_VECTOR_NUM, Grd_TIM2_2_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR22_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_BB_TX,0));
+    NVIC_SetPriority(TIMER_INTR22_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_BB_TX,0));
 }
 static void grd_Timer2_5_Init(void)
 {
@@ -1570,7 +1570,7 @@ static void grd_Timer2_5_Init(void)
     TIM_RegisterTimer(grd_timer2_5, 8000);
 
     reg_IrqHandle(TIMER_INTR25_VECTOR_NUM, Grd_TIM2_5_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR25_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER00,0));
+    NVIC_SetPriority(TIMER_INTR25_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER00,0));
 }
 
 //=====================================Grd RC funcions =====

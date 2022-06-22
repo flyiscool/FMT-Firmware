@@ -182,7 +182,7 @@ HAL_RET_T HAL_GPIO_RegisterInterrupt(ENUM_HAL_GPIO_NUM e_gpioPin,
     
     GPIO_Intr_SetPinIntrPol(e_gpioPin, e_polarity);   
     
-    NVIC_SetPriority(GPIO_INTR_N0_VECTOR_NUM + (e_gpioPin>>5), NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_GPIO_DEFAULT,0));
+    NVIC_SetPriority(GPIO_INTR_N0_VECTOR_NUM + (e_gpioPin>>5), NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_GPIO_DEFAULT,0));
     
     GPIO_Intr_ClearIntr(e_gpioPin);
     

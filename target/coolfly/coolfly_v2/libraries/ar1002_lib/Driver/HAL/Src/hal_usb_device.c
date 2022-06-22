@@ -49,12 +49,12 @@ void HAL_USB_InitDevice(ENUM_HAL_USB_PORT e_usbPort, uint8_t u8_DeviceMode)
     if (HAL_USB_PORT_0 == e_usbPort)
     {
         reg_IrqHandle(OTG_INTR0_VECTOR_NUM, USB_LL_OTG0_IRQHandler, NULL);
-        NVIC_SetPriority(OTG_INTR0_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_OTG_INITR0,0));
+        NVIC_SetPriority(OTG_INTR0_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_OTG_INITR0,0));
     }
     else if (HAL_USB_PORT_1 == e_usbPort)
     {
         reg_IrqHandle(OTG_INTR1_VECTOR_NUM, USB_LL_OTG1_IRQHandler, NULL);
-        NVIC_SetPriority(OTG_INTR1_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_OTG_INITR1,0));
+        NVIC_SetPriority(OTG_INTR1_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_OTG_INITR1,0));
     }
     else
     {

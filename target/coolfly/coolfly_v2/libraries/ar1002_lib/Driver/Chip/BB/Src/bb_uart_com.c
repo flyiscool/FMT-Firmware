@@ -373,7 +373,7 @@ void BB_ComInit(BBCallBack func,uint8_t aes_off_flag)
     }
     reg_IrqHandle(VIDEO_UART10_INTR_VECTOR_NUM, UART_IntrSrvc, NULL);
     UART_RegisterUserRxHandler(BBCOM_UART_INDEX, BB_UARTComRecvDataHandler);
-    NVIC_SetPriority(VIDEO_UART10_INTR_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_VIDEO_UART10,0));
+    NVIC_SetPriority(VIDEO_UART10_INTR_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_VIDEO_UART10,0));
     NVIC_EnableIRQ(VIDEO_UART10_INTR_VECTOR_NUM);
     BB_JudgeLockStatus = func;
 

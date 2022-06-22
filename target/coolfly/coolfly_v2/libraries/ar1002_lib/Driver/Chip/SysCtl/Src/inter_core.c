@@ -97,7 +97,7 @@ static void InterCore_TriggerIRQ0(void)
 
 static void InterCore_EnableBacktraceIRQ1(void)
 {
-    NVIC_SetPriority(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,0,0));
+    NVIC_SetPriority(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,0,0));
     NVIC_EnableIRQ(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM);
 }
 
@@ -130,19 +130,19 @@ void InterCore_Init(void)
     // Init the SRAM data share buffer
     MPU_SetUp();
 
-    // volatile INTER_CORE_MSG_TYPE* msgPtr = (INTER_CORE_MSG_TYPE*)INTER_CORE_MSG_SHARE_MEMORY_BASE_ADDR;
-    // memset((void*)msgPtr, 0, sizeof(INTER_CORE_MSG_TYPE)*INTER_CORE_MSG_SHARE_MEMORY_NUMBER);
-    // InterCore_CopyConfigureFormFlashToSRAM();
-    // // Interrupt enable
-    // Timer2_4_Init();
-    // reg_IrqHandle(TIMER_INTR24_VECTOR_NUM, InterCore_IRQ0Handler, NULL);
-    // NVIC_SetPriority(TIMER_INTR24_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_GLOBAL2_INTR_VSOC0,0));
-    // NVIC_EnableIRQ(TIMER_INTR24_VECTOR_NUM);
+    volatile INTER_CORE_MSG_TYPE* msgPtr = (INTER_CORE_MSG_TYPE*)INTER_CORE_MSG_SHARE_MEMORY_BASE_ADDR;
+    memset((void*)msgPtr, 0, sizeof(INTER_CORE_MSG_TYPE)*INTER_CORE_MSG_SHARE_MEMORY_NUMBER);
+    InterCore_CopyConfigureFormFlashToSRAM();
+    // // // Interrupt enable
+    Timer2_4_Init();
+    reg_IrqHandle(TIMER_INTR24_VECTOR_NUM, InterCore_IRQ0Handler, NULL);
+    NVIC_SetPriority(TIMER_INTR24_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_GLOBAL2_INTR_VSOC0,0));
+    NVIC_EnableIRQ(TIMER_INTR24_VECTOR_NUM);
 
-    // if (ENUM_CPU0_ID == CPUINFO_GetLocalCpuId())
-    // {
-    //     InterCore_EnableBacktraceIRQ1();
-    // }
+    if (ENUM_CPU0_ID == CPUINFO_GetLocalCpuId())
+    {
+        InterCore_EnableBacktraceIRQ1();
+    }
 }
 
 uint8_t InterCore_SendMsg(INTER_CORE_CPU_ID dst, INTER_CORE_MSG_ID msg, uint8_t* buf, uint32_t length)

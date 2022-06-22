@@ -346,6 +346,10 @@ void bsp_early_initialize(void)
     /* init system heap */
     rt_system_heap_init((void*)SYSTEM_FREE_MEM_BEGIN, (void*)SYSTEM_FREE_MEM_END);
 
+
+
+    dlog_set_output_level(4);
+
     STRU_HAL_SYS_CTL_CONFIG *pst_cfg;
     HAL_SYS_CTL_GetConfig( &pst_cfg);
 
@@ -368,13 +372,18 @@ void bsp_early_initialize(void)
 
     /* systick driver init */
     RT_CHECK(drv_systick_init());
-
     console_println("drv_systick_init~");
 
     /* system time module init */
     FMT_CHECK(systime_init());
     console_println("systime_init~");
 
+
+    // Inter core SRAM init
+    InterCore_Init();
+    console_println("InterCore_Init~");
+    DLOG_Critical(" DLOG_Critical begin to used");
+    
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
     console_println("drv_gpio_init~");

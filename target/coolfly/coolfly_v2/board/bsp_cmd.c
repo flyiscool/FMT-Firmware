@@ -17,14 +17,17 @@
 
 #include "module/syscmd/syscmd.h"
 #include "ar1002_chip.h"
+#include "ar1002_hal.h"
 
 static int handle_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
 	printf("rebooting...\n");
+	printf(" coolfly will reboot, goodbye !~ \n");
+
 	sys_msleep(10);
 
-	NVIC_SystemReset();
-
+    HAL_GPIO_SetPin(HAL_GPIO_NUM74, HAL_GPIO_PIN_RESET);
+	
 	return 0;
 }
 

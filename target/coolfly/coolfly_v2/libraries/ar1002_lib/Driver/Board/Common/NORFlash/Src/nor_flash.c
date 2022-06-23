@@ -3,7 +3,6 @@
 #include <string.h>
 #include "data_type.h"
 #include "quad_spi_ctrl.h"
-#include "w25q128.h"
 #include "nor_flash.h"
 #include "debuglog.h"
 #include "mpu.h"
@@ -14,7 +13,7 @@
 #define             BOOT_UPGRADE_OPEN           1
 #define             BOOT_UPGRADE_CLOSE          0
 
-#define WP_CTRL_GPIO_NUM 105 //flash_chip WP_pin -> GPIO105 (c201d)
+#define WP_CTRL_GPIO_NUM 105 // no used
 
 struct spi_flash    g_norflash;
 uint32_t            g_protect_size = MIN_PROTECT_SIZE;
@@ -382,9 +381,6 @@ uint8_t NOR_FLASH_EraseSector(uint32_t flash_start_addr)
 {
     uint32_t sector_size = 0x1000;
 
-#ifdef USE_WINBOND_SPI_NOR_FLASH
-    sector_size = W25Q128_SECTOR_SIZE;
-#endif
     if (FALSE == NOR_FLASH_Assert(flash_start_addr, sector_size))
     {
         return FALSE;
@@ -406,9 +402,6 @@ uint8_t NOR_FLASH_EraseBlock(uint32_t flash_start_addr)
 {
     uint32_t sector_size = 0x10000;
 
-#ifdef USE_WINBOND_SPI_NOR_FLASH
-    sector_size = W25Q128_BLOCK_SIZE;
-#endif
     if (FALSE == NOR_FLASH_Assert(flash_start_addr, sector_size))
     {
         return FALSE;

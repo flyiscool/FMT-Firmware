@@ -342,18 +342,14 @@ void bsp_early_initialize(void)
     // HAL_GPIO_OutPut(HAL_GPIO_NUM104);     // 
     // HAL_GPIO_SetPin(HAL_GPIO_NUM104, HAL_GPIO_PIN_SET);
 
-
     /* init system heap */
     rt_system_heap_init((void*)SYSTEM_FREE_MEM_BEGIN, (void*)SYSTEM_FREE_MEM_END);
-
-
 
     dlog_set_output_level(4);
 
     STRU_HAL_SYS_CTL_CONFIG *pst_cfg;
     HAL_SYS_CTL_GetConfig( &pst_cfg);
 
-   
    /* System clock initialization */
    /* ICATCH  DCATCH         */
     pst_cfg->u8_workMode = 0;
@@ -378,7 +374,7 @@ void bsp_early_initialize(void)
     FMT_CHECK(systime_init());
     console_println("systime_init~");
 
-
+    HAL_NV_Init();
     
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
@@ -387,7 +383,6 @@ void bsp_early_initialize(void)
     /* spi driver init */
     RT_CHECK(drv_spi_init());
     console_println("drv_spi_init~");
-
 
     /* i2c driver init */
     RT_CHECK(drv_i2c_init());
@@ -502,7 +497,6 @@ void bsp_initialize(void)
 
 void bsp_post_initialize(void)
 {
-
     console_println("bsp_post_initialize---------");
 
     /* toml system configure */

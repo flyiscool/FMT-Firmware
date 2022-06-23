@@ -24,22 +24,6 @@
 
 static systick_dev_t systick_dev;
 
-/**
- * This function will delay for some us.
- *
- * @param us the delay time of us
- */
-static void _delay_us(rt_uint32_t us)
-{
-    rt_uint32_t start, now, delta, reload, us_tick;
-    start = SysTick->VAL;
-    reload = SysTick->LOAD;
-    us_tick = systick_dev->ticks_per_us;
-    do {
-        now = SysTick->VAL;
-        delta = start >= now ? start - now : reload + start - now;
-    } while (delta < us_tick * us);
-}
 
 /* HAL exported functions */
 uint32_t HAL_GetTick(void)
@@ -54,7 +38,7 @@ void HAL_Delay(__IO uint32_t Delay)
         rt_thread_mdelay(Delay);
     } else {
         for (rt_uint32_t count = 0; count < Delay; count++) {
-            _delay_us(1000);
+            SysTicks_DelayUS(1000);
         }
     }
 }

@@ -326,7 +326,7 @@ typedef struct
 #define NV_FLASH_ADDR1        (NV_FLASH_ADDR2 - NV_FLASH_SIZE)
 
 
-#define NV_FLASH_FCT_SIZE       (32 * 1024)
+#define NV_FLASH_FCT_SIZE     (32 * 1024)
 
 #define NV_FLASH_FCT_START_ADDR_0        (NV_FLASH_ADDR1 - NV_FLASH_FCT_SIZE)
 

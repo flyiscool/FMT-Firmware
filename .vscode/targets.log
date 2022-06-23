@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jun 18 19:02:14 2022
+# Make data base, printed on Wed Jun 22 22:59:55 2022
 
 # Variables
 
@@ -32,6 +32,8 @@ XDG_SESSION_TYPE = x11
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# environment
+PLATFORMIO_IDE = 2.4.3
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -49,7 +51,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:56341
+JOURNAL_STREAM = 8:52139
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -58,6 +60,8 @@ MAKEFILE_LIST :=
 @F = $(notdir $@)
 # environment
 IM_CONFIG_PHASE = 1
+# environment
+QT_IM_MODULE = fcitx
 # environment
 USERNAME = fly
 # environment
@@ -71,7 +75,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /usr/bin/code
 # environment
-MANAGERPID = 1539
+MANAGERPID = 1546
 # environment
 CLUTTER_IM_MODULE = fcitx
 # environment
@@ -83,11 +87,11 @@ VSCODE_CWD = /home/fly/workspace/FMT-Firmware
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+NO_PROXY = 127.0.0.1
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/ubuntu:@/tmp/.ICE-unix/1758,unix/ubuntu:/tmp/.ICE-unix/1758
+SESSION_MANAGER = local/ubuntu:@/tmp/.ICE-unix/1765,unix/ubuntu:/tmp/.ICE-unix/1765
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -97,7 +101,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 2d639ae930e047fc8d3a8f05c7f222b6
+INVOCATION_ID = c02aef31a82a4d29a618da012a2d3542
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -121,7 +125,7 @@ RTT_EXEC_PATH = /opt/toolchain/gcc-arm-none-eabi-5_2-2015q4/bin
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1710
+SSH_AGENT_PID = 1719
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -153,19 +157,21 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # environment
 LC_TIME = en_US.UTF-8
 # environment
+PLATFORMIO_PATH = /home/fly/.platformio/python3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
 COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-QT_IM_MODULE = fcitx
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-211ed68c-92d1-46b6-897f-cdb2df7232a5.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3044ab68-c629-45b1-a0a5-e261bef445d8.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -183,7 +189,7 @@ LC_TELEPHONE = en_US.UTF-8
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /home/fly/workspace/FMT-Firmware/target
+OLDPWD = /home/fly/workspace
 # default
 .VARIABLES := 
 # automatic
@@ -215,6 +221,8 @@ LC_NUMERIC = en_US.UTF-8
 # automatic
 <F = $(notdir $<)
 # environment
+PLATFORMIO_CALLER = vscode
+# environment
 LC_MEASUREMENT = en_US.UTF-8
 # environment
 LC_ALL = C
@@ -223,11 +231,11 @@ QT4_IM_MODULE = fcitx
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d7eba2a4_888e_4815_b8ef_55ee4217f878
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/30738236_ec50_415c_af17_9a6c2e9c9305
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.4597
+GNOME_TERMINAL_SERVICE = :1.7223
 # default
 SUFFIXES := 
 # environment
@@ -247,9 +255,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 446037
+VSCODE_PID = 298827
 # variable set hash-table stats:
-# Load=118/1024=12%, Rehash=0, Collisions=19/140=14%
+# Load=122/1024=12%, Rehash=0, Collisions=21/144=15%
 
 # Pattern-specific Variable Values
 
@@ -270,6 +278,7 @@ VSCODE_PID = 446037
 # Not a target:
 all:
 #  Command line target.
+ 
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
@@ -278,7 +287,6 @@ all:
 Makefile:
 #  Implicit rule search has been done.
 #  File does not exist.
- 
 #  File has been updated.
 #  Failed to be updated.
 
@@ -316,6 +324,6 @@ GNUmakefile:
 # strcache performance: lookups = 31 / hit rate = 9%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Sat Jun 18 19:02:14 2022
+# Finished Make data base on Wed Jun 22 22:59:55 2022
 
  

@@ -28,12 +28,11 @@ path += [cwd + '/Driver/Board/Common/NORFlash/Inc']
 path += [cwd + '/Driver/Board/COOLFLY_S1_V2/Inc']
 
 
-src += Glob('Driver/Board/NORFlash/nor_flash.c')
-src += Glob('Driver/Board/NORFlash/w25q128.c')
+src += Glob('Driver/Board/Common/NORFlash/Src/nor_flash.c')
+src += Glob('Driver/Board/Common/NORFlash/Src/norflash_WPTable.c')
 
 src += Glob('Driver/Board/RF8003/Src/rf8003.c')
 src += Glob('Driver/Board/RF8003/Src/rf8003_init.c')
-
 
 
 # chip 
@@ -47,7 +46,7 @@ path += [cwd + '/Driver/Chip/SPI/Inc']
 path += [cwd + '/Driver/Chip/SRAM/Inc']
 path += [cwd + '/Driver/Chip/SysCtl/Inc']
 path += [cwd + '/Driver/Chip/UART/Inc']
-# path += [cwd + '/Driver/Chip/USB/Inc']
+
 
 
 src += Glob('Driver/Chip/DMA/Src/dma.c')

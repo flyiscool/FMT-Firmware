@@ -452,49 +452,6 @@ HAL_RET_T HAL_NV_Init(void)
 
     pst_nv->st_nvMng.u32_nvInitFlag = 0x23178546;
 
-#ifdef AR8020_MP_INFO_RECORD
-    *((uint32_t *)SRAM_MODULE_SHARE_POWER_OFFSET) = 0x00;
-
-    memset(pwr, 0x00, sizeof(pwr));
-    ret = NV_DataRead(0, pwr, 16);
-    if (ret != HAL_OK)
-      memset(pwr, 0x00, sizeof(pwr));
-
-    uint16_t               u16_msgId;
-    uint16_t               u16_msgLen = 0;
-    uint16_t               u16_chksum;
-    uint16_t               calc_chksum;
-    uint16_t               i;
-
-    if ((pwr[0] == 0xFF) && (pwr[1] == 0x5A))
-    {
-        u16_msgId = pwr[2] + (pwr[3] << 8);
-        u16_msgLen = pwr[6] + (pwr[7] << 8);
-        u16_chksum = pwr[8] + (pwr[9] << 8);
-
-        calc_chksum = 0;
-
-        for (i = 0; i < u16_msgLen; i++)
-        {
-            calc_chksum += pwr[10 + i];
-        }
-
-        if (calc_chksum == u16_chksum)
-        {
-            uint32_t power_offset = ((pwr[10] & 0x0FF) << 24) + ((pwr[11] & 0x0FF) << 16) + ((pwr[12] & 0x0FF) << 8) +  pwr[13];
-            DLOG_Critical("*************  power_offset value: %08X ***********" , power_offset);
-
-            *((uint32_t *)SRAM_MODULE_SHARE_POWER_OFFSET) = power_offset;
-        }
-        else
-        {
-            *((uint32_t *)SRAM_MODULE_SHARE_POWER_OFFSET) = 0x00;
-        }
-
-    }
-
-#endif
-
     return HAL_OK;
 }
 

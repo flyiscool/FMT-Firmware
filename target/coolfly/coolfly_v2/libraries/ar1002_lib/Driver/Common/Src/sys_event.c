@@ -57,18 +57,6 @@ static inline void disableInterrupts(void)
     s_ul_primask = local_irq_disable_save_flags();
 }
 
-__attribute__((weak)) void ar_osSysEventMsgQGet(void)
-{
-}
-
-__attribute__((weak)) void ar_osSysEventMsgQPut(void)
-{
-}
-
-__attribute__((weak)) uint8_t InterCore_SendMsg(INTER_CORE_CPU_ID dst, INTER_CORE_MSG_ID msg, uint8_t* buf, uint32_t length)
-{
-    DLOG_Error("InterCore_SendMsg function link is not right!");
-}
 
 /**
  * Internal functions about event node
@@ -453,8 +441,6 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
 
     event_id &= ~SYS_EVENT_INTER_CORE_MASK;
 
-    acquireSysEventList();
-
     sysEventNode = retrieveRegisteredEventNode(event_id, TRUE);
 
     if (sysEventNode != NULL)
@@ -482,9 +468,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
 {
     uint8_t retval = FALSE;
     STRU_RegisteredSysEvent_Node* sysEventNode;
-
-    acquireSysEventList();   
-
+ 
     sysEventNode = retrieveRegisteredEventNode(event_id, FALSE);
 
     if (sysEventNode != NULL)
@@ -601,8 +585,6 @@ uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter)
 {
     uint8_t retval = FALSE;
 
-    acquireSysEventList();
-
     retval = notifySysEvent(event_id, parameter);
 
     releaseSysEventList();
@@ -647,10 +629,6 @@ uint8_t SYS_EVENT_Process(void)
     uint8_t             retval = FALSE;
     static uint32_t     idle_event_ticks = 0;
 
-    ar_osSysEventMsgQGet();
-
-    acquireSysEventList();
-
     // DLOG_Info("12= %d \r\n \r\n",HAL_GetSysMsTick()-timestart);
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
@@ -676,9 +654,6 @@ uint8_t SYS_EVENT_Process(void)
                 // Launch the handler callback
                 // From this design, event handler callback can not register or unregister event handler.
                 tmp_handler(processNode->parameter);
-
-                // Apply system event resource again
-                acquireSysEventList();
 
                 // Continue to process the next handler of this event
                 handler_node = handler_node->next;
@@ -719,9 +694,6 @@ uint8_t SYS_EVENT_Process(void)
                 // Launch the handler callback
                 // From this design, event handler callback can not register or unregister event handler.
                 tmp_handler((void*)NULL);
-
-                // Apply system event resource again
-                acquireSysEventList();
 
                 // Continue to process the next handler of this event
                 handler_node = handler_node->next;

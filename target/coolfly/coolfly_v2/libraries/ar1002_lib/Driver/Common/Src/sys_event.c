@@ -552,10 +552,10 @@ static uint8_t notifySysEvent(uint32_t event_id, void* parameter)
     return retval;
 }
 
-static void notifySysEventIdle(void* parameter)
-{
-    ar_osSysEventMsgQPut();
-}
+// static void notifySysEventIdle(void* parameter)
+// {
+//     ar_osSysEventMsgQPut();
+// }
 
 /** 
  * @brief       API for different modules to notify an envent in ISR functions.
@@ -569,7 +569,7 @@ uint8_t SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter)
     uint8_t retval = notifySysEvent(event_id, parameter);
     if (retval)
     {
-        ar_osSysEventMsgQPut();
+        // ar_osSysEventMsgQPut();
     }
 }
 
@@ -591,7 +591,7 @@ uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter)
 
     if (retval)
     {
-        ar_osSysEventMsgQPut();
+        // ar_osSysEventMsgQPut();
     }
     
     return retval;
@@ -629,11 +629,9 @@ uint8_t SYS_EVENT_Process(void)
     uint8_t             retval = FALSE;
     static uint32_t     idle_event_ticks = 0;
 
-    // DLOG_Info("12= %d \r\n \r\n",HAL_GetSysMsTick()-timestart);
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
-
-    // DLOG_Info("13= %d \r\n \r\n",HAL_GetSysMsTick()-timestart);
+    printf("processNode = %08x \r\n", (uint32_t)processNode);
     if (processNode != NULL)
     {
         // Get the event node with same event ID as the nitification node 
@@ -663,7 +661,7 @@ uint8_t SYS_EVENT_Process(void)
         // Remove such notification node after it is processed
         retval = removeNotifiedSysEventNode(processNode);
     }
-    // DLOG_Info("14= %d \r\n \r\n",HAL_GetSysMsTick()-timestart);
+
     //check IDLE event, avoid idle event starve or too often
     {
         uint32_t now  = SysTicks_GetTickCount();
@@ -700,7 +698,6 @@ uint8_t SYS_EVENT_Process(void)
             }
         }        
     }
-    // DLOG_Info("15= %d \r\n \r\n",HAL_GetSysMsTick()-timestart);
     releaseSysEventList();
     return retval;
 }

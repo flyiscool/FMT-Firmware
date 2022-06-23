@@ -17,9 +17,13 @@
 #ifndef BOARD_DEVICE_H__
 #define BOARD_DEVICE_H__
 
-// Device Name
-#define FMTIO_DEVICE_NAME          "serial5"
+
+#define  VIDEO_RED_LED_GPIO       HAL_GPIO_NUM61
+#define  LINK_LED_GPIO            HAL_GPIO_NUM69
+#define  LNA_BYPASS_GPIO          HAL_GPIO_NUM75
+
 
 #define SPI1_SPEED_HZ 7000000
+
 
 #endif

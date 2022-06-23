@@ -363,8 +363,12 @@ void bsp_early_initialize(void)
     /* init console to enable console output */
     FMT_CHECK(console_init());
 
+
     console_println("------------------FMT Firmware---------------------");
     console_println("---------Build time: %s %s----------", __DATE__, __TIME__);
+
+    DLOG_Init(NULL, NULL, DLOG_SERVER_PROCESSOR);
+    DLOG_Process(NULL);
 
     /* systick driver init */
     RT_CHECK(drv_systick_init());
@@ -467,8 +471,7 @@ void bsp_initialize(void)
     if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
         console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
     }
-    else
-    {
+    else{
         console_println("mmc5983ma i2c2_dev2~");
     }
    

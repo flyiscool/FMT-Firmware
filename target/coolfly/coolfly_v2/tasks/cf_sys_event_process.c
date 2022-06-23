@@ -35,7 +35,10 @@ void task_sys_event_process_entry(void* parameter)
     // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USER_DEFINE, USER_Define_EventHandler);
 
     while (1) {
+
+        printf("SYS_EVENT_Process in \r\n");
         SYS_EVENT_Process();
+        printf("SYS_EVENT_Process out \r\n");
         sys_msleep(5);
     }
 }

@@ -81,32 +81,11 @@ static unsigned char s_u8_commandLine[128];
 static FUNC_CommandRun s_func_commandRun = NULL;
 static FUNC_LogSave s_sd_log_func_commandRun = NULL;
 
-__attribute__((weak)) ENUM_CPU_ID CPUINFO_GetLocalCpuId(void) 
-{
-    return *((volatile ENUM_CPU_ID*)CPU_ID_INFO_ADDRESS);
-}
+// ENUM_CPU_ID CPUINFO_GetLocalCpuId(void) 
+// {
+//     return *((volatile ENUM_CPU_ID*)CPU_ID_INFO_ADDRESS);
+// }
 
-__attribute__((weak)) void uart_putc(unsigned char index, char c)
-{
-}
-
-__attribute__((weak)) void uart_puts(unsigned char index, const char *s)
-{
-}
-
-__attribute__((weak)) void uart_putFifo(unsigned char index)
-{
-}
-
-__attribute__((weak)) int32_t Uart_WaitTillIdle(unsigned char index, uint32_t timeOut)
-{
-}
-
-__attribute__((weak)) HAL_RET_T HAL_UART_Init(ENUM_HAL_UART_COMPONENT e_uartComponent, 
-                        ENUM_HAL_UART_BAUDR e_uartBaudr, 
-                        HAL_UART_RxHandle pfun_rxFun)
-{
-}
 
 static unsigned char DLOG_CheckDebugBufInitStatus(void)
 {
@@ -141,237 +120,237 @@ static unsigned char DLOG_CheckDebugBufInitStatus(void)
     return 1;
 }
 
-static unsigned int DLOG_Input(char* buf, unsigned int byte_num)
-{
-    CHECK_DEBUG_BUF_INIT_STATUS();
+// static unsigned int DLOG_Input(char* buf, unsigned int byte_num)
+// {
+//     CHECK_DEBUG_BUF_INIT_STATUS();
 
-    if (CPUINFO_GetLocalCpuId() != s_u8_dlogServerCpuId)
-    {
-        return 0;
-    }
+//     if (CPUINFO_GetLocalCpuId() != s_u8_dlogServerCpuId)
+//     {
+//         return 0;
+//     }
 
-    unsigned int iByte = 0;
+//     unsigned int iByte = 0;
 
-    char* target = (char*)DEBUG_LOG_INPUT_BUF_WR_POS;
+//     char* target = (char*)DEBUG_LOG_INPUT_BUF_WR_POS;
 
-    // Copy to log buffer
-    while (iByte < byte_num)
-    {
-        *target = buf[iByte];
+//     // Copy to log buffer
+//     while (iByte < byte_num)
+//     {
+//         *target = buf[iByte];
 
-        if (target >= DEBUG_LOG_INPUT_BUF_TAIL)
-        {
-            target = DEBUG_LOG_INPUT_BUF_HEAD;
-        }
-        else
-        {
-            target++;
-        }
+//         if (target >= DEBUG_LOG_INPUT_BUF_TAIL)
+//         {
+//             target = DEBUG_LOG_INPUT_BUF_HEAD;
+//         }
+//         else
+//         {
+//             target++;
+//         }
 
-        iByte++;
-    }
+//         iByte++;
+//     }
 
-    DEBUG_LOG_INPUT_BUF_WR_POS = (uint32_t)target;
+//     DEBUG_LOG_INPUT_BUF_WR_POS = (uint32_t)target;
     
-    return iByte;
-}
+//     return iByte;
+// }
 
-uint32_t DLOG_GetChar(uint8_t *u8_uartRxBuf, uint8_t u8_uartRxLen)
-{
-    uint8_t i = 0;
-    char c = '\r';
-    char u8_commandTemp[64] = {0};
-    uint16_t u8_commandTempPos = 0;
-    while (u8_uartRxLen)
-    {
-        c = *(u8_uartRxBuf + i);
+// uint32_t DLOG_GetChar(uint8_t *u8_uartRxBuf, uint8_t u8_uartRxLen)
+// {
+//     uint8_t i = 0;
+//     char c = '\r';
+//     char u8_commandTemp[64] = {0};
+//     uint16_t u8_commandTempPos = 0;
+//     while (u8_uartRxLen)
+//     {
+//         c = *(u8_uartRxBuf + i);
 
-        if ((s_u8_commandPos < (sizeof(s_u8_commandLine) - 1)) &&
-            (u8_commandTempPos < (sizeof(u8_commandTemp) - 1)))
-        {
-            /* receive "enter" key */
-            if (c == '\r')
-            {
-                s_u8_commandLine[s_u8_commandPos++] = c;
-                u8_commandTemp[u8_commandTempPos++] = '\n';
-                /* if s_u8_commandLine is not empty, go to parse command */
-                if (s_u8_commandPos > 0)
-                {
-                    DLOG_Input(s_u8_commandLine, s_u8_commandPos);
-                    s_u8_commandPos = 0;
-                    memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
-                }
-            }
-            /* receive "backspace" key */
-            else if (c == '\b')
-            {
-                if (s_u8_commandPos > 1)
-                {
-                    s_u8_commandLine[--s_u8_commandPos] = '\0';
-                }
-                u8_commandTemp[u8_commandTempPos++] = '\b';
-                u8_commandTemp[u8_commandTempPos++] = ' ';
-                u8_commandTemp[u8_commandTempPos++] = '\b';
-            }
-            /* receive normal data */
-            else if ((c >= 32) && (c <= 126))
-            {
-                s_u8_commandLine[s_u8_commandPos++] = c;
-                u8_commandTemp[u8_commandTempPos++] = c;
-            }
-        }
-        else
-        {
-             s_u8_commandPos = 0;
-             memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
-             printf("!!! Too long input string one time, skip the operation !!!\n\n\n");
-        }
+//         if ((s_u8_commandPos < (sizeof(s_u8_commandLine) - 1)) &&
+//             (u8_commandTempPos < (sizeof(u8_commandTemp) - 1)))
+//         {
+//             /* receive "enter" key */
+//             if (c == '\r')
+//             {
+//                 s_u8_commandLine[s_u8_commandPos++] = c;
+//                 u8_commandTemp[u8_commandTempPos++] = '\n';
+//                 /* if s_u8_commandLine is not empty, go to parse command */
+//                 if (s_u8_commandPos > 0)
+//                 {
+//                     DLOG_Input(s_u8_commandLine, s_u8_commandPos);
+//                     s_u8_commandPos = 0;
+//                     memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
+//                 }
+//             }
+//             /* receive "backspace" key */
+//             else if (c == '\b')
+//             {
+//                 if (s_u8_commandPos > 1)
+//                 {
+//                     s_u8_commandLine[--s_u8_commandPos] = '\0';
+//                 }
+//                 u8_commandTemp[u8_commandTempPos++] = '\b';
+//                 u8_commandTemp[u8_commandTempPos++] = ' ';
+//                 u8_commandTemp[u8_commandTempPos++] = '\b';
+//             }
+//             /* receive normal data */
+//             else if ((c >= 32) && (c <= 126))
+//             {
+//                 s_u8_commandLine[s_u8_commandPos++] = c;
+//                 u8_commandTemp[u8_commandTempPos++] = c;
+//             }
+//         }
+//         else
+//         {
+//              s_u8_commandPos = 0;
+//              memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
+//              printf("!!! Too long input string one time, skip the operation !!!\n\n\n");
+//         }
 
 
-        i++;
-        u8_uartRxLen--;  
-    }
+//         i++;
+//         u8_uartRxLen--;  
+//     }
 
-    if (u8_commandTempPos != 0)
-    {
-        if (u8_commandTemp[u8_commandTempPos-1] != '\n')
-        {
-            u8_commandTemp[u8_commandTempPos] = DEBUG_LOG_END;
-            u8_commandTemp[u8_commandTempPos+1] = '\n';
-        }
+//     if (u8_commandTempPos != 0)
+//     {
+//         if (u8_commandTemp[u8_commandTempPos-1] != '\n')
+//         {
+//             u8_commandTemp[u8_commandTempPos] = DEBUG_LOG_END;
+//             u8_commandTemp[u8_commandTempPos+1] = '\n';
+//         }
         
-        printf("%s",u8_commandTemp);
-    }
-}
+//         printf("%s",u8_commandTemp);
+//     }
+// }
 
-static void DLOG_InputCommandInit(void)
-{
-    s_u8_commandPos = 0;
-    memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
+// static void DLOG_InputCommandInit(void)
+// {
+//     s_u8_commandPos = 0;
+//     memset(s_u8_commandLine, 0, sizeof(s_u8_commandLine));
     
-    HAL_UART_Init(DEBUG_LOG_UART_PORT, HAL_UART_BAUDR_460800, DLOG_GetChar);
-}
+//     HAL_UART_Init(DEBUG_LOG_UART_PORT, HAL_UART_BAUDR_460800, DLOG_GetChar);
+// }
 
-unsigned int DLOG_InputParse(char *buf, unsigned int byte_max)
-{
-    unsigned char u8_dataValid = 0;
-    unsigned int iByte = 0;
-    char **p_src;
+// unsigned int DLOG_InputParse(char *buf, unsigned int byte_max)
+// {
+//     unsigned char u8_dataValid = 0;
+//     unsigned int iByte = 0;
+//     char **p_src;
 
-    CHECK_DEBUG_BUF_INIT_STATUS();
+//     CHECK_DEBUG_BUF_INIT_STATUS();
 
-    ENUM_CPU_ID e_cpuID = CPUINFO_GetLocalCpuId();
+//     ENUM_CPU_ID e_cpuID = CPUINFO_GetLocalCpuId();
 
-    switch (e_cpuID)
-    {
-    case ENUM_CPU0_ID:
-        p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_0;
-        break;
-    case ENUM_CPU1_ID:
-        p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_1;
-        break;
-    case ENUM_CPU2_ID:
-        p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_2;
-        break;
-    default:
-        return 0;
-    }
+//     switch (e_cpuID)
+//     {
+//     case ENUM_CPU0_ID:
+//         p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_0;
+//         break;
+//     case ENUM_CPU1_ID:
+//         p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_1;
+//         break;
+//     case ENUM_CPU2_ID:
+//         p_src = &DEBUG_LOG_INPUT_BUF_RD_POS_2;
+//         break;
+//     default:
+//         return 0;
+//     }
 
-    char *src = *p_src;
+//     char *src = *p_src;
 
-    while (src != (char *)DEBUG_LOG_INPUT_BUF_WR_POS)
-    {
-        *buf++ = *src;
+//     while (src != (char *)DEBUG_LOG_INPUT_BUF_WR_POS)
+//     {
+//         *buf++ = *src;
 
-        if ((*src == '\n') || (*src == '\r'))
-        {
-            u8_dataValid = 1;
-        }
+//         if ((*src == '\n') || (*src == '\r'))
+//         {
+//             u8_dataValid = 1;
+//         }
 
-        if (src >= DEBUG_LOG_INPUT_BUF_TAIL)
-        {
-            src = DEBUG_LOG_INPUT_BUF_HEAD;
-        }
-        else
-        {
-            src++;
-        }
-        iByte++;
+//         if (src >= DEBUG_LOG_INPUT_BUF_TAIL)
+//         {
+//             src = DEBUG_LOG_INPUT_BUF_HEAD;
+//         }
+//         else
+//         {
+//             src++;
+//         }
+//         iByte++;
 
-        if ((iByte >= byte_max) || (u8_dataValid == 1))
-        {
-            break;
-        }
-    }
+//         if ((iByte >= byte_max) || (u8_dataValid == 1))
+//         {
+//             break;
+//         }
+//     }
 
-    *p_src = src;
+//     *p_src = src;
     
-    if (u8_dataValid == 1)
-    {
-        return iByte;
-    }
-    else
-    {
-        return 0;
-    }
-}
+//     if (u8_dataValid == 1)
+//     {
+//         return iByte;
+//     }
+//     else
+//     {
+//         return 0;
+//     }
+// }
 
-static void DLOG_InputCommandParse(char *cmd)
-{
-    unsigned char cmdIndex;
-    char *tempCommand[DLOG_INPUT_MAX_CMD_PAR];
+// static void DLOG_InputCommandParse(char *cmd)
+// {
+//     unsigned char cmdIndex;
+//     char *tempCommand[DLOG_INPUT_MAX_CMD_PAR];
 
-    cmdIndex = 0;
-    memset(tempCommand, 0, sizeof(tempCommand));
+//     cmdIndex = 0;
+//     memset(tempCommand, 0, sizeof(tempCommand));
 
-    while (cmdIndex < DLOG_INPUT_MAX_CMD_PAR)
-    {
-        /* skip the sapce */
-        while ((*cmd == ' ') || (*cmd == '\t'))
-        {
-            ++cmd;
-        }
+//     while (cmdIndex < DLOG_INPUT_MAX_CMD_PAR)
+//     {
+//         /* skip the sapce */
+//         while ((*cmd == ' ') || (*cmd == '\t'))
+//         {
+//             ++cmd;
+//         }
 
-        /* end of the cmdline */
-        if (*cmd == '\0')
-        {
-            break;
-        }
+//         /* end of the cmdline */
+//         if (*cmd == '\0')
+//         {
+//             break;
+//         }
 
-        tempCommand[cmdIndex++] = cmd;
+//         tempCommand[cmdIndex++] = cmd;
 
-        /* find the end of string */
-        while (*cmd && (*cmd != ' ') && (*cmd != '\t'))
-        {
-            ++cmd;
-        }
+//         /* find the end of string */
+//         while (*cmd && (*cmd != ' ') && (*cmd != '\t'))
+//         {
+//             ++cmd;
+//         }
 
-        /* no more command */
-        if (*cmd == '\0')
-        {
-            break;
-        }
+//         /* no more command */
+//         if (*cmd == '\0')
+//         {
+//             break;
+//         }
 
-        /* current cmd is end */
-        *cmd++ = '\0';
-    }
+//         /* current cmd is end */
+//         *cmd++ = '\0';
+//     }
 
-    if (s_func_commandRun != NULL)
-    {
-        s_func_commandRun(tempCommand, cmdIndex);
-    }
-}
+//     if (s_func_commandRun != NULL)
+//     {
+//         s_func_commandRun(tempCommand, cmdIndex);
+//     }
+// }
 
 void DLOG_Process(void* p)
 {
-    char commandBuf[80];
-    memset(commandBuf, 0, sizeof(commandBuf));
+    // char commandBuf[80];
+    // memset(commandBuf, 0, sizeof(commandBuf));
 
-    while(DLOG_InputParse(commandBuf, sizeof(commandBuf)))
-    {
-        DLOG_InputCommandParse(commandBuf);
-        memset(commandBuf, 0, sizeof(commandBuf));
-    }
+    // while(DLOG_InputParse(commandBuf, sizeof(commandBuf)))
+    // {
+    //     DLOG_InputCommandParse(commandBuf);
+    //     memset(commandBuf, 0, sizeof(commandBuf));
+    // }
 
     while(DLOG_Output(3000))
     {
@@ -403,7 +382,7 @@ void DLOG_Init(FUNC_CommandRun func_command,
         ((STRU_DebugLogOutputBufferHeader*)SRAM_DEBUG_LOG_OUTPUT_BUFFER_ST_ADDR_2)->output_buf_wr_pos = (uint32_t)DEBUG_LOG_OUTPUT_BUF_HEAD_2;
         ((STRU_DebugLogOutputBufferHeader*)SRAM_DEBUG_LOG_OUTPUT_BUFFER_ST_ADDR_2)->output_buf_init_flag = SRAM_DEBUG_BUF_INIT_FLAG;
 
-        DLOG_InputCommandInit();
+        // DLOG_InputCommandInit();
     }
     else
     {
@@ -413,9 +392,6 @@ void DLOG_Init(FUNC_CommandRun func_command,
         SCB_InvalidateDCache_by_Addr((uint32_t *)0x2000A000, 0x6000);
     }
 
-#ifdef USE_SYS_EVENT_TRIGGER_DEBUG_LOG_PROCESS
-//    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_IDLE, DLOG_Process);
-#endif
 }
 
 #ifdef DEBUG_LOG_USE_SRAM_OUTPUT_BUFFER
@@ -566,24 +542,16 @@ unsigned int DLOG_Output(unsigned int byte_num)
                 
                 if ((*tmpsrc != DEBUG_LOG_END))
                 {
-                    uart_puts(DEBUG_LOG_UART_PORT, tmp_buf);
-                    Uart_WaitTillIdle(DEBUG_LOG_UART_PORT, UART_DEFAULT_TIMEOUTMS);                    
-
-                    if (s_sd_log_func_commandRun != NULL)
-                    {
-                        tmp_len = strlen(tmp_buf);
-                        s_sd_log_func_commandRun(tmp_buf, tmp_len);
-                    }
-
-                    uart_putc(DEBUG_LOG_UART_PORT, '\r');
-                    Uart_WaitTillIdle(DEBUG_LOG_UART_PORT, UART_DEFAULT_TIMEOUTMS);
+                    console_write(tmp_buf, strlen(tmp_buf));
+             
+                    uint8_t c_test[1] = {'\r'};
+                    console_write(c_test, 1);
                     iByte += tmp_buf_index;
                 }
                 else
                 {   
                     tmp_buf[tmp_buf_index-1]='\0';
-                    uart_puts(DEBUG_LOG_UART_PORT, tmp_buf);
-                    Uart_WaitTillIdle(DEBUG_LOG_UART_PORT, UART_DEFAULT_TIMEOUTMS);
+                    console_write(tmp_buf, strlen(tmp_buf));
                     iByte += (tmp_buf_index-1);
                 }
                                

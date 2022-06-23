@@ -10,7 +10,7 @@ DRIVERS = [
     # 'barometer/ms5611.c',
     'barometer/spl06.c',
     'gps/gps_m8n.c',
-    'rgb_led/ncp5623c.c',
+    # 'rgb_led/ncp5623c.c',
     'mtd/ramtron.c',
 ]
 
@@ -20,7 +20,7 @@ HAL = [
     'pin/*.c',
     'serial/*.c',
     'systick/*.c',
-    'sd/*.c',
+    # 'sd/*.c',
     'usb/usbd_cdc.c',
     'spi/spi_core.c',
     'spi/spi_dev.c',

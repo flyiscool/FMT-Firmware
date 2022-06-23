@@ -16,71 +16,83 @@
 #include <firmament.h>
 
 #include "module/task_manager/task_manager.h"
-#include "led.h"
+#include "debuglog.h"
+#include "bb_led.h"
+#include "sys_event.h"
+#include "bb_match_id.h"
+#include "bb_led.h"
+#include "ar1002_hal.h"
+
+
+extern uint32_t flag_searchIdTimerStart;
+extern uint8_t vt_id_timer_start_flag;
+
+
+// void BB_skyRcIdEventHandler(void *p)
+// {
+//     STRU_SysEvent_DEV_BB_STATUS *pstru_status = (STRU_SysEvent_DEV_BB_STATUS *)p;
+//     uint8_t id[7];
+
+//     if(pstru_status->pid == BB_GET_RCID)
+//     {
+//         DLOG_Critical("Get rcid: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x,rssi_a %d, rssi_b %d", pstru_status->rcid[0], pstru_status->rcid[1], 
+//                                                                        pstru_status->rcid[2], pstru_status->rcid[3], pstru_status->rcid[4],
+//                                                                        pstru_status->agc1,pstru_status->agc2);
+//     }
+
+//     if (pstru_status->pid == BB_SKY_SEARCHING_STATES_CHAGE)
+//     {
+//         if (SKY_WAIT_VT_ID_MSG == pstru_status->e_sky_searchState)
+//         {
+//             DLOG_Warning("search id: SKY_WAIT_VT_ID_MSG");
+//         }
+//         else if (SKY_WAIT_RC_ID_MATCH == pstru_status->e_sky_searchState)
+//         {
+//             memcpy(id,pstru_status->vtid,2);
+//             memcpy(id+2,pstru_status->rcid,5);
+//             add_dev_info(id,pstru_status->agc1,pstru_status->agc2);
+            
+//             if(!vt_id_timer_start_flag)
+//             {
+//                 vt_id_timer_start_flag = 1;
+//                 HAL_TIMER_Start(GET_VT_ID_TIMER);
+//                 DLOG_Warning("got vtid: %dus timer start",GET_VT_ID_TIMEOUT);
+//             }
+//             //DLOG_Warning("search id: SKY_WAIT_RC_ID_MATCH");
+//         }
+//         else if (SKY_RC_SEARCH_END == pstru_status->e_sky_searchState)
+//         {
+//             DLOG_Warning("search id: SKY_RC_SEARCH_END rc id: %x %x %x %x %x; vt id: %x %x", 
+//                           pstru_status->rcid[0], pstru_status->rcid[1], pstru_status->rcid[2], pstru_status->rcid[3], pstru_status->rcid[4],
+//                           pstru_status->vtid[0], pstru_status->vtid[1]);
+
+//             if (flag_searchIdTimerStart)
+//             {
+//                 HAL_TIMER_Stop(SEARCH_ID_TIMER);
+//                 flag_searchIdTimerStart = 0;
+//                 vt_id_timer_start_flag = 0;
+//             }
+//         }
+//     }
+// }
 
 fmt_err_t task_local_init(void)
 {
+
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
     return FMT_EOK;
 }
-
-char** str = (char*[]) { "Hello", "C++", "World", NULL };
 
 void task_local_entry(void* parameter)
 {
     printf("Hello FMT! This is a local demo task.\n");
     printf("Hello ChuanYun! This is a local demo task.\n");
 
-    struct device_pin_mode r_pin_mode = { HAL_GPIO_NUM61, PIN_MODE_OUTPUT, PIN_OUT_TYPE_PP };
-    
-    static rt_device_t pin_dev;
-    /* configure led pin */
-    pin_dev = rt_device_find("pin");
-    RT_ASSERT(pin_dev != NULL);
-
-    RT_CHECK(rt_device_open(pin_dev, RT_DEVICE_OFLAG_RDWR));
-    led_init(r_pin_mode);
-    LED_ON(HAL_GPIO_NUM61);
-
-    // sys_msleep(5000);
-    // // test_printf_sector0();
-
-    // rt_device_t dev_id = rt_device_find("mtdblk0");
-    // if(dev_id == NULL)
-    // {
-    //     console_println("can't find mtdblk0");
-    // }
-    // else
-    // {
-    //     console_println("find mtd success~ ");
-
-    //     if(rt_device_open(dev_id, RT_DEVICE_OFLAG_RDWR) != RT_EOK)
-    //     {
-    //         console_println("mtd open failed ");
-    //     }
-
-    //     console_println("open mtd success~ ");
-    
-    // }
-
-
     while (1) {
-        LED_TOGGLE(HAL_GPIO_NUM61);
-
         // sky_led_video_process();
-        // led_link_process();
+        led_link_process();
         DLOG_Process(NULL);
         sys_msleep(10);
-
-        // rt_device_read(dev_id, 20, buf, 1);
-
-        // for(int m = 0; m<512; m++)
-        // {
-        //     buf[m] = m;
-        //     console_println(" buf[%d] = %d ", m, buf[m]);
-        // }   
-
-        // rt_device_write(dev_id, 20, buf, 1);
-
     }
 }
 

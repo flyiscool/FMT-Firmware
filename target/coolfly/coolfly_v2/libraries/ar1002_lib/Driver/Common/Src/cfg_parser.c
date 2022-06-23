@@ -16,20 +16,10 @@ static uint8_t CFGBIN_CheckMd5Valid(STRU_cfgBin *ptr_cfg)
     STRU_cfgBin *p_cfghead = ptr_cfg;
     if ( p_cfghead->headflag != CFG_DATA_HEAD_FLAG)
     {
-        DLOG_Error("head Fail \r\n");
+        BOOT_Printf("head Fail \r\n");
         return 0;
     }
 
-#if 0
-    uint8_t *ptr_data = (uint8_t *)(ptr_cfg + 1);   //STRU_cfgBin is 4byte aligned
-    MD5Check(ptr_data, p_cfghead->dataSize, md5);
-
-    if (0 != memcmp( (void *)md5, (void *)p_cfghead->dataMd5, 16))
-    {
-        DLOG_Error("md5 Fail");
-        return 0;
-    }
-#endif
     return 1;
 }
 
@@ -65,7 +55,7 @@ STRU_cfgNode * CFGBIN_GetNode(STRU_cfgBin *ptr_cfg, uint32_t u32_nodeId)
 
         if (ptr_node->nodeId == u32_nodeId)
         {
-            DLOG_Info("find Node 0x%x", u32_nodeId);
+            BOOT_Printf("find Node 0x%x \r\n", u32_nodeId);
             return ptr_node;
         }
 
@@ -79,7 +69,7 @@ STRU_cfgNode * CFGBIN_GetNode(STRU_cfgBin *ptr_cfg, uint32_t u32_nodeId)
         ptr_node =  (STRU_cfgNode *)((uint8_t *)ptr_node  + nodesize); //move 1 node and nodeDataSize data
     }
 
-    DLOG_Error("Not Node 0x%x", u32_nodeId);
+    BOOT_Printf("Not Node 0x%x \r\n", u32_nodeId);
 
     return NULL;
 }

@@ -223,7 +223,9 @@ HAL_RET_T HAL_SYS_CTL_Init(STRU_HAL_SYS_CTL_CONFIG *pst_usrHalSysCtlCfg)
         while (0 == PLLCTRL_CheckCpu0ResourceReady());
     }
     
-   
+    // Inter core SRAM init
+    InterCore_Init();
+
     HAL_NVIC_SetPriorityGrouping(HAL_NVIC_PRIORITYGROUP_4);
     
     // Default clock: CPU0 and CPU1 200M; CPU2 166M.

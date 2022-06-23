@@ -19,7 +19,7 @@
 #include "ar1002_chip.h"
 #include "ar1002_hal.h"
 
-static int handle_cmd(int argc, char** argv, int optc, optv_t* optv)
+static int handle_reboot_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
 	printf("rebooting...\n");
 	printf(" coolfly will reboot, goodbye !~ \n");
@@ -33,6 +33,10 @@ static int handle_cmd(int argc, char** argv, int optc, optv_t* optv)
 
 int cmd_reboot(int argc, char** argv)
 {
-	return syscmd_process(argc, argv, handle_cmd);
+	return syscmd_process(argc, argv, handle_reboot_cmd);
 }
 FINSH_FUNCTION_EXPORT_ALIAS(cmd_reboot, __cmd_reboot, reboot the system);
+
+
+
+

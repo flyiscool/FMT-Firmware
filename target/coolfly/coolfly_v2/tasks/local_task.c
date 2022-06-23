@@ -65,7 +65,11 @@ void task_local_entry(void* parameter)
 
     while (1) {
         LED_TOGGLE(HAL_GPIO_NUM61);
-        sys_msleep(1000);
+
+        // sky_led_video_process();
+        // led_link_process();
+        DLOG_Process(NULL);
+        sys_msleep(10);
 
         // rt_device_read(dev_id, 20, buf, 1);
 

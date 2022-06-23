@@ -712,6 +712,7 @@ rt_err_t drv_usart_init(void)
     return rt_err;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
 
 void ar_uart_init(unsigned char index, unsigned int baud_rate)
 {

@@ -39,7 +39,7 @@ static uint8_t FCT_CheckFlashSettingValid(STRU_FACTORY_SETTING *fct)
 
     if (fct_len > 4 * 1024) //sector size: 4 * 1024 
     {
-        DLOG_Error("Error: factory len = 0x%p 0x%lx", fct, fct_len);
+        BOOT_Printf("Error: factory len = 0x%p 0x%lx \r\n", fct, fct_len);
         return 0;
     }
 
@@ -52,7 +52,7 @@ static uint8_t FCT_CheckFlashSettingValid(STRU_FACTORY_SETTING *fct)
     valid = (checksum == *(uint32_t *)(pdata + fct_len));
     if (valid == 0)
     {
-        DLOG_Info("fct checksum error: %p %ld %ld ", pdata, checksum, *(uint32_t *)(pdata + fct_len));
+        BOOT_Printf("fct checksum error: %p %ld %ld \r\n", pdata, checksum, *(uint32_t *)(pdata + fct_len));
     }
 
     return valid;
@@ -71,10 +71,10 @@ int FCT_ListAllNode(STRU_FACTORY_SETTING *fct, STRU_NODE_LIST *p_nodelist)
 
     if (FACTORY_SETTING_NODE_ID != fct->st_factoryNode.nodeId)
     {
-        DLOG_Error("No factorySetting data addr=0x%lx", (uint32_t)fct);
+        BOOT_Printf("No factorySetting data addr=0x%lx \r\n", (uint32_t)fct);
         return 0;
     }
-    DLOG_Info("fct data addr=0x%lx 0x%lx size=%ld", (uint32_t)fct, (uint32_t)fct_data, fct_datasize);
+    BOOT_Printf("fct data addr=0x%lx 0x%lx size=%ld \r\n", (uint32_t)fct, (uint32_t)fct_data, fct_datasize);
 
     //because node parse is 4bytes aligned
     if (fct_datasize & 0x03)
@@ -86,12 +86,12 @@ int FCT_ListAllNode(STRU_FACTORY_SETTING *fct, STRU_NODE_LIST *p_nodelist)
     while (cur_datasize < fct_datasize)
     {
         STRU_cfgNode * node = (STRU_cfgNode *)((uint8_t *)fct_data + cur_datasize);
-        DLOG_Info("node ptr=0x% 0x%x %d", node, node->nodeId, node->nodeDataSize);
+        BOOT_Printf("node ptr=0x% 0x%x %d \r\n", node, node->nodeId, node->nodeDataSize);
 
         if ( (node->nodeId & FACTORY_NODE_ID_MASK) != FACTORY_NODE_ID_MASK)
         {
             p_nodelist->nodecnt = 0;
-            DLOG_Error("fct node id=%d", node->nodeId);
+            BOOT_Printf("fct node id=%d \r\n", node->nodeId);
             return 0;
         }
 
@@ -118,7 +118,7 @@ int FCT_ListAllNode(STRU_FACTORY_SETTING *fct, STRU_NODE_LIST *p_nodelist)
     if (cur_datasize != fct_datasize)
     {
         p_nodelist->nodecnt = 0;
-        DLOG_Error("Fct setting parser error %d %d", cur_datasize, fct_datasize);
+        BOOT_Printf("Fct setting parser error %d %d \r\n", cur_datasize, fct_datasize);
     }
 
     return (p_nodelist->nodecnt);
@@ -134,74 +134,18 @@ int FCT_Load2Sram(void)
     uint8_t  valid0 = 0, valid1 = 0;
     uint32_t flash_factoryAddr;
 
+
     // get sram config data & node
     void *p_sramcfgdata = CFGBIN_GetNodeAndData((STRU_cfgBin *)SRAM_CONFIGURE_MEMORY_ST_ADDR, FACTORY_SETTING_NODE_ID, (STRU_cfgNode **)&pst_factory_defaultcfgnode);
     if (p_sramcfgdata == NULL || pst_factory_defaultcfgnode == NULL)
     {
-        DLOG_Critical("Fail get sram %p %p", p_sramcfgdata, pst_factory_defaultcfgnode);
+        BOOT_Printf("Fail get sram %p %p \r\n", p_sramcfgdata, pst_factory_defaultcfgnode);
         return -1;
     }
 
-    DLOG_Info("get sram %p %p", p_sramcfgdata, pst_factory_defaultcfgnode);
+    BOOT_Printf("get sram %p %p \r\n", p_sramcfgdata, pst_factory_defaultcfgnode);
 
     int node_cnt0 = FCT_ListAllNode((STRU_FACTORY_SETTING *)pst_factory_defaultcfgnode, &st_node_list_default);
-
-#ifdef RF_9363
-    uint32_t u32_Gpio87_val = 0;
-    uint32_t u32_Gpio88_val = 0;
-    uint32_t u32_Gpio89_val = 0;
-
-    HAL_GPIO_InPut(HAL_GPIO_NUM87);
-    HAL_GPIO_InPut(HAL_GPIO_NUM88);
-    HAL_GPIO_InPut(HAL_GPIO_NUM89);
-
-    HAL_GPIO_GetPin(HAL_GPIO_NUM87, &u32_Gpio87_val);
-    HAL_GPIO_GetPin(HAL_GPIO_NUM88, &u32_Gpio88_val);
-    HAL_GPIO_GetPin(HAL_GPIO_NUM89, &u32_Gpio89_val);
-
-    if (!(u32_Gpio87_val == 0 && u32_Gpio88_val == 1 && u32_Gpio89_val == 1))  //Board V2
-    {
-        STRU_RF_CHANNEL *p_frq;
-        STRU_cfgNode *p_node;
-
-        STRU_RF_POWER_CTRL *pst_powercfg = NULL;
-        STRU_cfgNode *cfgnode;
-
-        p_frq = FCT_GetNodeAndData(FACTORY_SUBNODE_BAND0_VT_10M_FRQ_ID, &p_node);
-
-        if (p_frq != NULL)
-        {
-            p_frq->u32_rfChCount = 10;
-            p_frq->u16_rfChFrqList[0] = 6330;
-            p_frq->u16_rfChFrqList[1] = 6410;
-            p_frq->u16_rfChFrqList[2] = 6730;
-            p_frq->u16_rfChFrqList[3] = 6820;
-            p_frq->u16_rfChFrqList[4] = 6930;
-            p_frq->u16_rfChFrqList[5] = 6980;
-            p_frq->u16_rfChFrqList[6] = 7340;
-            p_frq->u16_rfChFrqList[7] = 7370;
-            p_frq->u16_rfChFrqList[8] = 7580;
-            p_frq->u16_rfChFrqList[9] = 7720;
-        }
-
-        pst_powercfg = (STRU_RF_POWER_CTRL *)FCT_GetNodeAndData(FACTORY_SUBNODE_POWER_NODE_ID, &cfgnode);
-        if (pst_powercfg != NULL)
-        {
-            pst_powercfg->vtPowerOther[0] = 0x1A;
-            pst_powercfg->vtPowerOther[1] = 0x1A;
-
-            pst_powercfg->rcPowerOther[0] = 0x19;
-            pst_powercfg->rcPowerOther[1] = 0x19;
-        }
-
-        DLOG_Info("********* Hardware Version 2.0. *********\n");
-    }
-    else
-    {
-        DLOG_Info("********* Hardware Version 3.0. *********\n");
-    }
-
-#endif
 
     //check FLASH_APB_FCT_START_ADDR_0 factory valid
     valid0 = FCT_CheckFlashSettingValid((STRU_FACTORY_SETTING *)FLASH_APB_FCT_START_ADDR_0);
@@ -220,7 +164,7 @@ int FCT_Load2Sram(void)
     }
     else
     {
-        DLOG_Critical("No valid flash factory setting");
+        BOOT_Printf("No valid flash factory setting \r\n");
         return 1;
     }
 
@@ -248,7 +192,7 @@ int FCT_Load2Sram(void)
                     }
                     else
                     {
-                        DLOG_Error("node size error %ld %ld", node0->nodeDataSize, node1->nodeDataSize);
+                        BOOT_Printf("node size error %ld %ld \r\n", node0->nodeDataSize, node1->nodeDataSize);
                     }
 
                     break;
@@ -292,7 +236,7 @@ void * FCT_GetNodeAndData(uint32_t u32_nodeId, STRU_cfgNode **pp_node)
 
     if (pst_factory_defaultcfgnode == NULL || st_node_list_default.nodecnt == 0)
     {
-        DLOG_Error("No factory node: %p %d", pst_factory_defaultcfgnode, st_node_list_default.nodecnt);
+        BOOT_Printf("No factory node: %p %d \r\n", pst_factory_defaultcfgnode, st_node_list_default.nodecnt);
         return NULL;
     }
 
@@ -300,7 +244,7 @@ void * FCT_GetNodeAndData(uint32_t u32_nodeId, STRU_cfgNode **pp_node)
     {
         if (u32_nodeId == st_node_list_default.nodeid[i])
         {
-            DLOG_Info("find nod 0x%x", u32_nodeId);
+            BOOT_Printf("find nod 0x%x \r\n", u32_nodeId);
             break;
         }
     }

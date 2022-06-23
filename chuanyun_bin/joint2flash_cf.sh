@@ -46,6 +46,20 @@ skycpu2length=`stat --format=%s $skycpu2`
 #90112 = 64K ITCM2 + 0x6000 (ITCM2 extension)
 skycpu2strlength=$((90112 - $skycpu2length))
 
+
+#12 = cpu image size(4 byte) * 3
+skyapplengthhead=$((256+12+$skycpu0length+$skycpu1length+$skycpu2length+$skycpu2strlength))
+
+replenishskyapp=$((4-$skyapplengthhead%4))
+skyapplengthhead=$(($skyapplengthhead+$replenishskyapp))
+
+tmplength=`stat --format=%s $outcfgbin`
+skyapplengthhead=$(($skyapplengthhead+$tmplength))
+
+replenishskyimage=$((4-$skyapplengthhead%4))
+skyapplengthhead=$(($skyapplengthhead+$replenishskyimage))
+
+
 ######################################################
 
 
@@ -162,17 +176,7 @@ imageheadlength=$((2+$imageheadlength))
 
 
 
-#12 = cpu image size(4 byte) * 3
-skyapplengthhead=$((256+12+$skycpu0length+$skycpu1length+$skycpu2length+$skycpu2strlength))
 
-replenishskyapp=$((4-$skyapplengthhead%4))
-skyapplengthhead=$(($skyapplengthhead+$replenishskyapp))
-
-tmplength=`stat --format=%s $outcfgbin`
-skyapplengthhead=$(($skyapplengthhead+$tmplength))
-
-replenishskyimage=$((4-$skyapplengthhead%4))
-skyapplengthhead=$(($skyapplengthhead+$replenishskyimage))
 
 
 #echo $skyapplengthhead

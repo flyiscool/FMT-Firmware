@@ -163,56 +163,6 @@ extern "C" {
 #define UART_LCR_PS_STICK0           (3 << UART_LCR_PS_SHIFT) /* Forced "0" stick parity */
 
 
-// #define UART_LCR_BRK                 (1 << 6)  /* Bit 6: Break Control */
-
-// #define UART_LCR_DLAB                (1 << 7)  /* Bit 7: Divisor Latch Access Bit (DLAB) */
-//                                                /* Bits 8-31: Reserved */
-
-// /* MCR Modem Control Register (UART1 only) */
-
-// #define UART_MCR_DTR                 (1 << 0)  /* Bit 0:  DTR Control Source for DTR output */
-
-// #define UART_MCR_RTS                 (1 << 1)  /* Bit 1:  Control Source for  RTS output */
-
-// #define UART_MCR_OUT1                (1 << 2)  /* Bit 2:  OUT1 */
-// #define UART_MCR_OUT2                (1 << 3)  /* Bit 3:  OUT3 */
-
-// #define UART_MCR_LPBK                (1 << 4)  /* Bit 4:  Loopback Mode Select */
-
-// #define UART_MCR_AFCE                (1 << 5)  /* Bit 5:  Enable auto flow control */
-// #define UART_MCR_SIRE                (1 << 6)  /* Bit 6:  SIR Mode Enable */
-//                                                /* Bits 7-31: Reserved */
-
-// /* LSR Line Status Register (all) */
-
-// #define UART_LSR_RDR                 (1 << 0)  /* Bit 0:  Receiver Data Ready */
-// #define UART_LSR_OE                  (1 << 1)  /* Bit 1:  Overrun Error */
-// #define UART_LSR_PE                  (1 << 2)  /* Bit 2:  Parity Error */
-// #define UART_LSR_FE                  (1 << 3)  /* Bit 3:  Framing Error */
-// #define UART_LSR_BI                  (1 << 4)  /* Bit 4:  Break Interrupt */
-// #define UART_LSR_THRE                (1 << 5)  /* Bit 5:  Transmitter Holding Register Empty */
-// #define UART_LSR_TEMT                (1 << 6)  /* Bit 6:  Transmitter Empty */
-// #define UART_LSR_RXFE                (1 << 7)  /* Bit 7:  Error in RX FIFO (RXFE) */
-//                                                /* Bits 8-31: Reserved */
-
-// /* MSR Modem Status Register (UART1 only) */
-
-// #define UART_MSR_DCTS                (1 << 0)  /* Bit 0:  CTS state change */
-// #define UART_MSR_DDSR                (1 << 1)  /* Bit 1:  DSR state change */
-// #define UART_MSR_TERI                (1 << 2)  /* Bit 2:  RI ow to high transition */
-// #define UART_MSR_DDCD                (1 << 3)  /* Bit 3:  DCD state change */
-// #define UART_MSR_CTS                 (1 << 4)  /* Bit 4:  CTS State */
-// #define UART_MSR_DSR                 (1 << 5)  /* Bit 5:  DSR State */
-// #define UART_MSR_RI                  (1 << 6)  /* Bit 6:  Ring Indicator State */
-// #define UART_MSR_DCD                 (1 << 7)  /* Bit 7:  Data Carrier Detect State */
-//                                                /* Bits 8-31: Reserved */
-
-
-// /* SCR Scratch Pad Register (all) */
-
-// #define UART_SCR_MASK                (0xff)    /* Bits 0-7: SCR data */
-//                                                /* Bits 8-31: Reserved */
-
 
                                                
 rt_err_t drv_usart_init(void);

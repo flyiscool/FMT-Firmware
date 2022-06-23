@@ -379,10 +379,6 @@ void bsp_early_initialize(void)
     console_println("systime_init~");
 
 
-    // Inter core SRAM init
-    InterCore_Init();
-    console_println("InterCore_Init~");
-    DLOG_Critical(" DLOG_Critical begin to used");
     
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());

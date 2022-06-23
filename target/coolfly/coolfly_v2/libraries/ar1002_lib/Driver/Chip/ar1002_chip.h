@@ -60,7 +60,7 @@ extern "C"
 #include "bb_regs.h"
 
 
-
+#define UNUSED(X) (void)X      /* To avoid gcc/g++ warnings */
 
 
 

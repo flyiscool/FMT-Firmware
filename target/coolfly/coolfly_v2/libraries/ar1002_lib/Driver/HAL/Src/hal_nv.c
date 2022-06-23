@@ -40,7 +40,7 @@ static int32_t NV_CalChk(STRU_NV_DATA *pst_nvData, uint8_t *u8_chk);
 
 static int32_t NV_CheckValidity(STRU_NV_DATA *pst_nvData);
 
-static int32_t NV_GetInit(void);
+static void NV_GetInit(void);
 
 /**
 * @brief      
@@ -118,7 +118,7 @@ static int32_t NV_UpdateBbRcId(uint8_t *u8_bbRcId, uint8_t *u8_bbVtId)
     NV_CalChk(&(pst_nv->st_nvDataUpd), &(pst_nv->st_nvDataUpd.u8_nvChk));
     pst_nv->st_nvMng.u8_nvChg = TRUE;
 
-    DLOG_Info("0x%x 0x%x 0x%x 0x%x 0x%x",
+    DLOG_Info("0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
                pst_nv->st_nvDataUpd.u8_nvBbRcId[0],
                pst_nv->st_nvDataUpd.u8_nvBbRcId[1],
                pst_nv->st_nvDataUpd.u8_nvBbRcId[2],
@@ -139,7 +139,7 @@ static int32_t NV_UpdateChipId(uint8_t *chipId)
     NV_CalChk(&(pst_nv->st_nvDataUpd), &(pst_nv->st_nvDataUpd.u8_nvChk));
     pst_nv->st_nvMng.u8_nvChg = TRUE;
 
-    DLOG_Warning("0x%x 0x%x 0x%x 0x%x 0x%x",
+    DLOG_Warning("0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
                pst_nv->st_nvDataUpd.u8_nvChipId[0],
                pst_nv->st_nvDataUpd.u8_nvChipId[1],
                pst_nv->st_nvDataUpd.u8_nvChipId[2],
@@ -162,7 +162,7 @@ static int32_t NV_UpdateChipId(uint8_t *chipId)
 static int32_t NV_Update(void *par)
 {
     uint32_t u32_delay = 0;
-    uint8_t *u8_pdata = (uint8_t *)par;
+    // uint8_t *u8_pdata = (uint8_t *)par;
     STRU_NV *pst_nv = (STRU_NV *)SRAM_NV_MEMORY_ST_ADDR;
     STRU_SysEvent_NvMsg *pst_nvMsg = (STRU_SysEvent_NvMsg *)par;
 
@@ -277,7 +277,7 @@ static int32_t NV_ReadFromFlash(uint32_t u32_nvFlashAddr, STRU_NV_DATA *pst_nvDa
 */
 static int32_t NV_Get(void)
 {
-    uint8_t u8_checkSum;
+    // uint8_t u8_checkSum;
     int32_t result = -1;
     STRU_NV *pst_nv = (STRU_NV *)SRAM_NV_MEMORY_ST_ADDR;
 
@@ -408,7 +408,7 @@ static int32_t NV_CheckValidity(STRU_NV_DATA *pst_nvData)
 * @retval   
 * @note   
 */
-static int32_t NV_GetInit(void)
+static void NV_GetInit(void)
 {
     STRU_NV *pst_nv = (STRU_NV *)SRAM_NV_MEMORY_ST_ADDR;
 
@@ -434,8 +434,8 @@ HAL_RET_T NV_DataRead(uint32_t addr, uint8_t *rdata, uint32_t rlen);
 */
 HAL_RET_T HAL_NV_Init(void)
 {
-    uint8_t pwr[32];
-    HAL_RET_T ret;
+    // uint8_t pwr[32];
+    // HAL_RET_T ret;
     volatile STRU_NV *pst_nv = (volatile STRU_NV *)SRAM_NV_MEMORY_ST_ADDR;
     memset((void *)pst_nv, 0, SRAM_NV_MEMORY_SIZE);
     if (1 == EFUSE_GetEfuseEnable())
@@ -699,14 +699,14 @@ HAL_RET_T NV_DataRead(uint32_t uAddr, uint8_t *rData, uint32_t rLen)
         }
         else
         {
-            DLOG_Error("1 err - 0x%x", secStartAddr);
+            DLOG_Error("1 err - 0x%lx", secStartAddr);
             if(1 == NV_CheckSecValid(secStartAddr+ BACKUP_OFFSET))
             {
                 NOR_FLASH_ReadByteBuffer(secStartAddr + secOffsetAddr + BACKUP_OFFSET, &rData[readLen], secResLen);
             }
             else
             {
-                DLOG_Error("2 err - 0x%x", secStartAddr+ BACKUP_OFFSET);
+                DLOG_Error("2 err - 0x%lx", secStartAddr+ BACKUP_OFFSET);
                 ret = HAL_NV_ERR;
                 break;
             }

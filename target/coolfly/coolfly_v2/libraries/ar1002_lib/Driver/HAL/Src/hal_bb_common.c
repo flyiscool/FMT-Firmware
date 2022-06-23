@@ -91,7 +91,7 @@ HAL_RET_T HAL_BB_ComRegisterSession(ENUM_BB_COM_SESSION_ID e_sessionId,
     if ( u8_ret == 1 )
     {
         uint32_t u32_rcv_event;
-        uint32_t u32_snd_event;
+        // uint32_t u32_snd_event;
 
         if ( get_session_eventid(e_sessionId, &u32_rcv_event))
         {
@@ -117,7 +117,7 @@ HAL_RET_T HAL_BB_ComRegisterSession(ENUM_BB_COM_SESSION_ID e_sessionId,
 HAL_RET_T HAL_BB_ComUnRegisterSession(ENUM_BB_COM_SESSION_ID e_sessionId, SYS_Event_Handler rcvDataEventHandler)
 {
     uint32_t u32_rcv_event;
-    uint32_t u32_snd_event;
+    // uint32_t u32_snd_event;
     
     if(BB_COM_SESSION_SPI == e_sessionId)
     {

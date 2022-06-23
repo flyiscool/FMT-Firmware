@@ -366,52 +366,6 @@ uint8_t I2C_Master_ReadData(EN_I2C_COMPONENT en_component, uint16_t u16_i2cAddr,
 
     return FALSE;
 }
-uint8_t I2C_Master_ReadDataMfi(EN_I2C_COMPONENT en_component, uint16_t u16_i2cAddr, uint8_t* ptr_subAddr, uint8_t u8_subAddrSize, uint8_t* ptr_data, uint32_t u32_dataSize)
-{
-    uint8_t u8_i = 0;
-    uint32_t u32_LaunchNumber = 0;
-    uint32_t u32_tmpLen;
-    
-    u32_tmpLen = ((u32_dataSize < I2C_RX_FIFO_BUFFER_DEPTH)? u32_dataSize:(I2C_RX_FIFO_BUFFER_DEPTH - 1));
-    I2C_Master_SetIntrData(en_component, 0, 0, ptr_data, u32_dataSize, u32_tmpLen);
-    
-    I2C_Master_UpdateTargetAddress(en_component, u16_i2cAddr);
-    
-    if (ptr_subAddr)
-    {
-        while (u8_i < u8_subAddrSize)
-        {
-            // The sub address size should be less than I2C_TX_FIFO_BUFFER_DEPTH, so no check here.
-            I2C_Master_WriteByte(en_component, ptr_subAddr[u8_i++]); // High address first
-        }
-    }
-    
-    if (ptr_data)
-    {
-        //SysTicks_DelayUS(2500);
-        ar_osDelay(5);
-        if (u32_dataSize <= IC_RX_TL_DEF_VALUE)
-        {
-            I2C_Master_SetRxTl(en_component, 0);
-        }
-        else
-        {
-            I2C_Master_SetRxTl(en_component, IC_RX_TL_DEF_VALUE);
-        }
-
-        I2C_Master_EnableIntr(en_component, IC_INTR_M_RX_FULL);
-            
-        while (u32_LaunchNumber < u32_tmpLen)
-        {
-            I2C_Master_ReadLaunch(en_component);
-            u32_LaunchNumber++;
-        }
-
-        return TRUE;
-    }
-
-    return FALSE;
-}
 
 void I2C_Master_IntrSrvc(uint32_t u32_vectorNum)
 {

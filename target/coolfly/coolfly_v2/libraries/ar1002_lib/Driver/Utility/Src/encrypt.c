@@ -205,17 +205,17 @@ int main_upgrade_encrypt( int argc, const char * argv [] )
 {
     FILE* in;
     FILE* outencrypt;
-    FILE* outdecoder;
+    // FILE* outdecoder;
 
     in = fopen(argv[1], "rb");
     s_u32_key[0] = strtoul(argv[2], NULL, 0);
     s_u32_key[1] = strtoul(argv[3], NULL, 0);
     
-    uint8_t outFileName[64] = "encrypt_";
+    char outFileName[64] = "encrypt_";
     
     strcat(outFileName, argv[4]);
 
-    printf("encrypt key1=%08x key2=%08x\n", s_u32_key[0], s_u32_key[1]);
+    printf("encrypt key1=%08lx key2=%08lx\n", s_u32_key[0], s_u32_key[1]);
     printf("output encrypt file name %s\n", outFileName);
     fseek(in, 0, SEEK_END);
     uint32_t len = ftell(in);
@@ -232,17 +232,7 @@ int main_upgrade_encrypt( int argc, const char * argv [] )
     fclose(outencrypt);
     fclose(in);
 
-#if 0 
-    memset(inbuff, 0, len);
-    memset(outbuff, 0, len);
-   
-    in = fopen("image_en.bin", "rb+");
-    outdecoder = fopen("image_de.bin", "wb");
-    fread(inbuff, 1, len, in);
-    UPGRADE_Encrypt(inbuff, len, outbuff, 1);
-    fwrite(outbuff, 1, len, outdecoder);
-    fclose(outdecoder);
-    fclose(in);
-#endif
+
+	return 0;
     
 }

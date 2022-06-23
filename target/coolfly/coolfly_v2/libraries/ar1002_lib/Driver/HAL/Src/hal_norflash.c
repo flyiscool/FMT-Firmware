@@ -18,6 +18,8 @@ History:
 #include "driver_module_init.h"
 #include "hal.h"
 
+#include "drv_systick.h"
+
 static uint8_t cpu0_into_upgrade = 0;
 
 HAL_RET_T HAL_NV_enterintoUpgrade(void)

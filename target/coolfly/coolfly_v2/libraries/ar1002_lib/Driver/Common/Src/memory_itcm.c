@@ -175,7 +175,7 @@ void * nano_malloc_itcm(RARG malloc_size_t s)
     chunk *p, *r;
     char * ptr, * align_ptr;
     int offset;
-    int step = 0;
+    // int step = 0;
 
     malloc_size_t alloc_size;
 

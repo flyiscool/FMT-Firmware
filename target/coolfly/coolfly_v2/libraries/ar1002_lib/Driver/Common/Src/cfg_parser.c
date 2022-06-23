@@ -12,7 +12,7 @@
 */
 static uint8_t CFGBIN_CheckMd5Valid(STRU_cfgBin *ptr_cfg)
 {
-    uint8_t md5[16];
+    // uint8_t md5[16];
     STRU_cfgBin *p_cfghead = ptr_cfg;
     if ( p_cfghead->headflag != CFG_DATA_HEAD_FLAG)
     {

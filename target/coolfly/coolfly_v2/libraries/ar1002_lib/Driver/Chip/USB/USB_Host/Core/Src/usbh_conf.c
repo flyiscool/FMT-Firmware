@@ -363,7 +363,7 @@ uint8_t  USBH_LL_GetToggle   (USBH_HandleTypeDef *phost, uint8_t pipe)
 void  USBH_Delay (uint32_t Delay)
 {
   //SysTicks_DelayMS(Delay);
-  ar_osDelay(Delay);
+  HAL_Delay(Delay);
 }
 
 void USBH_SetBigEndian(USBH_HandleTypeDef *phost)

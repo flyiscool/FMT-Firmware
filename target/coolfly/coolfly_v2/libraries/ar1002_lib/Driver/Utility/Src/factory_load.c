@@ -11,6 +11,7 @@
 #include "factory.h"
 #include "hal_gpio.h"
 
+#include "drv_usart.h"
 
 STRU_NODE_LIST st_node_list_default  = {0};
 STRU_NODE_LIST st_node_list_user = {0};

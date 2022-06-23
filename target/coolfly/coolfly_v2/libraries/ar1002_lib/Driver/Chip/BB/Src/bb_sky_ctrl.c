@@ -109,7 +109,7 @@ static void sky_vt_mode_proc(uint8_t value);
 
 static int sky_lock_status(void *p);
 
-static int sky_rc_mod_chg_process(void);
+static void sky_rc_mod_chg_process(void);
 
 static int sky_filter_chg_process(void);
 
@@ -2216,14 +2216,14 @@ static void sky_handle_all_grd_cmds(uint8_t *arg, uint8_t len)
 
 static void sky_handle_one_cmd(STRU_WIRELESS_CONFIG_CHANGE* pcmd)
 {
-    uint8_t u8_data;
+    // uint8_t u8_data;
     uint8_t class  = pcmd->u8_configClass;
     uint8_t item   = pcmd->u8_configItem;
     uint32_t value = pcmd->u32_configValue;
     uint32_t value1 = pcmd->u32_configValue1;
     uint8_t frq[5] = {(value>>24)&0xff, (value>>16)&0xff, (value>>8)&0xff, value&0xff, (value1&0xff)};
 
-    DLOG_Info("class item value %d %d 0x%0.8ld \r\n", class, item, value);
+    DLOG_Info("class item value %d %d 0x%08ld \r\n", class, item, value);
     if(class == WIRELESS_FREQ_CHANGE)
     {
         switch(item)
@@ -2530,10 +2530,10 @@ static void sky_handle_one_rf_cmd(STRU_WIRELESS_CONFIG_CHANGE* pcmd)
     // uint8_t u8_data;
     uint8_t class  = pcmd->u8_configClass;
     uint8_t item   = pcmd->u8_configItem;
-    uint32_t value = pcmd->u32_configValue;
+    // uint32_t value = pcmd->u32_configValue;
 
 
-    //DLOG_Info("class item value %d %d 0x%0.8d \r\n", class, item, value);
+    //DLOG_Info("class item value %d %d 0x%08d \r\n", class, item, value);
 
     if(class == WIRELESS_OTHER)
     {
@@ -2712,7 +2712,7 @@ uint16_t sky_get_rc_snr( void )
     if( cnt++ > 1500 )
     {
         cnt = 0;
-        //DLOG_Info("SNR1:%0.4x\n", snr);
+        //DLOG_Info("SNR1:%04x\n", snr);
     }
 
     return snr;
@@ -2942,7 +2942,7 @@ static int sky_lock_status(void *p)
 }
 
 
-static int sky_rc_mod_chg_process(void)
+static void sky_rc_mod_chg_process(void)
 {
     if(rc_mod_chg_delay.valid)
     {

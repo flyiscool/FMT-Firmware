@@ -17,7 +17,8 @@
 #include "image_struct.h"
 #include "hal_sram_sky.h"
 #include "hal_hdmi_rx.h"
-// #include "cmsis_os.h"
+
+#include "drv_systick.h"
 
 
 #define UPGRADE_SESSION         BB_COM_SESSION_2
@@ -201,7 +202,7 @@ int8_t UPGRADE_CheckUpgradeLocalFile(const uint8_t *fileName)
     st_formatChange.hight = 0;
     st_formatChange.framerate = 0;
     SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_H264_INPUT_FORMAT_CHANGE, (void*)&st_formatChange);
-
+    
     // close view 1
     st_formatChange.index = 1;
     st_formatChange.width = 0;
@@ -209,7 +210,7 @@ int8_t UPGRADE_CheckUpgradeLocalFile(const uint8_t *fileName)
     st_formatChange.framerate = 0;
     SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_H264_INPUT_FORMAT_CHANGE, (void*)&st_formatChange);
 
-    ar_osDelay(20);
+    HAL_Delay(20);
 
     fileResult = f_open(&MyFile, (char *)fileName, FA_READ);
     if (FR_OK != fileResult)
@@ -236,7 +237,7 @@ int8_t UPGRADE_CheckUpgradeLocalFile(const uint8_t *fileName)
                 DLOG_Critical("read image fail");
             }
 
-            ar_osDelay(1);
+            HAL_Delay(1);
         } while (FR_OK != fileResult);
 
         memcpy((uint8_t *)(s_u32_imageAddr + UPGRADE_DATACHUNK_SIZE * i), u8_sendDataArray, u32_bytesRead);        

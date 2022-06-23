@@ -32,7 +32,7 @@ int8_t COMMON_getNewBuffer(uint8_t **ppu8_drvBuf, uint8_t *pu8_usrBuf, uint32_t 
                 if (NULL == *ppu8_drvBuf)
                 {
                     *pu32_txLenLast = 0;
-                    DLOG_Error("realloc error, size = %d", u32_size);
+                    DLOG_Error("realloc error, size = %ld", u32_size);
                     return -1;
                 }
                 else

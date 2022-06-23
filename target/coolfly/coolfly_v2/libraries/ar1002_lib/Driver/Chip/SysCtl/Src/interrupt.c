@@ -2,6 +2,7 @@
 #include "debuglog.h"
 #include "ar8020.h"
 #include "systicks.h"
+#include "drv_usart.h"
 
 #define MAX_IRQ_VECTROS     (99)
 
@@ -83,19 +84,19 @@ void hard_fault_monitor(unsigned int * hardfault_args)
     stacked_lr = ((unsigned long)hardfault_args[5]);
     stacked_pc = ((unsigned long)hardfault_args[6]);
     stacked_psr = ((unsigned long) hardfault_args[7]);
-    // BOOT_Printf("Hardfault happens!");
-    // BOOT_Printf("R0 = %x",stacked_r0);
-    // BOOT_Printf("R1 = %x\n",stacked_r1);
-    // BOOT_Printf("R2 = %x\n",stacked_r2);
-    // BOOT_Printf("R3 = %x\n",stacked_r3);
-    // BOOT_Printf("R12 = %x\n",stacked_r12);
-    // BOOT_Printf("LR [R14] = %x  subroutine call return address\n",stacked_lr);
-    // BOOT_Printf("PC [R15] = %x  program counter\n", stacked_pc);
-    // BOOT_Printf("PSR = %x\n",stacked_psr);
+    BOOT_Printf("Hardfault happens!\r\n");
+    BOOT_Printf("R0 = %x \r\n",stacked_r0);
+    BOOT_Printf("R1 = %x \r\n",stacked_r1);
+    BOOT_Printf("R2 = %x \r\n",stacked_r2);
+    BOOT_Printf("R3 = %x \r\n",stacked_r3);
+    BOOT_Printf("R12 = %x \r\n",stacked_r12);
+    BOOT_Printf("LR [R14] = %x  subroutine call return address \r\n",stacked_lr);
+    BOOT_Printf("PC [R15] = %x  program counter  \r\n", stacked_pc);
+    BOOT_Printf("PSR = %x \r\n",stacked_psr);
     
-    // DLOG_Output(3000);
-
-    while(1) {test_led();};
+    while(1) {
+        DLOG_Output(3000);
+    };
 }
 
 // To replace the weak function in start.s

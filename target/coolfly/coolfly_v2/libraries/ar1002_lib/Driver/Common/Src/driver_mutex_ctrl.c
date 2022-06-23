@@ -151,7 +151,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                 u32_cpu_id = ( (g_ps_periMutex->uart & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                 if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                 {
-                    DLOG_Error("uart u32_channel:%d occupied", u32_channel);
+                    DLOG_Error("uart u32_channel:%ld occupied", u32_channel);
                     return -1;
                 }
             }
@@ -163,7 +163,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                 u32_cpu_id = ( (g_ps_periMutex->spi & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                 if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                 {
-                    DLOG_Error("spi channel:%d occupied", u32_channel);
+                    DLOG_Error("spi channel:%ld occupied", u32_channel);
                     return -1;
                 }
             }
@@ -176,7 +176,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                 u32_cpu_id = ( (g_ps_periMutex->can & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                 if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                 {
-                    DLOG_Error("can channel:%d occupied", u32_channel);
+                    DLOG_Error("can channel:%ld occupied", u32_channel);
                     return -1;
                 }
             }
@@ -189,7 +189,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                 u32_cpu_id = ( (g_ps_periMutex->i2c & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                 if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                 {
-                    DLOG_Error("i2c channel:%d occupied", u32_channel);
+                    DLOG_Error("i2c channel:%ld occupied", u32_channel);
                     return -1;
                 }
             }
@@ -203,7 +203,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                     u32_cpu_id = ( (g_ps_periMutex->s_timer.timer0to7 & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                     if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                     {
-                        DLOG_Error("timer channel:%d occupied", u32_channel);
+                        DLOG_Error("timer channel:%ld occupied", u32_channel);
                         return -1;
                     }
                 }
@@ -217,7 +217,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                     u32_cpu_id = ( (g_ps_periMutex->s_timer.timer8to15 & u32_cpu_id_mask) >> ((u32_channel-8)*3 + 1) );
                     if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                     {
-                        DLOG_Error("timer channel:%d occupied", u32_channel);
+                        DLOG_Error("timer channel:%ld occupied", u32_channel);
                         return -1;
                     }
                 }
@@ -231,7 +231,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                     u32_cpu_id = ( (g_ps_periMutex->s_timer.timer16to23 & u32_cpu_id_mask) >> ((u32_channel-16)*3 + 1) );
                     if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                     {
-                        DLOG_Error("timer channel:%d occupied", u32_channel);
+                        DLOG_Error("timer channel:%ld occupied", u32_channel);
                         return -1;
                     }
                 }
@@ -256,7 +256,7 @@ int8_t COMMON_driverMutexGet(emu_driver_mutex e_driver, uint32_t u32_channel)
                 u32_cpu_id = ( (g_ps_periMutex->dma & u32_cpu_id_mask) >> (u32_channel*3 + 1) );
                 if (u32_cpu_id != CPUINFO_GetLocalCpuId())
                 {
-                    DLOG_Error("i2c channel:%d occupied", u32_channel);
+                    DLOG_Error("i2c channel:%ld occupied", u32_channel);
                     return -1;
                 }
             }

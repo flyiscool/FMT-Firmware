@@ -698,7 +698,7 @@ rt_err_t drv_usart_init(void)
     serial4.ops = &_usart_ops;
 
     struct serial_configure serial4_config = SERIAL4_DEFAULT_CONFIG;
-    serial4.config = serial1_config;
+    serial4.config = serial4_config;
 
     NVIC_Configuration(&uart4);
 

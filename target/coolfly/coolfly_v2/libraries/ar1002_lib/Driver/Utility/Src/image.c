@@ -20,18 +20,18 @@ static uint8_t s_u8_imageMd5sumArray[2][MD5_SIZE] = {0};
 int8_t UPGRADE_MD5SUM(uint32_t u32_addr, uint8_t u8_flag)
 {
     uint32_t i=0;
-    uint32_t j=0;
+    // uint32_t j=0;
     uint8_t  md5_value[MD5_SIZE];
     MD5_CTX md5;
     MD5Init(&md5);
 
     uint8_t  *p8_data;
     uint8_t* p8_sizeAddr;
-    uint32_t u32_RecCountTmp;
+    // uint32_t u32_RecCountTmp;
     uint8_t* p8_md5Addr;
     uint8_t* p8_encryptMd5Addr;
 
-    int8_t ret = -1;
+    // int8_t ret = -1;
     if (1 == u8_flag)
     {
         //encrypt
@@ -84,7 +84,7 @@ int8_t UPGRADE_MD5SUM(uint32_t u32_addr, uint8_t u8_flag)
 void UPGRADE_EraseWriteFlash(uint32_t u32_flashAddress, uint32_t u32_upgradeDataAddress, uint32_t u32_imageSize)
 {
     uint8_t *pu8_upgradeDataAddr = (uint8_t *)u32_upgradeDataAddress;
-    uint32_t i=0;
+    // uint32_t i=0;
     uint32_t u32_dataSize = u32_imageSize;
     uint32_t u32_flashAddr = u32_flashAddress;
 
@@ -102,7 +102,7 @@ void UPGRADE_EraseWriteFlash(uint32_t u32_flashAddress, uint32_t u32_upgradeData
         u32_dataSize -= RDWR_SECTOR_SIZE;
         u32_flashAddr += RDWR_SECTOR_SIZE;
         pu8_upgradeDataAddr += RDWR_SECTOR_SIZE;
-        DLOG_Critical("upgrade data %d%%\n",(u32_imageSize-u32_dataSize)*100/u32_imageSize);
+        DLOG_Critical("upgrade data %ld%%\n",(u32_imageSize-u32_dataSize)*100/u32_imageSize);
          
         DLOG_Output(100);
     }while(((u32_flashAddr % RDWR_BLOCK_SIZE) != 0) || u32_flashAddr < APPLICATION_IMAGE_START0 - FLASH_BASE_ADDR);// boot upgrade too small
@@ -129,7 +129,7 @@ void UPGRADE_EraseWriteFlash(uint32_t u32_flashAddress, uint32_t u32_upgradeData
         u32_dataSize -= RDWR_BLOCK_SIZE;
         u32_flashAddr += RDWR_BLOCK_SIZE;
         pu8_upgradeDataAddr += RDWR_BLOCK_SIZE;
-        DLOG_Critical("upgrade data %d%%\n",(u32_imageSize-u32_dataSize)*100/u32_imageSize);
+        DLOG_Critical("upgrade data %ld%%\n",(u32_imageSize-u32_dataSize)*100/u32_imageSize);
          
         DLOG_Output(100);
     }while(1);
@@ -249,7 +249,7 @@ int8_t UPGRADE_ModifyBootInfo(uint32_t u32_addr)
 
     DLOG_Critical("into upgrade %x %x %x\r\n",st_bootInfo.success_boot,st_bootInfo.success_app,st_bootInfo.checkSum);
 
-    DLOG_Critical("flash s1:%02x, s2:%02x", HAL_NOR_FLASH_ReadStatusReg1(), HAL_NOR_FLASH_ReadStatusReg2());
+    DLOG_Critical("flash s1:%02x, s2:%02x", (uint8_t)HAL_NOR_FLASH_ReadStatusReg1(), (uint8_t)HAL_NOR_FLASH_ReadStatusReg2());
     DLOG_Output(100);
     return ret;
 }
@@ -378,7 +378,7 @@ int8_t UPGRADE_ModifyBootInfo(uint32_t u32_addr)
 
     DLOG_Critical("into upgrade %x %x %x\r\n",st_bootInfo.success_boot,st_bootInfo.success_app,st_bootInfo.checkSum);
 
-    DLOG_Critical("flash s1:%02x, s2:%02x", HAL_NOR_FLASH_ReadStatusReg1(), HAL_NOR_FLASH_ReadStatusReg2());
+    DLOG_Critical("flash s1:%02x, s2:%02x", (uint8_t)HAL_NOR_FLASH_ReadStatusReg1(), (uint8_t)HAL_NOR_FLASH_ReadStatusReg2());
 
     return ret;
 }

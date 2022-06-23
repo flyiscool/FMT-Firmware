@@ -166,7 +166,7 @@ void HAL_SRAM_IPCameraPassThrough(void *data, uint32_t size, ENUM_HAL_SRAM_VIDEO
         }
         else
         {
-            DLOG_Error("bandwidth , %d, %d", u32_bufferLevel, total_size);
+            DLOG_Error("bandwidth , %ld, %ld", u32_bufferLevel, total_size);
             return;
         }
     }

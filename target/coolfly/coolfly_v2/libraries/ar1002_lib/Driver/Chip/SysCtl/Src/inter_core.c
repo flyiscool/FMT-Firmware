@@ -252,7 +252,7 @@ uint8_t InterCore_GetMsg(INTER_CORE_MSG_ID* msg_p, uint8_t* buf, uint32_t max_le
 
     if (*pAccessed != dst_filter)
     {
-        DLOG_Error("sram write fail: %lx %lx", *pAccessed, dst_filter);
+        DLOG_Error("sram write fail: %p  %lx", (void *)*pAccessed, (uint32_t)dst_filter);
     }
     //UnLock((uint32_t*)(&(msgPtr[i].lock)));
 

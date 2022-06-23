@@ -53,7 +53,7 @@ uint8_t I2C_Init_Ex(EN_I2C_COMPONENT en_component, ENUM_I2C_Mode en_i2cMode, uin
 
 uint8_t I2C_Master_WriteData(EN_I2C_COMPONENT en_component, uint16_t u16_i2cAddr, uint8_t* ptr_data, uint32_t u32_dataSize);
 uint8_t I2C_Master_ReadData(EN_I2C_COMPONENT en_component, uint16_t u16_i2cAddr, uint8_t* ptr_subAddr, uint8_t u8_subAddrSize, uint8_t* ptr_data, uint32_t u32_dataSize);
-uint8_t I2C_Master_ReadDataMfi(EN_I2C_COMPONENT en_component, uint16_t u16_i2cAddr, uint8_t* ptr_subAddr, uint8_t u8_subAddrSize, uint8_t* ptr_data, uint32_t u32_dataSize);
+
 void I2C_Master_IntrSrvc(uint32_t u32_vectorNum);
 int I2C_Master_GetBusyStatus(EN_I2C_COMPONENT en_component);
 int I2C_Master_GetTxAbrtSource(EN_I2C_COMPONENT en_component);

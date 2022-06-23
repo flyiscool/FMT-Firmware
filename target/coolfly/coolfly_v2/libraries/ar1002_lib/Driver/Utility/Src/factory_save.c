@@ -16,7 +16,7 @@ extern int FCT_ListAllNode(STRU_FACTORY_SETTING *fct, STRU_NODE_LIST *p_nodelist
 
 void FCT_SaveToFlashTest(void)
 {
-    DLOG_Info("pst_factory_defaultcfgnode = 0x%x", pst_factory_defaultcfgnode);
+    DLOG_Info("pst_factory_defaultcfgnode = 0x%lx", (uint32_t)pst_factory_defaultcfgnode);
 
     if (NULL == pst_factory_defaultcfgnode)
     {

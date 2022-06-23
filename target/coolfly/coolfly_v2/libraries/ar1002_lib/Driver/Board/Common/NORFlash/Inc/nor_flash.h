@@ -117,7 +117,7 @@
 
 struct spi_flash
 {
-    const int8_t *  name;
+    const char *  name;
     uint8_t         id[SPI_FLASH_MAX_ID_LEN];
     uint8_t         dual_flash;
     uint8_t         shift;
@@ -138,7 +138,7 @@ struct spi_flash
 struct spi_flash_info
 {
     /* Device name ([MANUFLETTER][DEVTYPE][DENSITY][EXTRAINFO]) */
-    const int8_t    *name;
+    const char    *name;
 
     /*
      * This array stores the ID bytes.
@@ -176,7 +176,7 @@ uint8_t NOR_FLASH_WP_Enable(struct spi_flash flash_status, uint8_t enable_flag, 
 void NOR_FLASH_BootUpgradeEnable();
 void NOR_FLASH_BootUpgradeDisable();
 
-uint8_t NOR_FLASH_Init(void);
+void NOR_FLASH_Init(void);
 
 uint8_t NOR_FLASH_EraseSector(uint32_t flash_start_addr);
 uint8_t NOR_FLASH_EraseBlock(uint32_t flash_start_addr);

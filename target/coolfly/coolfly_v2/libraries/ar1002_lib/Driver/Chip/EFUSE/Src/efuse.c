@@ -9,6 +9,8 @@
 #include "debuglog.h"
 #include "mpu.h"
 
+#include "drv_systick.h"
+
 #define EFUSE_EFUSEDATA0              (0x40B000FC)
 #define EFUSE_EFUSEDATA1              (0x40B00100)
 #define EFUSE_EFUSEDATA2              (0x40B00104) // bit 1   1 mean efuse 
@@ -43,7 +45,7 @@ int8_t EFUSE_EfuseInit(uint32_t u32_key0, uint32_t u32_key1)
     do
     {
         u32_data = EFUSE_GetEfuseCtrstatus(4);
-        DLOG_Critical("wait Efuse%d",u32_data);
+        DLOG_Critical("wait Efuse%ld", u32_data);
         HAL_Delay(1);
     }while(!u32_data);
 
@@ -78,7 +80,7 @@ int32_t EFUSE_GetEfuseEnable(void)
     }while(!u32_data);
 
     u32_data = *(((uint32_t *) EFUSE_EFUSEDATA2));
-    DLOG_Info("efuse data2 value %x", u32_data);
+    DLOG_Info("efuse data2 value %lx", u32_data);
     return ((u32_data >> 1) & 0x01);
 }
 

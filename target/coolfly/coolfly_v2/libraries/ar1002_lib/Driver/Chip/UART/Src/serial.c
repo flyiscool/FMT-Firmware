@@ -389,7 +389,7 @@ void uart_puts(unsigned char index, const char *s)
 
     if (NULL == uart_regs || (0 == strlen(s)))
     {
-        DLOG_Error("regs=0x%lx %d =%d", uart_regs, index, strlen(s));
+        DLOG_Error("regs=0x%p %d =%d", (void *)uart_regs, index, strlen(s));
         return ;        
     }
 
@@ -483,8 +483,8 @@ void UART_IntrSrvc(uint32_t u32_vectorNum)
     uint8_t u8_uartCh;
     uint32_t u32_uartIsrType;
     uint32_t t;
-    volatile uart_type   *pst_uartRegs;
-    volatile uint32_t   ret;
+    volatile uart_type      *pst_uartRegs;
+    volatile uint32_t       ret;
 
     if (VIDEO_UART9_INTR_VECTOR_NUM == u32_vectorNum)
     {
@@ -602,8 +602,6 @@ void UART_IntrSrvc(uint32_t u32_vectorNum)
     {
         ret = pst_uartRegs->USR;
     }
-
-
 
 }
 

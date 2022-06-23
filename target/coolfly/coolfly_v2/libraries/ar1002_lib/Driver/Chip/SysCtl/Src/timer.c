@@ -174,7 +174,7 @@ uint8_t TIM_RegisterPwm(init_timer_st time_st, uint32_t low_us, uint32_t high_us
 uint8_t TIM_ModifyPwmCount(init_timer_st time_st, uint32_t low_us, uint32_t high_us)
 {
     uint8_t u8_TimNum = time_st.time_num;
-    uint8_t u8_TimCtrl = time_st.ctrl;
+    // uint8_t u8_TimCtrl = time_st.ctrl;
     uint8_t u8_TimGroup = time_st.base_time_group;
     uint32_t u32_TimBaseAddr = 0;
     int16_t u16_TimerClock = 0; 

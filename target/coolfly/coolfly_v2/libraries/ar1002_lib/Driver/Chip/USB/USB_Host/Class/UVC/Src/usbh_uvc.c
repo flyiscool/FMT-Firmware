@@ -377,7 +377,7 @@ static void USBH_UVC_Commit(USBH_HandleTypeDef *phost)
                                           UVC_Handle->u8_selInterface,
                                           UVC_Handle->u8_selAltInterface))
     {
-        ar_osDelay(1);
+        HAL_Delay(1);
     }
 
     u8_recvBuff         = USBH_GetRecvBuffer(phost);
@@ -1373,7 +1373,7 @@ void USBH_UVC_SetUVCAttribution(USBH_HandleTypeDef *phost)
 
     while (USBH_BUSY == USBH_CtlReq(phost, (uint8_t *)(&(g_stUVCAttrCtrl[UVC_Handle->u8_setAttrIndex].cur)) , phost->Control.setup.b.wLength.w))
     {
-        ar_osDelay(1);
+        HAL_Delay(1);
     }
 }
 

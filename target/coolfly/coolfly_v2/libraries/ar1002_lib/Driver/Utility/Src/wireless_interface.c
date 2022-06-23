@@ -29,6 +29,8 @@
 #include "driver_mutex.h"
 #include "driver_module_init.h"
 #include "systicks.h"
+
+#include "drv_systick.h"
 // #include "cmsis_os.h"
 
 STRU_WIRELESS_INFO_DISPLAY             *g_pstWirelessInfoDisplay;        //OSD Info in SRAM

@@ -192,7 +192,7 @@ HAL_RET_T HAL_UART_TxData(ENUM_HAL_UART_COMPONENT e_uartComponent,
                           uint32_t u32_timeoutms)
 {
     uint8_t u8_uartCh;
-    uint32_t u32_uartTxCnt = 0;
+    // uint32_t u32_uartTxCnt = 0;
     
     //support uart9 and uart10
     if (e_uartComponent > HAL_UART_COMPONENT_7)
@@ -221,7 +221,7 @@ HAL_RET_T HAL_UART_TxData(ENUM_HAL_UART_COMPONENT e_uartComponent,
       return HAL_BUSY;
     }
     
-    uart_putdata(u8_uartCh, pu8_txBuf, u32_len);
+    uart_putdata(u8_uartCh, (char *)pu8_txBuf, u32_len);
 
     HAL_UART_WaitTillIdle(u8_uartCh, u32_timeoutms);
     
@@ -235,9 +235,9 @@ HAL_RET_T HAL_UART_TxData(ENUM_HAL_UART_COMPONENT e_uartComponent,
 HAL_RET_T HAL_UART_SET_BAUDRATE(ENUM_HAL_UART_COMPONENT e_uartComponent, 
                         ENUM_HAL_UART_BAUDR e_uartBaudr)
 {
-    uint32_t u32_uartBaudr;
-    uint8_t u8_uartCh;
-    uint8_t u8_uartVecNum;
+    // uint32_t u32_uartBaudr;
+    // uint8_t u8_uartCh;
+    // uint8_t u8_uartVecNum;
 
     //support uart9 and uart10
     if (e_uartComponent > HAL_UART_COMPONENT_7)

@@ -37,7 +37,7 @@ int CMD_exec_cmd(char *cmdArray[], uint32_t cmdNum)
 {
     uint32_t i =0;
     int ret;
-    char buf[64];
+    // char buf[64];
     if (cmdNum >= 10)
     {
         return 1;
@@ -50,7 +50,7 @@ int CMD_exec_cmd(char *cmdArray[], uint32_t cmdNum)
 
     while(NULL!= g_cmdArray[i].func)
     {
-        uint8_t name_match = (0 == memcmp(cmdArray[0], g_cmdArray[i].fname, strlen(g_cmdArray[i].fname)));
+        uint8_t name_match = (0 == memcmp(cmdArray[0], g_cmdArray[i].fname, strlen((char *)g_cmdArray[i].fname)));
         uint8_t argc_match = (cmdNum >= (g_cmdArray[i].argc+1));
 
         if (name_match && argc_match)

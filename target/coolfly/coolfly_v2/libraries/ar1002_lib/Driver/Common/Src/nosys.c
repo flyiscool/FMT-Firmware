@@ -389,7 +389,7 @@ void *calloc_safe(size_t n, size_t elem_size)
 
 void memory_malloc_free_check(void)
 {
-    DLOG_Warning("%d %d", malloc_cnt, free_cnt);
+    DLOG_Warning("%ld %ld", malloc_cnt, free_cnt);
 }
 
 

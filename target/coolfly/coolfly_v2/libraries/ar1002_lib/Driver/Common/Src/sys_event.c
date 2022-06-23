@@ -12,6 +12,8 @@
 #include "memory.h"
 #include "hal.h"
 
+#include "inter_core.h"
+
 #define TRUE (1)
 #define FALSE (0)
 
@@ -42,10 +44,10 @@ static uint8_t acquireSysEventList(void)
     return TRUE;
 }
 
-static uint8_t releaseSysEventList(void)
-{
-    return TRUE;
-}
+// static uint8_t releaseSysEventList(void)
+// {
+//     return TRUE;
+// }
 
 static inline void enableInterrupts(void)
 {
@@ -345,7 +347,7 @@ static STRU_NotifiedSysEvent_Node* findNotifiedSysEventNodeByPriority(void)
                  (pNode->event_id & SYS_EVENT_LEVEL_MIDIUM_MASK) ||
                  (pNode->event_id & SYS_EVENT_LEVEL_LOW_MASK)) == 0)
             {
-                DLOG_Error("The system event ID 0x%x priority level is not right!", pNode->event_id);
+                DLOG_Error("The system event ID 0x%lx priority level is not right!", pNode->event_id);
             }
         }
         
@@ -452,7 +454,7 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
         }
     }
 
-    releaseSysEventList();
+    // releaseSysEventList();
     
     return retval;
 }
@@ -487,7 +489,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
         }
     }
 
-    releaseSysEventList();
+    // releaseSysEventList();
     
     return retval;
 }
@@ -564,13 +566,14 @@ static uint8_t notifySysEvent(uint32_t event_id, void* parameter)
  * @retval      TURE, this means notification operation is sucessful. 
  * @retval      FALSE, this means error happens in this notification operation.
  */
-uint8_t SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter)
+void SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter)
 {
     uint8_t retval = notifySysEvent(event_id, parameter);
     if (retval)
     {
         // ar_osSysEventMsgQPut();
     }
+
 }
 
 
@@ -587,7 +590,7 @@ uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter)
 
     retval = notifySysEvent(event_id, parameter);
 
-    releaseSysEventList();
+    // releaseSysEventList();
 
     if (retval)
     {
@@ -631,7 +634,7 @@ uint8_t SYS_EVENT_Process(void)
 
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
-    printf("processNode = %08x \r\n", (uint32_t)processNode);
+    printf("processNode = %p \r\n", (void *)processNode);
     if (processNode != NULL)
     {
         // Get the event node with same event ID as the nitification node 
@@ -647,7 +650,7 @@ uint8_t SYS_EVENT_Process(void)
                 SYS_Event_Handler tmp_handler = handler_node->handler;
                 
                 // Release resource to let handler to use system event lists
-                releaseSysEventList();
+                // releaseSysEventList();
 
                 // Launch the handler callback
                 // From this design, event handler callback can not register or unregister event handler.
@@ -687,7 +690,7 @@ uint8_t SYS_EVENT_Process(void)
                 SYS_Event_Handler tmp_handler = handler_node->handler;
                 
                 // Release resource to let handler to use system event lists
-                releaseSysEventList();
+                // releaseSysEventList();
 
                 // Launch the handler callback
                 // From this design, event handler callback can not register or unregister event handler.
@@ -698,7 +701,7 @@ uint8_t SYS_EVENT_Process(void)
             }
         }        
     }
-    releaseSysEventList();
+    // releaseSysEventList();
     return retval;
 }
 
@@ -710,7 +713,7 @@ void SYS_EVENT_DumpAllListNodes(void)
     STRU_RegisteredSysEvent_Node* rEventNode = g_registeredSysEventList;
     while(rEventNode != NULL)
     {
-        DLOG_Info("Registered EventNode: event_id 0x%x\n", rEventNode->event_id);
+        DLOG_Info("Registered EventNode: event_id 0x%lx\n", rEventNode->event_id);
         STRU_RegisteredSysEventHandler_Node* hNode = rEventNode->handler_list;
         while(hNode != NULL)
         {
@@ -723,7 +726,7 @@ void SYS_EVENT_DumpAllListNodes(void)
     STRU_NotifiedSysEvent_Node* nEventNode = g_notifiedSysEventList;
     while(nEventNode != NULL)
     {
-        DLOG_Info("Notified EventNode: event_id 0x%x\n", nEventNode->event_id);
+        DLOG_Info("Notified EventNode: event_id 0x%lx\n", nEventNode->event_id);
         nEventNode = nEventNode->next;
     }
 }
@@ -731,7 +734,7 @@ void SYS_EVENT_DumpAllListNodes(void)
 
 void SYS_EVENT_MallocFreeCntCheck(void)
 {
-    DLOG_Critical("%d %d %d %d %d %d", msg_malloc_cnt, msg_free_cnt, 
+    DLOG_Critical("%ld %ld %ld %ld %ld %ld", msg_malloc_cnt, msg_free_cnt, 
                                        handler_malloc_cnt, handler_free_cnt, 
                                        node_malloc_cnt, node_free_cnt);
 }

@@ -204,6 +204,7 @@ uint8_t MD5Check(uint8_t *data,
     }
 
     DLOG_Info("checksum......ok\n");
+    return 0;
 }
 
 

@@ -215,7 +215,7 @@ static void set_rf_mode(int mode)
 }
 
 
-int PWR_CTRL_ModeSet(STRU_PWR_CTRL *ctrl)
+void PWR_CTRL_ModeSet(STRU_PWR_CTRL *ctrl)
 {
 	// uint8_t v;
     STRU_DEVICE_INFO *pst_devInfo = (STRU_DEVICE_INFO *)(DEVICE_INFO_SHM_ADDR);

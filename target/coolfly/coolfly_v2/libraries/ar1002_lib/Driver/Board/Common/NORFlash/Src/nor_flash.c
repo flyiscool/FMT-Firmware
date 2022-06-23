@@ -68,7 +68,7 @@ static const struct spi_flash_info * NOR_FLASH_ReadId(void)
 
 
 /*Winbond, GIGADEVICE*/
-static uint8_t NOR_FLASH_Common_WPEnable(struct spi_flash flash_status, uint8_t enable_flag)
+static void NOR_FLASH_Common_WPEnable(struct spi_flash flash_status, uint8_t enable_flag)
 {
     uint32_t u32_reg = 0;
 
@@ -114,7 +114,7 @@ static uint8_t NOR_FLASH_Common_WPEnable(struct spi_flash flash_status, uint8_t 
 }
 
 /* Macronix */
-static uint8_t NOR_FLASH_Macrnix_WPEnable(struct spi_flash flash_status, uint8_t enable_flag)
+static void NOR_FLASH_Macrnix_WPEnable(struct spi_flash flash_status, uint8_t enable_flag)
 {
     uint32_t u32_reg1 = 0;
     uint32_t u32_reg2 = 0;
@@ -218,7 +218,7 @@ uint8_t NOR_FLASH_WP_Enable(struct spi_flash flash_status, uint8_t enable_flag, 
     return 0;
 }
 
-uint8_t NOR_FLASH_Init(void)
+void NOR_FLASH_Init(void)
 {
     const struct spi_flash_info * info;
     MPU_QuadspiProtectDisable();
@@ -302,7 +302,7 @@ uint8_t NOR_FLASH_Init(void)
                 HAL_GPIO_SetPin(WP_CTRL_GPIO_NUM, 0);
 
                 MPU_QuadspiProtectDisable();
-                DLOG_Critical("WP register no match reset all WP register! S1_REG:%x,S2_REG:%x",s1_tmp,s2_tmp);
+                DLOG_Critical("WP register no match reset all WP register! S1_REG:%lx,S2_REG:%lx",s1_tmp,s2_tmp);
             }
             
             if(0 == NOR_FLASH_WP_Enable(g_norflash, 1, g_norflash.protect_start, 0))
@@ -311,7 +311,7 @@ uint8_t NOR_FLASH_Init(void)
                 DLOG_Critical("WP Enable");
                 DLOG_Critical("Flash JEDEC ID:0x%02x 0x%02x 0x%02x, Name:%s",
                               g_norflash.id[0], g_norflash.id[1], g_norflash.id[2], g_norflash.name);
-                DLOG_Critical("Protect Zone:0x%02x - 0x%02x", g_norflash.protect_start, g_norflash.protect_end);
+                DLOG_Critical("Protect Zone:0x%02lx - 0x%02lx", g_norflash.protect_start, g_norflash.protect_end);
                 DLOG_Critical("S1 MAP:0x%02x, S2 MAP:0x%02x", g_norflash.s1_map, g_norflash.s2_map);
                 DLOG_Critical("WP MAP:0x%02x, WP MAP:0x%02x", g_norflash.s1_wp_map, g_norflash.s2_wp_map);
                 DLOG_Critical("*********************************************");
@@ -330,6 +330,8 @@ uint8_t NOR_FLASH_Init(void)
     }
 
     MPU_QuadspiProtectEnable();
+
+
 }
 
 static int8_t NOR_FLASH_Assert(uint32_t flash_start_addr, uint32_t size)

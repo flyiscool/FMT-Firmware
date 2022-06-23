@@ -184,8 +184,8 @@ void SYS_ClearResouce(void)
 
 HAL_RET_T HAL_SYS_CTL_Init(STRU_HAL_SYS_CTL_CONFIG *pst_usrHalSysCtlCfg)
 {
-    uint16_t u16_pllClk = 0;
-    uint32_t u32_tickCnt = 0;
+    // uint16_t u16_pllClk = 0;
+    // uint32_t u32_tickCnt = 0;
 
     STRU_HAL_SYS_CTL_CONFIG *pst_halSysCtlCfg = NULL;
     

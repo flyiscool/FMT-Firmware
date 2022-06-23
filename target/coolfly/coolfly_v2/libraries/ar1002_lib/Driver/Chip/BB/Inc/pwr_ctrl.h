@@ -15,7 +15,7 @@ extern "C"
 
 int PWR_CTRL_Init(STRU_PWR_CTRL *ctrl);
 
-int PWR_CTRL_ModeSet(STRU_PWR_CTRL *ctrl);
+void PWR_CTRL_ModeSet(STRU_PWR_CTRL *ctrl);
 
 
 #ifdef __cplusplus

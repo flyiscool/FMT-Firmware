@@ -24,7 +24,10 @@
 extern "C" {
 #endif
 
+void HAL_Delay(__IO uint32_t Delay);
 rt_err_t drv_systick_init(void);
+
+
 
 #ifdef __cplusplus
 }

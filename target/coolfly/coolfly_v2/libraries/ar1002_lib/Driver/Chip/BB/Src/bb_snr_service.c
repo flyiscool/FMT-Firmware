@@ -183,7 +183,7 @@ uint16_t grd_get_it_snr( void )
     if( cnt++ > 1000 )
     {
         cnt = 0;
-        DLOG_Info("SNR1:%0.4x\n", snr);
+        DLOG_Info("SNR1:%04x\n", snr);
     }
 
     return snr;

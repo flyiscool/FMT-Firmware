@@ -104,8 +104,8 @@ uint8_t __attribute__ ((section(".h264"))) sky_rcUnLockHopBand(void)
 {
     static uint32_t u32_count = 0;
     //static uint32_t u32_AgcToggleTick = 0;
-    static uint8_t frq_2g = 0;
-    static uint8_t frq_5g = 0;
+    // static uint8_t frq_2g = 0;
+    // static uint8_t frq_5g = 0;
 	static uint8_t frq_pre = 0;
     static uint8_t cnt = 0;
     uint32_t feq_num;
@@ -158,7 +158,7 @@ uint8_t __attribute__ ((section(".h264"))) sky_rcUnLockHopBand(void)
             sky_soft_reset();
 
             BB_set_ItFrqByCh(context.e_curBand, context.cur_IT_ch);
-            DLOG_Warning("to:%d %d %d %d", context.e_curBand, context.rf_info.rc_ch_working_patten_size,context.sky_rc_channel, SysTicks_GetTickCount());
+            DLOG_Warning("to:%d %d %d %ld", (uint8_t)context.e_curBand, context.rf_info.rc_ch_working_patten_size, context.sky_rc_channel, SysTicks_GetTickCount());
 
             sky_bandSwitchLnaSwitch();
             

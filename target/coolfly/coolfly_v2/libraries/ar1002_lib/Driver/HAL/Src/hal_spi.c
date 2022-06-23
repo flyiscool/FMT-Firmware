@@ -34,7 +34,7 @@ History:
 HAL_RET_T HAL_SPI_MasterInit(ENUM_HAL_SPI_COMPONENT e_spiComponent, 
                              STRU_HAL_SPI_INIT *pst_spiInitInfo)
 {
-    uint16_t u16_spiDivision;
+    // uint16_t u16_spiDivision;
     uint8_t u8_spiVecNum;
     // init default value.
     STRU_SPI_InitTypes st_spiInit = 

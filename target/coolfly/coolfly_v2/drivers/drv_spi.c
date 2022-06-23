@@ -77,7 +77,7 @@ static rt_uint32_t transfer(struct rt_spi_device* device, struct rt_spi_message*
     {
         // console_println("only write");
         ret = HAL_SPI_MasterWriteRead(SPI, 
-                message->send_buf,
+                (uint8_t *)message->send_buf,
                 message->length,
                 NULL,
                 0,

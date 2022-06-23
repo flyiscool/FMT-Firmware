@@ -297,7 +297,6 @@ void   BB_SetPowerOpenMode(ENUM_RF_BAND band)
 static void  __attribute__ ((section(".h264"))) BB_getCfgData(ENUM_BB_MODE en_mode, STRU_cfgBin *cfg)
 {
     pstru_bb_boardcfg = (STRU_BOARD_BB_PARA *)CFGBIN_GetNodeData(cfg, BB_BOARDCFG_PARA_ID);
-    STRU_RF_POWER_CTRL *power_data;
     STRU_cfgNode *cfgnode;
 	// int i=0;
 

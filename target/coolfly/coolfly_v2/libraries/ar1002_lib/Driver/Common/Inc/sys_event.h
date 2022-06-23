@@ -82,7 +82,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
 uint8_t SYS_EVENT_NotifyLocal(uint32_t event_id, void* parameter);
 uint8_t SYS_EVENT_NotifyInterCore(uint32_t event_id, void* parameter);
 uint8_t SYS_EVENT_NotifyRemote(uint32_t event_id, void* parameter);
-uint8_t SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter);
+void SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter);
 uint8_t SYS_EVENT_Process(void);
 void SYS_EVENT_DumpAllListNodes(void);
 void SYS_EVENT_MallocFreeCntCheck(void);

@@ -29,7 +29,7 @@ History:
 
 // HAL_RET_T HAL_Delay(uint32_t u32_ms)
 // {
-//     ar_osDelay(u32_ms);
+//     HAL_Delay(u32_ms);
 // }
 
 

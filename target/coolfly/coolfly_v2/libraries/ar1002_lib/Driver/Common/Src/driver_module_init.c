@@ -53,7 +53,7 @@ void COMMON_driverInitSet(emu_driver_init e_driver, uint32_t u32_channel)
 
 int8_t COMMON_driverInitGet(emu_driver_init e_driver, uint32_t u32_channel)
 {
-    uint32_t tmp;
+    // uint32_t tmp;
 
     switch (e_driver)
     {

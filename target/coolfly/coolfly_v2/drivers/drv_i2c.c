@@ -169,10 +169,10 @@ static struct ar1002_i2c_bus ar1002_i2c3 = {
 };
 
 
-static struct rt_i2c_device i2c2_dev1 = {
-    .slave_addr = IST8310_ADDRESS, /* 7 bit address */
-    .flags = 0
-};
+// static struct rt_i2c_device i2c2_dev1 = {
+//     .slave_addr = IST8310_ADDRESS, /* 7 bit address */
+//     .flags = 0
+// };
 
 static struct rt_i2c_device i2c2_dev2 = {
     .slave_addr = MMC5983_7BITI2C_ADDRESS, /* 7 bit address */

@@ -98,7 +98,7 @@ HAL_RET_T HAL_SYS_CTL_FpuEnable(uint8_t u8_fpuEnable)
 HAL_RET_T HAL_SYS_CTL_SysTickInit(uint32_t u32_sysTickCount)
 {
     NVIC_SetPriority(HAL_NVIC_SYSTICK_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,0x0f,0));
-    SysTicks_Init(u32_sysTickCount);
+    // SysTicks_Init(u32_sysTickCount);
     
     return HAL_OK;
 }

@@ -28,9 +28,10 @@ extern "C" {
 
 /* Thread Prority */
 
+#define COOLFLY_InterCore          1
 #define VEHICLE_THREAD_PRIORITY    3
 #define FMTIO_THREAD_PRIORITY      4
-#define COOLFLY_InterCore          4
+// #define COOLFLY_InterCore          4
 #define LOGGER_THREAD_PRIORITY     10
 #define MAVLINK_RX_THREAD_PRIORITY 11
 #define COMM_THREAD_PRIORITY       12

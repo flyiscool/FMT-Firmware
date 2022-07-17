@@ -18,6 +18,7 @@
 #include "module/task_manager/task_manager.h"
 
 #include "sys_event.h"
+// #include "bb_led.c"
 
 fmt_err_t task_sys_event_process_init(void)
 {
@@ -35,10 +36,7 @@ void task_sys_event_process_entry(void* parameter)
     // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USER_DEFINE, USER_Define_EventHandler);
 
     while (1) {
-
-        printf("SYS_EVENT_Process in \r\n");
         SYS_EVENT_Process();
-        printf("SYS_EVENT_Process out \r\n");
         sys_msleep(1000);
     }
 }
@@ -48,7 +46,7 @@ TASK_EXPORT __fmt_task_desc = {
     .init = task_sys_event_process_init,
     .entry = task_sys_event_process_entry,
     .priority = COOLFLY_InterCore,
-    .stack_size = 1024,
+    .stack_size = 2048,
     .param = NULL,
     .dependency = NULL
 };

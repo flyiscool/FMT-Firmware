@@ -641,6 +641,8 @@ uint8_t SYS_EVENT_Process(void)
     BOOT_Printf("2------------------ \r\n");
     if (processNode != NULL)
     {
+
+        BOOT_Printf("3------------------ \r\n");
         // Get the event node with same event ID as the nitification node 
         STRU_RegisteredSysEvent_Node* event_node = retrieveRegisteredEventNode(processNode->event_id, FALSE);
         if (event_node != NULL)
@@ -665,6 +667,7 @@ uint8_t SYS_EVENT_Process(void)
             }
         }
 
+        BOOT_Printf("4------------------ \r\n");   
         // Remove such notification node after it is processed
         retval = removeNotifiedSysEventNode(processNode);
     }
@@ -705,6 +708,9 @@ uint8_t SYS_EVENT_Process(void)
             }
         }        
     }
+
+
+    BOOT_Printf("5------------------ \r\n");   
     // releaseSysEventList();
     return retval;
 }

@@ -7,7 +7,7 @@
 #include "debuglog.h"
 #include "pll_ctrl.h"
 #include "cpu_info.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 static STRU_I2C_Controller stru_i2cControllerArray[MAX_I2C_CONTOLLER_NUMBER] = 
 {

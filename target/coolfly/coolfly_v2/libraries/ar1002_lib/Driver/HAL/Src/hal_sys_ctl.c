@@ -15,7 +15,7 @@ History:
 #include "pll_ctrl.h"
 #include "bb_spi.h"
 #include "inter_core.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "debuglog.h"
 #include "hal_sys_ctl.h"
 #include "hal_ret_type.h"

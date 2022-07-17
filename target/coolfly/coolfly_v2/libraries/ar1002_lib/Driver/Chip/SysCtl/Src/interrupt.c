@@ -1,7 +1,7 @@
 #include "interrupt.h"
 #include "debuglog.h"
 #include "ar8020.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "drv_usart.h"
 
 #define MAX_IRQ_VECTROS     (99)

@@ -13,7 +13,7 @@
 #include "bb_uart_com.h"
 #include "memory_config.h"
 #include "sys_event.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 
 typedef enum

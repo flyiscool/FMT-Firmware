@@ -11,7 +11,7 @@
 #include "log10.h"
 #include "cfg_parser.h"
 #include "rf_if.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 #define SWEEP_NOISE_ORDER 65
 #define SWEEP_NOISE_CHG_THD 5

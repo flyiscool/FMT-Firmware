@@ -14,7 +14,7 @@ History:
 #include "hal_i2c.h"
 #include "hal_ret_type.h"
 #include "hal_nvic.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "hal.h"
 #include "interrupt.h"
 #include "debuglog.h"

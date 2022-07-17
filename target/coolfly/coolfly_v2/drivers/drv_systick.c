@@ -25,6 +25,7 @@
 static systick_dev_t systick_dev;
 
 
+
 /* HAL exported functions */
 uint32_t HAL_GetTick(void)
 {
@@ -32,7 +33,7 @@ uint32_t HAL_GetTick(void)
     return rt_tick_get() / (RT_TICK_PER_SECOND / 1000);
 }
 
-void HAL_Delay(__IO uint32_t Delay)
+void HAL_Delay(volatile uint32_t Delay)
 {
     if (rt_thread_self()) {
         rt_thread_mdelay(Delay);
@@ -49,20 +50,23 @@ void HAL_Delay(__IO uint32_t Delay)
  */
 void SysTick_Handler(void)
 {
+    SysTicks_IncTickCount();
+
     /* enter interrupt */
     rt_interrupt_enter();
 
     hal_systick_isr(systick_dev);
     
-#ifdef USE_HAL_DRIVER
-    HAL_IncTick();
-#endif
-
     rt_tick_increase();
 
     /* leave interrupt */
     rt_interrupt_leave();
 }
+
+
+static volatile uint32_t g_u32SysTickCount = 0;
+static volatile uint32_t g_u32SysTickLoad = 0;
+
 
 static void _set_systick_freq(rt_uint32_t freq)
 {
@@ -79,7 +83,140 @@ static void _set_systick_freq(rt_uint32_t freq)
     systick_dev->ticks_per_isr = TicksNum;
 
     SysTick_Config(TicksNum);
+
+    g_u32SysTickLoad = (uint32_t)(TicksNum - 1UL);
+
 }
+
+void SysTicks_IncTickCount(void)
+{
+    g_u32SysTickCount++;
+}
+
+uint32_t SysTicks_GetTickCount(void)
+{
+    return g_u32SysTickCount;
+}
+
+/**
+  * @brief Provides a us tick value
+  * @note: Call xTaskGetTickCount instead if the FreeRTOS is running.  
+  * @retval Tick value
+  */
+uint64_t SysTicks_GetUsTickCount(void)
+{
+    uint64_t val = (uint64_t)(SysTick->VAL);
+    uint64_t tmp_SysTickCount = (uint64_t)(g_u32SysTickCount);
+
+    uint16_t u16_pllClk;
+    uint64_t ret;
+    static uint64_t calc_SysTickCount = 0;
+    static uint64_t pre_val = 0;
+    
+    PLLCTRL_GetCoreClk(&u16_pllClk, CPUINFO_GetLocalCpuId());
+
+    if(calc_SysTickCount > tmp_SysTickCount)
+    {
+        if (val > pre_val)
+        {
+            calc_SysTickCount += 1;
+        }
+    }
+    else
+    {
+        if((val > pre_val) && (calc_SysTickCount == tmp_SysTickCount))
+        {
+            calc_SysTickCount = tmp_SysTickCount + 1;
+        }
+        else
+        {
+            calc_SysTickCount = tmp_SysTickCount;
+        }
+    }
+
+    ret = (uint64_t)(calc_SysTickCount * 1000 + (uint32_t)(g_u32SysTickLoad - val) / u16_pllClk);
+
+    pre_val = val;
+
+    return ret;
+}
+
+
+void SysTicks_DelayMS(uint32_t msDelay)
+{
+    uint32_t tickstart = 0;
+    uint32_t tickcurrent = 0;
+    tickstart = g_u32SysTickCount;
+    while(1)
+    {
+        tickcurrent = g_u32SysTickCount;
+        if (tickcurrent >= tickstart)
+        {
+            if ((tickcurrent - tickstart) >= msDelay)
+            {
+                break;
+            }
+        }
+        else
+        {
+            if (((MAX_SYS_TICK_COUNT - tickstart) + tickcurrent) >= msDelay)
+            {
+                break;
+            }
+        }
+    }
+}
+
+
+void SysTicks_DelayUS(uint64_t usDelay)
+{
+    uint64_t tickstart = 0;
+    uint64_t tickcurrent = 0;
+    tickstart = SysTicks_GetUsTickCount();
+    while(1)
+    {
+        tickcurrent = SysTicks_GetUsTickCount();
+        if (tickcurrent >= tickstart)
+        {
+            if ((tickcurrent - tickstart) >= usDelay)
+            {
+                break;
+            }
+        }
+        else
+        {
+            if (((((uint64_t)0xFFFFFFFFFFFFFFFF) - tickstart) + tickcurrent) >= usDelay)
+            {
+                break;
+            }
+        }
+    }
+}
+
+uint32_t SysTicks_GetDiff(uint32_t u32_start, uint32_t u32_end)
+{
+    if (u32_end >= u32_start)
+    {
+        return (u32_end - u32_start);
+    }
+    else
+    {
+       return ((MAX_SYS_TICK_COUNT - u32_start) + u32_end);
+    }
+}
+
+uint64_t SysTicks_GetUsDiff(uint64_t u64_start, uint64_t u64_end)
+{
+    if (u64_end >= u64_start)
+    {
+        return (u64_end - u64_start);
+    }
+    else
+    {
+       return ((((uint64_t)0xFFFFFFFFFFFFFFFF) - u64_start) + u64_end);
+    }
+}
+
 
 static rt_err_t systick_configure(systick_dev_t systick, struct systick_configure* cfg)
 {

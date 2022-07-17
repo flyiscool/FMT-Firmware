@@ -2,14 +2,14 @@
 # Modify this file to control which files/modules should be built
 
 DRIVERS = [
-    'imu/icm20600.c',
+    # 'imu/icm20600.c',
     # 'imu/icm20689.c',
     # 'imu/bmi055.c',
     # 'mag/ist8310.c',
-    'mag/mmc5983ma.c',
+    # 'mag/mmc5983ma.c',
     # 'barometer/ms5611.c',
-    'barometer/spl06.c',
-    'gps/gps_m8n.c',
+    # 'barometer/spl06.c',
+    # 'gps/gps_m8n.c',
     # 'rgb_led/ncp5623c.c',
     'mtd/ramtron.c',
 ]
@@ -25,10 +25,10 @@ HAL = [
     'spi/spi_core.c',
     'spi/spi_dev.c',
     'i2c/*.c',
-    'gyro/*.c',
-    'accel/*.c',
-    'mag/*.c',
-    'barometer/*.c',
+    # 'gyro/*.c',
+    # 'accel/*.c',
+    # 'mag/*.c',
+    # 'barometer/*.c',
     # 'fmtio_dev/*.c',
     'motor/*.c',
     'actuator/*.c',

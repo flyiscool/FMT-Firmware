@@ -11,7 +11,7 @@ History:
 *****************************************************************************/
 
 #include <stdint.h>
-#include "systicks.h"
+#include "drv_systick.h"
 #include "hal_ret_type.h"
 #include "hal.h"
 #include "dma.h"

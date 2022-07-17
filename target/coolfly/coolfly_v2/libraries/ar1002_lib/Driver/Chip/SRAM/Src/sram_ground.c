@@ -5,7 +5,7 @@
 #include "usbd_hid.h"
 #include "usbh_mtp.h"
 #include "reg_rw.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "cpu_info.h"
 #include "usbh_def.h"
 #include "usbh_cdc.h"

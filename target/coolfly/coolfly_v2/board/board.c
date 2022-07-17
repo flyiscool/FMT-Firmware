@@ -453,11 +453,11 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_gps(0));
 #else
     /* init onboard sensors */
-    RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
+    // RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_bmi055_init("spi1_dev3", "gyro1", "accel1"));
     // RT_CHECK(drv_ms5611_init("spi4_dev1", "barometer"));
-    RT_CHECK(drv_spl06_init("spi5_dev1", "barometer"));
+    // RT_CHECK(drv_spl06_init("spi5_dev1", "barometer"));
     /* if no gps mag then use onboard mag */
 
     // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
@@ -468,20 +468,20 @@ void bsp_initialize(void)
     //     console_println("drv_ist8310_init i2c2_dev1~");
     // }
 
-    if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
-    }
-    else{
-        console_println("mmc5983ma i2c2_dev2~");
-    }
+    // if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
+    //     console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
+    // }
+    // else{
+    //     console_println("mmc5983ma i2c2_dev2~");
+    // }
    
     
-    RT_CHECK(gps_m8n_init("serial1", "gps"));
+    // RT_CHECK(gps_m8n_init("serial1", "gps"));
 
     // /* register sensor to sensor hub */
-    FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
-    FMT_CHECK(register_sensor_mag("mag0", 0));
-    FMT_CHECK(register_sensor_barometer("barometer"));
+    // FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
+    // FMT_CHECK(register_sensor_mag("mag0", 0));
+    // FMT_CHECK(register_sensor_barometer("barometer"));
 #endif
 
     /* init finsh */

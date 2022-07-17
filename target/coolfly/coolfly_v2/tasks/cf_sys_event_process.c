@@ -39,7 +39,7 @@ void task_sys_event_process_entry(void* parameter)
         printf("SYS_EVENT_Process in \r\n");
         SYS_EVENT_Process();
         printf("SYS_EVENT_Process out \r\n");
-        sys_msleep(5);
+        sys_msleep(1000);
     }
 }
 

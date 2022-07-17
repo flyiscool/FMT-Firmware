@@ -1,6 +1,6 @@
 #include "usbh_uvc.h"
 #include "debuglog.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "dma.h"
 #include "cpu_info.h"
 #include "sram_sky.h"

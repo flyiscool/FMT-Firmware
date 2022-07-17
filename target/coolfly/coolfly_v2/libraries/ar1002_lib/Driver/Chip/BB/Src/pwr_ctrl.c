@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "debuglog.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "pwr_ctrl.h"
 #include "memory_config.h"
 #include "bb_ctrl_internal.h"

@@ -28,7 +28,7 @@
 #include "hal_sys_ctl.h"
 #include "driver_mutex.h"
 #include "driver_module_init.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 #include "drv_systick.h"
 // #include "cmsis_os.h"

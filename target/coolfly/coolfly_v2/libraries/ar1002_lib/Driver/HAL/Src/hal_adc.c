@@ -13,7 +13,7 @@ History:
 #include <stdint.h>
 #include "reg_rw.h"
 #include "debuglog.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "hal_adc.h"
 
 /** 

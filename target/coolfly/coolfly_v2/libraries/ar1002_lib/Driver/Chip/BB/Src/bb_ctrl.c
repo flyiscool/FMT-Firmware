@@ -9,7 +9,7 @@
 #include "bb_sky_ctrl.h"
 #include "bb_uart_com.h"
 #include "reg_rw.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "bb_regs.h"
 #include "sys_event.h"
 #include "rf_if.h"

@@ -8,7 +8,7 @@
 #include "local_irq.h"
 #include "memory.h"
 #include "cpu_info.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "memory.h"
 #include "hal.h"
 
@@ -632,9 +632,13 @@ uint8_t SYS_EVENT_Process(void)
     uint8_t             retval = FALSE;
     static uint32_t     idle_event_ticks = 0;
 
+    // printf("processNode = %p \r\n", (void *)processNode);
+    BOOT_Printf("1------------------ \r\n");
+
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
-    printf("processNode = %p \r\n", (void *)processNode);
+    
+    BOOT_Printf("2------------------ \r\n");
     if (processNode != NULL)
     {
         // Get the event node with same event ID as the nitification node 

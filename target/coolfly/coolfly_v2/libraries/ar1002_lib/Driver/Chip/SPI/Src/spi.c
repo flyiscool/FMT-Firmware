@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <string.h>
-#include "systicks.h"
+#include "drv_systick.h"
 #include "reg_rw.h"
 #include "spi.h"
 #include "debuglog.h"

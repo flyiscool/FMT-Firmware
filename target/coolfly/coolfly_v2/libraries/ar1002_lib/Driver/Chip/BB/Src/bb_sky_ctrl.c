@@ -7,7 +7,7 @@
 #include "reg_rw.h"
 #include "timer.h"
 #include "interrupt.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "bb_sky_ctrl.h"
 #include "bb_regs.h"
 #include "debuglog.h"

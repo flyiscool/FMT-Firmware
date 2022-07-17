@@ -11,7 +11,7 @@ History:
 
 #include "interrupt.h"
 #include "serial.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 #include "hal_nvic.h"
 #include "hal_uart.h"

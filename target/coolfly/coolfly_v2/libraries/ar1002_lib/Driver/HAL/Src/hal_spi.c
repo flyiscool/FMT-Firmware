@@ -13,11 +13,11 @@ History:
 #include "debuglog.h"
 #include "hal_nvic.h"
 #include "interrupt.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "hal.h"
 #include "driver_mutex.h"
 #include "driver_module_init.h"
-
+#include "drv_systick.h"
 /**
 * @brief  The SPI initialization function which must be called 
 *         before using the SPI controller.
@@ -156,7 +156,7 @@ HAL_RET_T HAL_SPI_MasterWriteRead(ENUM_HAL_SPI_COMPONENT e_spiComponent,
         start = SysTicks_GetTickCount();
         while (SPI_GetBusyStatus(e_spiComponent))
         {
-            if ((SysTicks_GetDiff(start, SysTicks_GetTickCount())) >= u32_timeOut)
+           if ((SysTicks_GetDiff(start, SysTicks_GetTickCount())) >= u32_timeOut)
             {
                 SPI_DisEnableInt(e_spiComponent, SPI_IMR_MASK);
                 return HAL_TIME_OUT;

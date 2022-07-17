@@ -29,7 +29,7 @@
 #include "usbh_core.h"
 #include "debuglog.h"
 #include "stm32f7xx_hal_conf.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 HCD_HandleTypeDef hhcd[2];
 

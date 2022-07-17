@@ -52,7 +52,7 @@
 #include "hal.h"
 #include "sram_sky.h"
 #include "sram_ground.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "sys_event.h"
 #include "usbh_core.h"
 

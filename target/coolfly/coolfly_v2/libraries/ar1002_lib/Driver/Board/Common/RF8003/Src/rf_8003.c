@@ -11,7 +11,7 @@ History:
 #include "debuglog.h"
 #include "bb_spi.h"
 #include "rf_if.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "bb_ctrl_internal.h"
 #include "cfg_parser.h"
 #include "factory.h"
@@ -102,7 +102,8 @@ void RF8003_getCfgData(ENUM_BB_MODE en_mode, STRU_cfgBin *cfg)
 }
 
 void RF8003xCalcFrq2Register(uint16_t u16_frq, STRU_FRQ_CHANNEL *frq_regvalue)
-{
+{
+
     uint8_t  integer;
     uint32_t fraction;
 

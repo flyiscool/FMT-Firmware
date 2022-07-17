@@ -20,7 +20,7 @@ History:
 #include "debuglog.h"
 #include "hal_dma.h"
 #include "cpu_info.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "hal.h"
 #include "hal_sram_sky.h"
 #include "sram_ground.h"

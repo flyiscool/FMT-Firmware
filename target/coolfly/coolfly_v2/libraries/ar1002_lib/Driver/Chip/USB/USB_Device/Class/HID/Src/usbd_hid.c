@@ -58,7 +58,7 @@
 #include "sys_event.h"
 #include "gpio.h"
 #include "hal_usb_otg.h"
-#include "systicks.h"
+#include "drv_systick.h"
 
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{

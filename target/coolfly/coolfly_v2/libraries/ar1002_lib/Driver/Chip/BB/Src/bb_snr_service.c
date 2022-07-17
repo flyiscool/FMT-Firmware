@@ -5,7 +5,7 @@
 #include "bb_snr_service.h"
 #include "bb_ctrl_internal.h"
 #include "bb_regs.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "debuglog.h"
 
 #define     WORK_FREQ_SNR_BLOCK_ROWS        (4)

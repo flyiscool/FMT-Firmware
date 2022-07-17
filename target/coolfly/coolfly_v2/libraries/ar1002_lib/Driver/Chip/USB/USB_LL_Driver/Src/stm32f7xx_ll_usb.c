@@ -57,7 +57,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_conf.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "usbd_conf.h"
 #include "usbd_def.h"
 #include "usbh_conf.h"

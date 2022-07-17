@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun 22 22:59:55 2022
+# Make data base, printed on Sat Jul 16 14:11:52 2022
 
 # Variables
 
@@ -33,7 +31,7 @@ VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-PLATFORMIO_IDE = 2.4.3
+PLATFORMIO_IDE = 2.5.0
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -51,7 +49,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:52139
+JOURNAL_STREAM = 8:54433
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -101,7 +99,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c02aef31a82a4d29a618da012a2d3542
+INVOCATION_ID = f0575ee218a04097acba8acb487a95c7
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -171,7 +169,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-3044ab68-c629-45b1-a0a5-e261bef445d8.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-10fbef6c-34d6-4dcc-a450-16df97bfd020.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -211,8 +209,6 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = en_US.UTF-8
 # environment
-LC_IDENTIFICATION = en_US.UTF-8
-# environment
 QT_ACCESSIBILITY = 1
 # default
 MAKEFILES := 
@@ -229,13 +225,11 @@ LC_ALL = C
 # environment
 QT4_IM_MODULE = fcitx
 # environment
-GJS_DEBUG_TOPICS = JS ERROR;JS LOG
-# environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/30738236_ec50_415c_af17_9a6c2e9c9305
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/03612070_9030_487e_a84e_71189fd80dac
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.7223
+GNOME_TERMINAL_SERVICE = :1.23831
 # default
 SUFFIXES := 
 # environment
@@ -245,7 +239,7 @@ WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-GJS_DEBUG_OUTPUT = stderr
+LC_IDENTIFICATION = en_US.UTF-8
 # default
 .RECIPEPREFIX := 
 # environment
@@ -255,9 +249,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 298827
+VSCODE_PID = 762642
 # variable set hash-table stats:
-# Load=122/1024=12%, Rehash=0, Collisions=21/144=15%
+# Load=120/1024=12%, Rehash=0, Collisions=20/142=14%
 
 # Pattern-specific Variable Values
 
@@ -278,10 +272,12 @@ VSCODE_PID = 298827
 # Not a target:
 all:
 #  Command line target.
- 
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
+
+ 
+make: *** No rule to make target 'all'.  Stop.
 
 # Not a target:
 Makefile:
@@ -324,6 +320,6 @@ GNUmakefile:
 # strcache performance: lookups = 31 / hit rate = 9%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Wed Jun 22 22:59:55 2022
+# Finished Make data base on Sat Jul 16 14:11:52 2022
 
  

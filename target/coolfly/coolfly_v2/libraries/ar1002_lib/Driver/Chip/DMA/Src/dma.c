@@ -21,7 +21,7 @@ History:
 #include "cpu_info.h"
 #include "interrupt.h"
 #include "memory_config.h"
-#include "systicks.h"
+#include "drv_systick.h"
 #include "data_type.h"
 #include "memory.h"
 

@@ -24,9 +24,22 @@
 extern "C" {
 #endif
 
-void HAL_Delay(__IO uint32_t Delay);
+#define MAX_SYS_TICK_COUNT (0xFFFFFFFFUL)
+
+void HAL_Delay(volatile uint32_t Delay);
 rt_err_t drv_systick_init(void);
 
+/* HAL exported functions */
+uint32_t HAL_GetTick(void);
+
+void SysTicks_IncTickCount(void);
+uint32_t SysTicks_GetTickCount(void);
+uint64_t SysTicks_GetUsTickCount(void);
+
+void SysTicks_DelayMS(uint32_t msDelay);
+void SysTicks_DelayUS(uint64_t usDelay);
+uint32_t SysTicks_GetDiff(uint32_t u32_start, uint32_t u32_end);
+uint64_t SysTicks_GetUsDiff(uint64_t u64_start, uint64_t u64_end);
 
 
 #ifdef __cplusplus

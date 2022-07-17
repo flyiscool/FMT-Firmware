@@ -37,7 +37,7 @@ void task_sys_event_process_entry(void* parameter)
 
     while (1) {
         SYS_EVENT_Process();
-        sys_msleep(1000);
+        sys_msleep(50);
     }
 }
 

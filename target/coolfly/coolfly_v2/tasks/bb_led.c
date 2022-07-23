@@ -147,6 +147,7 @@ void BB_ledGpioInit(void)
 
 void BB_EventHandler(void *p)
 {
+    DLOG_Critical("BB_EventHandler~~");
     STRU_SysEvent_DEV_BB_STATUS *pstru_status = (STRU_SysEvent_DEV_BB_STATUS *)p;
 
     if (pstru_status->pid == BB_LOCK_STATUS)
@@ -361,4 +362,5 @@ void led_link_process(void)
     {
         BB_ledIdNoMatch();
     }
+    DLOG_Critical("link_led_status = %d ", link_led_status);
 }

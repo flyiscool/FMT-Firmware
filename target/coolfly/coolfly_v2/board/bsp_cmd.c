@@ -19,6 +19,7 @@
 #include "ar1002_chip.h"
 #include "ar1002_hal.h"
 
+#include  "factory.h"
 
 ////////////////////////////////////////////////////////////////////////////
 // reboot
@@ -46,8 +47,13 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_reboot, __cmd_reboot, reboot the system);
 // reset_fct
 static int handle_reset_fct(int argc, char** argv, int optc, optv_t* optv)
 {
+
+
+    printf("fct reset start~ \r\n");
+
 	FCT_Reset();
 
+    printf("fct reset finish~ \r\n");
 	return 0;
 }
 

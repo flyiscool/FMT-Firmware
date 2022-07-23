@@ -18,7 +18,7 @@
 #include "module/task_manager/task_manager.h"
 
 #include "sys_event.h"
-// #include "bb_led.c"
+#include "bb_led.h"
 
 fmt_err_t task_sys_event_process_init(void)
 {
@@ -29,7 +29,7 @@ void task_sys_event_process_entry(void* parameter)
 {
     printf("Hello ChuanYun! This is a sys_event_process demo task.\n");
 
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_EventHandler);
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_EventHandler);
     // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
     // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USER_CFG_CHANGE, BB_ReplyPcHandler);
     // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_TO_APP, Sky_AppSysEventHandler);
@@ -37,7 +37,7 @@ void task_sys_event_process_entry(void* parameter)
 
     while (1) {
         SYS_EVENT_Process();
-        sys_msleep(50);
+        sys_msleep(20);
     }
 }
 
@@ -50,3 +50,15 @@ TASK_EXPORT __fmt_task_desc = {
     .param = NULL,
     .dependency = NULL
 };
+
+
+////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+

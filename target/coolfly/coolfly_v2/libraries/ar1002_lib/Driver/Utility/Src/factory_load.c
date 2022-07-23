@@ -54,6 +54,8 @@ static uint8_t FCT_CheckFlashSettingValid(STRU_FACTORY_SETTING *fct)
     if (valid == 0)
     {
         BOOT_Printf("fct checksum error: %p %ld %ld \r\n", pdata, checksum, *(uint32_t *)(pdata + fct_len));
+        BOOT_Printf("fct_len: %ld \r\n", fct_len);
+
     }
 
     return valid;
@@ -165,6 +167,7 @@ int FCT_Load2Sram(void)
     }
     else
     {
+        
         BOOT_Printf("No valid flash factory setting \r\n");
         return 1;
     }

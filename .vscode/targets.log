@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 16 14:11:52 2022
+# Make data base, printed on Fri Jul 22 20:04:42 2022
 
 # Variables
 
@@ -49,7 +51,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/fly/.config/Code/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:54433
+JOURNAL_STREAM = 8:54090
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -73,7 +75,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /usr/bin/code
 # environment
-MANAGERPID = 1546
+MANAGERPID = 1487
 # environment
 CLUTTER_IM_MODULE = fcitx
 # environment
@@ -89,7 +91,7 @@ NO_PROXY = 127.0.0.1
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/ubuntu:@/tmp/.ICE-unix/1765,unix/ubuntu:/tmp/.ICE-unix/1765
+SESSION_MANAGER = local/ubuntu:@/tmp/.ICE-unix/1710,unix/ubuntu:/tmp/.ICE-unix/1710
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -99,7 +101,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = f0575ee218a04097acba8acb487a95c7
+INVOCATION_ID = fa8e3ac9fa314750a3bd622a8c8d5cc3
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -119,11 +121,11 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /home/fly/workspace/FMT-Firmware
 # environment
-RTT_EXEC_PATH = /opt/toolchain/gcc-arm-none-eabi-5_2-2015q4/bin
+RTT_EXEC_PATH = /opt/toolchain/gcc-arm-none-eabi-7-2018-q2-update/bin
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1719
+SSH_AGENT_PID = 1665
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -169,7 +171,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-10fbef6c-34d6-4dcc-a450-16df97bfd020.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c809d55f-8c8a-45dd-916c-62110d2494e7.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -225,11 +227,11 @@ LC_ALL = C
 # environment
 QT4_IM_MODULE = fcitx
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/03612070_9030_487e_a84e_71189fd80dac
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9628c2a1_6c98_485f_bb8c_cf33fb3c1dff
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.23831
+GNOME_TERMINAL_SERVICE = :1.83
 # default
 SUFFIXES := 
 # environment
@@ -249,7 +251,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 762642
+VSCODE_PID = 2102
 # variable set hash-table stats:
 # Load=120/1024=12%, Rehash=0, Collisions=20/142=14%
 
@@ -277,8 +279,6 @@ all:
 #  File has not been updated.
 
  
-make: *** No rule to make target 'all'.  Stop.
-
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
@@ -320,6 +320,6 @@ GNUmakefile:
 # strcache performance: lookups = 31 / hit rate = 9%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Sat Jul 16 14:11:52 2022
+# Finished Make data base on Fri Jul 22 20:04:42 2022
 
  

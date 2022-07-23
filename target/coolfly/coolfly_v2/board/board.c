@@ -379,7 +379,8 @@ void bsp_early_initialize(void)
     console_println("systime_init~");
 
     HAL_NV_Init();
-    
+    console_println("HAL_NV_Init~");
+
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
     console_println("drv_gpio_init~");

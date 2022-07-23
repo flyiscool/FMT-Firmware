@@ -87,14 +87,10 @@ void FCT_Reset(void)
     uint32_t writesize = 0;
     uint32_t totalsize = NV_FLASH_FCT_SIZE;
 
-
-    printf("1------- \r\n");
     do
     {
-        printf("writesize = 0x%08lx ", writesize);
         NOR_FLASH_EraseSector(NV_FLASH_FCT_START_ADDR_0 + writesize);
         writesize += (4 * 1024);
     }while(writesize < totalsize);
-    
-    printf("2-------\r\n");
+
 }

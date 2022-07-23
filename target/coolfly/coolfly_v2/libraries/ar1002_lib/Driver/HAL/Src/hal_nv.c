@@ -355,10 +355,11 @@ static int32_t NV_CalChk(STRU_NV_DATA *pst_nvData, uint8_t *u8_chk)
     u32_i = sizeof(pst_nvData->u8_nvChk);
     p_u8Addr = (uint8_t *)pst_nvData;
 
+    uint32_t i;
     //calculate checkSum
-    for (u32_i; u32_i < u32_nvDataLen; u32_i++)
+    for ( i = u32_i; i < u32_nvDataLen; i++)
     {
-        u8_checkSum += *(p_u8Addr + u32_i);
+        u8_checkSum += *(p_u8Addr + i);
     }
 
     *u8_chk = u8_checkSum;

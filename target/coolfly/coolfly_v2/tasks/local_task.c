@@ -24,10 +24,39 @@
 
 #include "local_task.h"
 
+
+cf_rc_s 	sky_rc;
+cf_sbus_s  	sky_sbus;
+
 //--------------------------------------
 void link_led_process(void);
 void link_status_EventHandler(void *p);
 void key_bb_match_process(void);
+
+void debug_sbus(void)
+{
+    static uint64_t t_last;
+    uint64_t t = HAL_GetSysUsTick();
+
+
+    // this task is 20hz = 50ms;
+    if(t - t_last < 1000000)
+    {
+        return;
+    }
+
+    t_last = t;
+
+    DLOG_Critical("---------sky_rc----------");
+	DLOG_Critical("%d %d %d %d %d %d %d %d",
+		      sky_rc.ch[0], sky_rc.ch[1], sky_rc.ch[2], sky_rc.ch[3],
+		      sky_rc.ch[4], sky_rc.ch[5], sky_rc.ch[6], sky_rc.ch[7]);
+
+	DLOG_Critical("%d %d %d %d %d %d %d %d",
+		      sky_rc.ch[8], sky_rc.ch[9], sky_rc.ch[10], sky_rc.ch[11],
+		      sky_rc.ch[12], sky_rc.ch[13], sky_rc.ch[14], sky_rc.ch[15]);
+}
+
 
 fmt_err_t task_local_init(void)
 {
@@ -253,9 +282,6 @@ void key_bb_match_process(void)
 ////////////////////////////////////////////////
 // sky used
 
-
-cf_rc_s 	sky_rc;
-cf_sbus_s  	sky_sbus;
 
 static void cf_sky_bb_spi_irq_handler(void *p);
 static void cf_sbus_parse(void);

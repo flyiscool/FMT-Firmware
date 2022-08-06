@@ -60,6 +60,8 @@ void ENCODE_EventHandler(void *p);
 void led_link_process(void);
 
 
+void cf_led_task2(void);
+
 #ifdef __cplusplus
 }
 #endif

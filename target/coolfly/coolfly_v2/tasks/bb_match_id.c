@@ -158,39 +158,6 @@ void search_id(uint8_t dev_type)
     }
 }
 
-// void Mod_Sky_Pin_SearchIdTask(void const *argument)
-// {
-//     uint8_t cnt = 0,key_release = 1;
-//     uint32_t pin_value;
-    
-//     HAL_GPIO_SetMode(EXTERN_SEARCH_ID_PIN, HAL_GPIO_PIN_MODE2);  
-//     HAL_GPIO_InPut(EXTERN_SEARCH_ID_PIN);
-//     while (1)
-//     {
-//         HAL_GPIO_GetPin(EXTERN_SEARCH_ID_PIN,&pin_value);
-//         if(pin_value == 0)
-//         {
-//             cnt++;
-//             if((cnt >= KEY_LONG_PRESS / READ_INTERVAL) && key_release)
-//             {
-//                 if(!flag_searchIdTimerStart)
-//                 {
-//                     DLOG_Warning("pin search id start");
-//                     BB_Sky_SearchIdHandler(NULL);
-//                     set_link_led_status(LINK_SEARCH_ID);
-//                     key_release = 0;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             cnt = 0;
-//             key_release = 1;
-//         }
-        
-//         HAL_Delay(READ_INTERVAL);
-//     }
-// }
 
 void command_set_id(void)
 {

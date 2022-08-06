@@ -44,10 +44,10 @@ static uint8_t acquireSysEventList(void)
     return TRUE;
 }
 
-// static uint8_t releaseSysEventList(void)
-// {
-//     return TRUE;
-// }
+static uint8_t releaseSysEventList(void)
+{
+    return TRUE;
+}
 
 static inline void enableInterrupts(void)
 {
@@ -443,6 +443,8 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
 
     event_id &= ~SYS_EVENT_INTER_CORE_MASK;
 
+    acquireSysEventList();
+
     sysEventNode = retrieveRegisteredEventNode(event_id, TRUE);
 
     if (sysEventNode != NULL)
@@ -454,7 +456,7 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
         }
     }
 
-    // releaseSysEventList();
+    releaseSysEventList();
     
     return retval;
 }
@@ -471,6 +473,8 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
     uint8_t retval = FALSE;
     STRU_RegisteredSysEvent_Node* sysEventNode;
  
+    acquireSysEventList();   
+
     sysEventNode = retrieveRegisteredEventNode(event_id, FALSE);
 
     if (sysEventNode != NULL)
@@ -489,7 +493,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
         }
     }
 
-    // releaseSysEventList();
+    releaseSysEventList();
     
     return retval;
 }
@@ -556,7 +560,7 @@ static uint8_t notifySysEvent(uint32_t event_id, void* parameter)
 
 // static void notifySysEventIdle(void* parameter)
 // {
-//     ar_osSysEventMsgQPut();
+//     // ar_osSysEventMsgQPut();
 // }
 
 /** 
@@ -573,7 +577,6 @@ void SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter)
     {
         // ar_osSysEventMsgQPut();
     }
-
 }
 
 
@@ -588,9 +591,11 @@ uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter)
 {
     uint8_t retval = FALSE;
 
+    acquireSysEventList();
+
     retval = notifySysEvent(event_id, parameter);
 
-    // releaseSysEventList();
+    releaseSysEventList();
 
     if (retval)
     {
@@ -621,6 +626,28 @@ uint8_t SYS_EVENT_NotifyInterCore(uint32_t event_id, void* parameter)
     return SYS_EVENT_Notify(event_id | SYS_EVENT_INTER_CORE_MASK, parameter);
 }
 
+
+// void ar_osSysEventMsgQGet(void)
+// {
+//     if (osKernelRunning())
+//     {
+//         createSysEventMsgQ();
+
+//         getSysEventMsgQ();
+//     }
+// }
+
+// void ar_osSysEventMsgQPut(void)
+// {
+//     if (osKernelRunning())
+//     {
+//         createSysEventMsgQ();
+
+//         putSysEventMsgQ();
+//     }
+// }
+
+
 /** 
  * @brief       API for main loop to process the notified events.
  * @param[in]   none
@@ -631,6 +658,9 @@ uint8_t SYS_EVENT_Process(void)
 {
     uint8_t             retval = FALSE;
     static uint32_t     idle_event_ticks = 0;
+
+    // ar_osSysEventMsgQGet();
+    // acquireSysEventList();
 
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
@@ -655,6 +685,9 @@ uint8_t SYS_EVENT_Process(void)
                 // Launch the handler callback
                 // From this design, event handler callback can not register or unregister event handler.
                 tmp_handler(processNode->parameter);
+
+                // Apply system event resource again
+                // acquireSysEventList();
 
                 // Continue to process the next handler of this event
                 handler_node = handler_node->next;
@@ -696,12 +729,16 @@ uint8_t SYS_EVENT_Process(void)
                 // From this design, event handler callback can not register or unregister event handler.
                 tmp_handler((void*)NULL);
 
+                // Apply system event resource again
+                // acquireSysEventList();
+
                 // Continue to process the next handler of this event
                 handler_node = handler_node->next;
             }
         }        
     }
 
+    // releaseSysEventList();
     return retval;
 }
 

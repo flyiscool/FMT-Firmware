@@ -84,21 +84,9 @@ void led_videoIsNormal(void)
 {
     HAL_GPIO_SetPin(VIDEO_RED_LED_GPIO,  HAL_GPIO_PIN_RESET);
 }
-void BB_ledSearchId(void)
-{
-    static int toggle_flag = 0;
 
-    if(toggle_flag)
-    {
-        toggle_flag = 0;
-        HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_SET );
-    }
-    else
-    {
-        toggle_flag = 1;
-        HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_RESET );
-    }
-}
+
+
 void BB_ledIdNoMatch(void)
 {
     static int toggle_flag = 0;
@@ -233,8 +221,6 @@ int check_encode_status(void)
 	}
 
 	return 0;
-
-
 }
 
 
@@ -327,40 +313,9 @@ int check_encode_status(void)
 // }
 
 
-void led_link_process(void)
-{
-    STRU_DEVICE_INFO p;
-    STRU_DEVICE_INFO       *pstDeviceInfo =(STRU_DEVICE_INFO*) &p;
-    //if bb not locked , to notice spi user data bypass not output data
 
-    if(HAL_BB_GetDeviceInfo(&pstDeviceInfo) != HAL_OK)
-    {
-        DLOG_Error("failed");
-        return;
-    }
-        
-    if(pstDeviceInfo->inSearching) //0,un search, 1 , searching
-    {
-        BB_ledSearchId();
-        link_status = LINK_SEARCH_ID;
-        return;
-    }
-    link_status = link_led_status;
-    if(link_led_status == LINK_UNLOCK)
-    {
-        BB_ledUnlock();
-    }
-    else if(link_led_status == LINK_LOCK)
-    {
-        BB_ledLock();
-    }
-    else if(link_led_status == LINK_SEARCH_ID)
-    {
-        BB_ledSearchId();
-    }
-    else if(link_led_status == LINK_ID_NO_MATCH)
-    {
-        BB_ledIdNoMatch();
-    }
-    DLOG_Critical("link_led_status = %d ", link_led_status);
+
+void cf_led_task2(void)
+{
+    printf("cf_led_task2 \n\r");
 }

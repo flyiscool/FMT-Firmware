@@ -53,7 +53,7 @@ static void InterCore_ResetIRQ0(void)
 static void InterCore_IRQ0Handler(uint32_t u32_vectorNum)
 {
 #ifdef INTER_CORE_DEBUG_LOG_ENABLE
-    DLOG_Info("handler 0\n");
+    BOOT_Printf("handler 0\r\n");
 #endif
 
     InterCore_ResetIRQ0();
@@ -79,7 +79,7 @@ static void InterCore_IRQ0Handler(uint32_t u32_vectorNum)
             // Notify the message as a system event to the local CPU
             SYS_EVENT_Notify_From_ISR(event, (void*)buf);
 #ifdef INTER_CORE_DEBUG_LOG_ENABLE
-            DLOG_Info("Notify event 0x%x by inter core msg", event);
+            BOOT_Printf("Notify event 0x%lx by inter core msg\r\n", event);
 #endif
         }
         else
@@ -216,7 +216,7 @@ uint8_t InterCore_GetMsg(INTER_CORE_MSG_ID* msg_p, uint8_t* buf, uint32_t max_le
     for(i = 0 ; i < INTER_CORE_MSG_SHARE_MEMORY_NUMBER; i++)
     {
 #ifdef INTER_CORE_DEBUG_LOG_ENABLE
-        DLOG_Info("msgPtr[%d].dataAccessed 0x%x, msgPtr[%d].enDstCpuID 0x%x", i, msgPtr[i].dataAccessed, i, msgPtr[i].enDstCpuID);
+        DLOG_Info("msgPtr[%d].dataAccessed 0x%lx, msgPtr[%d].enDstCpuID 0x%x", i, msgPtr[i].cpu0DataAccessed, i, msgPtr[i].enDstCpuID);
 #endif
         pAccessed = &(msgPtr[i].cpu0DataAccessed) + local_id;
         if((*pAccessed == 0) && ((msgPtr[i].enDstCpuID & dst_filter) != 0))

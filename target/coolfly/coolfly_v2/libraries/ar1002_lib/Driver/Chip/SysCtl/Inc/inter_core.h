@@ -5,7 +5,7 @@
 #include "sys_event.h"
 #include "memory_config.h"
 
-//#define INTER_CORE_DEBUG_LOG_ENABLE
+#define INTER_CORE_DEBUG_LOG_ENABLE
 
 /* need to modify after debug ok */
 #define INTER_CORE_MSG_SHARE_MEMORY_BASE_ADDR     SRAM_INTER_CORE_MSG_SHARE_MEMORY_ST_ADDRESS

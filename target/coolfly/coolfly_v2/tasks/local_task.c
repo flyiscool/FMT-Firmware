@@ -23,76 +23,33 @@
 #include "bb_led.h"
 #include "ar1002_hal.h"
 
+#include "board_device.h"
 
-extern uint32_t flag_searchIdTimerStart;
-extern uint8_t vt_id_timer_start_flag;
-
-
-// void BB_skyRcIdEventHandler(void *p)
-// {
-//     STRU_SysEvent_DEV_BB_STATUS *pstru_status = (STRU_SysEvent_DEV_BB_STATUS *)p;
-//     uint8_t id[7];
-
-//     if(pstru_status->pid == BB_GET_RCID)
-//     {
-//         DLOG_Critical("Get rcid: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x,rssi_a %d, rssi_b %d", pstru_status->rcid[0], pstru_status->rcid[1], 
-//                                                                        pstru_status->rcid[2], pstru_status->rcid[3], pstru_status->rcid[4],
-//                                                                        pstru_status->agc1,pstru_status->agc2);
-//     }
-
-//     if (pstru_status->pid == BB_SKY_SEARCHING_STATES_CHAGE)
-//     {
-//         if (SKY_WAIT_VT_ID_MSG == pstru_status->e_sky_searchState)
-//         {
-//             DLOG_Warning("search id: SKY_WAIT_VT_ID_MSG");
-//         }
-//         else if (SKY_WAIT_RC_ID_MATCH == pstru_status->e_sky_searchState)
-//         {
-//             memcpy(id,pstru_status->vtid,2);
-//             memcpy(id+2,pstru_status->rcid,5);
-//             add_dev_info(id,pstru_status->agc1,pstru_status->agc2);
-            
-//             if(!vt_id_timer_start_flag)
-//             {
-//                 vt_id_timer_start_flag = 1;
-//                 HAL_TIMER_Start(GET_VT_ID_TIMER);
-//                 DLOG_Warning("got vtid: %dus timer start",GET_VT_ID_TIMEOUT);
-//             }
-//             //DLOG_Warning("search id: SKY_WAIT_RC_ID_MATCH");
-//         }
-//         else if (SKY_RC_SEARCH_END == pstru_status->e_sky_searchState)
-//         {
-//             DLOG_Warning("search id: SKY_RC_SEARCH_END rc id: %x %x %x %x %x; vt id: %x %x", 
-//                           pstru_status->rcid[0], pstru_status->rcid[1], pstru_status->rcid[2], pstru_status->rcid[3], pstru_status->rcid[4],
-//                           pstru_status->vtid[0], pstru_status->vtid[1]);
-
-//             if (flag_searchIdTimerStart)
-//             {
-//                 HAL_TIMER_Stop(SEARCH_ID_TIMER);
-//                 flag_searchIdTimerStart = 0;
-//                 vt_id_timer_start_flag = 0;
-//             }
-//         }
-//     }
-// }
+//--------------------------------------
+void link_led_process(void);
+void link_status_EventHandler(void *p);
+void key_bb_match_process(void);
 
 fmt_err_t task_local_init(void)
 {
 
-    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
+    HAL_GPIO_InPut(EXTERN_SEARCH_ID_PIN);
+
     return FMT_EOK;
 }
 
 void task_local_entry(void* parameter)
 {
-    printf("Hello FMT! This is a local demo task.\n");
-    printf("Hello ChuanYun! This is a local demo task.\n");
+
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, link_status_EventHandler);
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
 
     while (1) {
-        // sky_led_video_process();
-        led_link_process();
+        key_bb_match_process();
+        link_led_process();
         DLOG_Process(NULL);
         sys_msleep(10);
+        
     }
 }
 
@@ -105,3 +62,182 @@ TASK_EXPORT __fmt_task_desc = {
     .param = NULL,
     .dependency = NULL
 };
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+static void link_led_fasttoggle(void)
+{
+    static uint8_t toggle_flag = 0;
+
+    if(toggle_flag)
+    {
+        toggle_flag = 0;
+        HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_SET);
+    }
+    else
+    {
+        toggle_flag = 1;
+        HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_RESET);
+    }
+}
+
+static void link_led_slowtoggle(void)
+{
+    static uint8_t cnt = 0;
+    cnt++;
+    if(cnt%4 == 0)
+    {
+        link_led_fasttoggle();
+    }
+}
+
+
+static void link_led_on(void)
+{
+    HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_RESET);
+}
+
+static void link_led_off(void)
+{
+    HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_SET);
+}
+
+
+
+static LINK_LED_STATUS _link_led_status;
+
+void link_status_EventHandler(void *p)
+{
+    STRU_SysEvent_DEV_BB_STATUS *pstru_status = (STRU_SysEvent_DEV_BB_STATUS *)p;
+
+    if (pstru_status->pid == BB_LOCK_STATUS)
+    {
+        if (pstru_status->lockstatus == 3)
+        {
+            _link_led_status = LINK_LOCK;
+            DLOG_Info("------> lock");
+        }
+        else
+        {
+            if(_link_led_status != LINK_SEARCH_ID)
+            {
+                _link_led_status = LINK_UNLOCK;
+            }
+            DLOG_Info("------> unlock");
+        }
+    }
+    else if(pstru_status->pid == BB_GOT_ERR_CONNNECT)
+    {        
+        if (pstru_status->lockstatus)        
+        {           
+            DLOG_Info("Got mismatch signal");
+            if(_link_led_status != LINK_SEARCH_ID)
+            {
+                _link_led_status = LINK_ID_NO_MATCH;
+            }
+        }       
+        else        
+        {            
+            DLOG_Info("not got signal");     
+        }    
+    }
+}
+
+
+void link_led_process(void)
+{
+    static uint64_t t_last;
+    uint64_t t = HAL_GetSysUsTick();
+
+
+    // this task is 20hz = 50ms;
+    if(t - t_last < 50000)
+    {
+        return;
+    }
+
+    t_last = t;
+
+
+    ////////////////////////////////
+    STRU_DEVICE_INFO p;
+    STRU_DEVICE_INFO       *pstDeviceInfo =(STRU_DEVICE_INFO*) &p;
+    
+    if(HAL_BB_GetDeviceInfo(&pstDeviceInfo) != HAL_OK)
+    {
+        DLOG_Critical("failed");
+        return;
+    }
+
+    if(pstDeviceInfo->inSearching) //0,un search, 1 , searching
+    {
+        link_led_fasttoggle();
+        return;
+    }
+
+    // link_status = _link_led_status;
+    if(_link_led_status == LINK_UNLOCK)
+    {
+        link_led_off();
+    }
+    else if(_link_led_status == LINK_LOCK)
+    {
+        link_led_on();
+    }
+    else if(_link_led_status == LINK_SEARCH_ID)
+    {
+        link_led_fasttoggle();
+    }
+    else if(_link_led_status == LINK_ID_NO_MATCH)
+    {
+        link_led_slowtoggle();
+    }
+}
+
+
+
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+void key_bb_match_process(void)
+{
+    static uint64_t t_last;
+    uint64_t t = HAL_GetSysUsTick();
+
+
+    // this task is 5hz = 200ms;
+    if(t - t_last < 200000)
+    {
+        return;
+    }
+
+    t_last = t;
+
+
+
+    //
+    static uint8_t cnt = 0;
+    static uint32_t pin_value;
+
+    HAL_GPIO_GetPin(EXTERN_SEARCH_ID_PIN, &pin_value);
+    if(pin_value == 0)
+    {
+        cnt++;
+        if(cnt >= 10)
+        {
+            cnt = 0;
+            DLOG_Warning("pin search id start");
+            BB_Sky_SearchIdHandler(NULL);
+            set_link_led_status(LINK_SEARCH_ID);
+        }
+    }
+    else
+    {
+        cnt = 0;
+    }
+        
+}

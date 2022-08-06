@@ -372,34 +372,26 @@ void bsp_early_initialize(void)
 
     /* systick driver init */
     RT_CHECK(drv_systick_init());
-    console_println("drv_systick_init~");
 
     /* system time module init */
     FMT_CHECK(systime_init());
-    console_println("systime_init~");
 
     HAL_NV_Init();
-    console_println("HAL_NV_Init~");
 
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
-    console_println("drv_gpio_init~");
 
     /* spi driver init */
     RT_CHECK(drv_spi_init());
-    console_println("drv_spi_init~");
 
     /* i2c driver init */
     RT_CHECK(drv_i2c_init());
-    console_println("drv_i2c_init");
 
     /* pwm driver init */
     RT_CHECK(drv_pwm_init());
-    console_println("drv_pwm_init");
 
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
-    console_println("sys_stat_init");
 }
 
 /* this function will be called after rtos start, which is in thread context */
@@ -407,19 +399,15 @@ void bsp_initialize(void)
 {
     /* enable on-board power supply */
     EnablePower();
-    console_println("EnablePower~");
 
     /* start recording boot log */
     FMT_CHECK(boot_log_init());
-    console_println("boot_log_init~");
 
     /* init uMCN */
     FMT_CHECK(mcn_init());
-    console_println("mcn_init~");
 
     /* create workqueue */
     FMT_CHECK(workqueue_manager_init());
-    console_println("workqueue_manager_init~");
 
     /* init storage devices */
     // RT_CHECK(drv_sdio_init());
@@ -430,18 +418,15 @@ void bsp_initialize(void)
 
     /* init file system */
     FMT_CHECK(file_manager_init(mnt_table));
-    console_println("file_manager_init~");
 
     /* init parameter system */
     FMT_CHECK(param_init());
-    console_println("param_init~");
 
     /* init usbd_cdc */
     // RT_CHECK(drv_usb_cdc_init());
 
     /* adc driver init */
     RT_CHECK(drv_adc_init());
-    console_println("drv_adc_init~");
 
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
     // drv_ncp5623c_init("i2c3_dev1");
@@ -454,11 +439,11 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_gps(0));
 #else
     /* init onboard sensors */
-    // RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
+    RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_bmi055_init("spi1_dev3", "gyro1", "accel1"));
     // RT_CHECK(drv_ms5611_init("spi4_dev1", "barometer"));
-    // RT_CHECK(drv_spl06_init("spi5_dev1", "barometer"));
+    RT_CHECK(drv_spl06_init("spi5_dev1", "barometer"));
     /* if no gps mag then use onboard mag */
 
     // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
@@ -469,40 +454,37 @@ void bsp_initialize(void)
     //     console_println("drv_ist8310_init i2c2_dev1~");
     // }
 
-    // if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
-    //     console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
-    // }
-    // else{
-    //     console_println("mmc5983ma i2c2_dev2~");
-    // }
+    if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
+        console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
+    }
+    else{
+        console_println("mmc5983ma i2c2_dev2~");
+    }
    
     
-    // RT_CHECK(gps_m8n_init("serial1", "gps"));
+    RT_CHECK(gps_m8n_init("serial1", "gps"));
 
     // /* register sensor to sensor hub */
-    // FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
-    // FMT_CHECK(register_sensor_mag("mag0", 0));
-    // FMT_CHECK(register_sensor_barometer("barometer"));
+    FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
+    FMT_CHECK(register_sensor_mag("mag0", 0));
+    FMT_CHECK(register_sensor_barometer("barometer"));
 #endif
 
     /* init finsh */
     finsh_system_init();
-    console_println("finsh_system_init~");
+
     /* Mount finsh to console after finsh system init */
     FMT_CHECK(console_enable_input());
-    console_println("console_enable_input~");
 
 #ifdef FMT_USING_CM_BACKTRACE
     /* cortex-m backtrace */
     cm_backtrace_init("fmt_coolfly-s1", TARGET_NAME, FMT_VERSION);
-    console_println("cm_backtrace_init~");
+
 #endif
 }
 
 void bsp_post_initialize(void)
 {
-    console_println("bsp_post_initialize---------");
-
     /* toml system configure */
     __toml_root_tab = toml_parse_config_file(SYS_CONFIG_FILE);
     if (!__toml_root_tab) {
@@ -510,45 +492,35 @@ void bsp_post_initialize(void)
         __toml_root_tab = toml_parse_config_string(default_conf);
     }
     FMT_CHECK(bsp_parse_toml_sysconfig(__toml_root_tab));
-    console_println("bsp_parse_toml_sysconfig~");
 
     /* init rc */
     FMT_CHECK(pilot_cmd_init());
-    console_println("pilot_cmd_init~");
 
     /* init gcs */
     FMT_CHECK(gcs_cmd_init());
-    console_println("gcs_cmd_init~");
 
     /* init mission data */
     FMT_CHECK(mission_data_init());
-    console_println("mission_data_init~");
 
 #if defined(FMT_HIL_WITH_ACTUATOR) || (!defined(FMT_USING_HIL) && !defined(FMT_USING_SIH))
     /* init actuator */
     FMT_CHECK(actuator_init());
-    console_println("actuator_init~");
 #endif
 
     /* start device message queue work */
     FMT_CHECK(devmq_start_work());
-    console_println("devmq_start_work~");
 
     /* initialize led */
     FMT_CHECK(led_control_init());
-    console_println("led_control_init~");
 
     /* initialize power management unit */
     FMT_CHECK(pmu_init());
-    console_println("pmu_init~");
 
     /* show system information */
     bsp_show_information();
-    console_println("bsp_show_information~");
 
     /* dump boot log to file */
     boot_log_dump();
-    console_println("boot_log_dump~");
 }
 
 /**

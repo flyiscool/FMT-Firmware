@@ -25,7 +25,7 @@ History:
 #include "hal_gpio.h"
 #include "hal.h"
 #include "bb_match_id.h"
-#include "bb_led.h"
+
 
 #include "drv_systick.h"
 
@@ -80,6 +80,10 @@ void BB_skyRcIdEventHandler(void *p)
     }
 }
 
+
+
+extern LINK_LED_STATUS _link_led_status;
+
 uint8_t timeout_loop = 0;
 void TIMHAL_IRQSearchIdHandler(uint32_t u32_vectorNum)
 {
@@ -91,7 +95,8 @@ void TIMHAL_IRQSearchIdHandler(uint32_t u32_vectorNum)
         HAL_BB_StopSearchRcId();
         timeout_loop = 0;
         vt_id_timer_start_flag = 0;
-        set_link_led_status(LINK_UNLOCK);
+        // set_link_led_status(LINK_UNLOCK);
+        _link_led_status = LINK_UNLOCK;
     }
 }
 
@@ -146,22 +151,9 @@ void BB_Sky_SearchIdHandler(void *p)
 
     HAL_BB_SearchRcId(1);
 
-    set_link_led_status(LINK_SEARCH_ID);
+    // set_link_led_status(LINK_SEARCH_ID);
+    _link_led_status = LINK_SEARCH_ID;
     DLOG_Critical("search id enter");
 }
 
-void search_id(uint8_t dev_type)
-{
-    if(dev_type == 0)
-    {
-        BB_Sky_SearchIdHandler(NULL);
-    }
-}
 
-
-void command_set_id(void)
-{
-    DLOG_Warning("pin search id start");
-    BB_Sky_SearchIdHandler(NULL);
-    set_link_led_status(LINK_SEARCH_ID);
-}

@@ -17,6 +17,15 @@ extern "C"
 {
 #endif
 
+typedef enum
+{
+    LINK_UNLOCK = 0,
+    LINK_LOCK,
+    LINK_SEARCH_ID,
+    LINK_ID_NO_MATCH,
+    LINK_INVALID
+}LINK_LED_STATUS;
+
                                                              
 #define SEARCH_ID_TIMER             (HAL_TIMER_NUM16)
 #define SEARCH_ID_TIMEOUT          (10*1000*1000)     //10 second
@@ -28,18 +37,10 @@ extern "C"
 #define GET_VT_ID_TIMEOUT          (10*1000*1000)     //10 second
 
 
-void BB_Grd_SearchIdHandler(void *p);
-
 void BB_Sky_SearchIdHandler(void *p);
 
 void BB_skyRcIdEventHandler(void *p);
 
-void BB_grdRcIdEventHandler(void *p);
-
-void Mod_Grd_Pin_SearchIdTask(void const *argument);
-
-void Mod_Sky_Pin_SearchIdTask(void const *argument);
-void search_id(uint8_t dev_type);
 
 void add_dev_info(uint8_t *pid, uint8_t rssi_a, uint8_t rssi_b);
 
@@ -50,7 +51,6 @@ void reset_dev_info(void);
 
 void CMD_SET_GND_SEARCH_ID_HANDLE(void);
 
-void command_set_id(void);
 
 #ifdef __cplusplus
 }

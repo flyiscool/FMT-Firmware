@@ -30,16 +30,9 @@ void task_sys_event_process_entry(void* parameter)
 {
     DLOG_Critical("Hello ChuanYun! This is a sys_event_process demo task.\n");
 
-    
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USER_CFG_CHANGE, BB_ReplyPcHandler);
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_TO_APP, Sky_AppSysEventHandler);
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USER_DEFINE, USER_Define_EventHandler);
-
     while (1) {
         SYS_EVENT_Process();
         sys_msleep(20);
-        // DLOG_Critical("Hello ChuanYun! This is a sys_event_process demo task.\n");
     }
 }
 

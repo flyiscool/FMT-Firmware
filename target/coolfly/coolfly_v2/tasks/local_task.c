@@ -17,12 +17,9 @@
 
 #include "module/task_manager/task_manager.h"
 #include "debuglog.h"
-#include "bb_led.h"
 #include "sys_event.h"
 #include "bb_match_id.h"
-#include "bb_led.h"
 #include "ar1002_hal.h"
-
 #include "board_device.h"
 
 //--------------------------------------
@@ -109,7 +106,7 @@ static void link_led_off(void)
 
 
 
-static LINK_LED_STATUS _link_led_status;
+LINK_LED_STATUS _link_led_status;
 
 void link_status_EventHandler(void *p)
 {
@@ -147,6 +144,10 @@ void link_status_EventHandler(void *p)
         }    
     }
 }
+
+
+
+
 
 
 void link_led_process(void)
@@ -202,7 +203,11 @@ void link_led_process(void)
 
 
 ///////////////////////////////////////////////////////////////////////
+//      bb_match
 ///////////////////////////////////////////////////////////////////////
+
+
+
 void key_bb_match_process(void)
 {
     static uint64_t t_last;
@@ -217,8 +222,6 @@ void key_bb_match_process(void)
 
     t_last = t;
 
-
-
     //
     static uint8_t cnt = 0;
     static uint32_t pin_value;
@@ -232,7 +235,7 @@ void key_bb_match_process(void)
             cnt = 0;
             DLOG_Warning("pin search id start");
             BB_Sky_SearchIdHandler(NULL);
-            set_link_led_status(LINK_SEARCH_ID);
+            _link_led_status = LINK_SEARCH_ID;
         }
     }
     else

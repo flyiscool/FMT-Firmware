@@ -50,18 +50,11 @@ static void InterCore_ResetIRQ0(void)
     ResetTimer2_4();
 }
 
-static void InterCore_IRQ0Handler(uint32_t u32_vectorNum)
+void InterCore_IRQ0_CALLBACK(void)
 {
-#ifdef INTER_CORE_DEBUG_LOG_ENABLE
-    BOOT_Printf("handler 0\r\n");
-#endif
-
-    InterCore_ResetIRQ0();
-
     INTER_CORE_MSG_ID msg = 0; 
     uint8_t buf[INTER_CORE_MSG_SHARE_MEMORY_DATA_LENGTH];
-    // uint32_t max_length = INTER_CORE_MSG_SHARE_MEMORY_DATA_LENGTH;
-
+    
     // Get all the messages in the SRAM buffer
     uint8_t mem_cnt = INTER_CORE_MSG_SHARE_MEMORY_NUMBER; // Max count to avoid the endless loop risk
     while(mem_cnt--)
@@ -78,15 +71,22 @@ static void InterCore_IRQ0Handler(uint32_t u32_vectorNum)
 
             // Notify the message as a system event to the local CPU
             SYS_EVENT_Notify_From_ISR(event, (void*)buf);
-#ifdef INTER_CORE_DEBUG_LOG_ENABLE
-            BOOT_Printf("Notify event 0x%lx by inter core msg\r\n", event);
-#endif
+// #ifdef INTER_CORE_DEBUG_LOG_ENABLE
+            // DLOG_Info("Notify event 0x%lx by inter core msg\r\n", event);
+// #endif
         }
         else
         {
             break;
         }
     }
+}
+
+static void InterCore_IRQ0Handler(uint32_t u32_vectorNum)
+{
+    InterCore_ResetIRQ0();
+    
+    intercore_irq0_callback();
 }
 
 
@@ -97,7 +97,7 @@ static void InterCore_TriggerIRQ0(void)
 
 static void InterCore_EnableBacktraceIRQ1(void)
 {
-    NVIC_SetPriority(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,0,0));
+    NVIC_SetPriority(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,0,0));
     NVIC_EnableIRQ(VIDEO_GLOBAL2_INTR_RES_VSOC1_VECTOR_NUM);
 }
 
@@ -136,7 +136,7 @@ void InterCore_Init(void)
     // // // Interrupt enable
     Timer2_4_Init();
     reg_IrqHandle(TIMER_INTR24_VECTOR_NUM, InterCore_IRQ0Handler, NULL);
-    NVIC_SetPriority(TIMER_INTR24_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_GLOBAL2_INTR_VSOC0,0));
+    NVIC_SetPriority(TIMER_INTR24_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_GLOBAL2_INTR_VSOC0,0));
     NVIC_EnableIRQ(TIMER_INTR24_VECTOR_NUM);
 
     if (ENUM_CPU0_ID == CPUINFO_GetLocalCpuId())
@@ -215,9 +215,9 @@ uint8_t InterCore_GetMsg(INTER_CORE_MSG_ID* msg_p, uint8_t* buf, uint32_t max_le
     // Check the data buffer to find the current CPU's data
     for(i = 0 ; i < INTER_CORE_MSG_SHARE_MEMORY_NUMBER; i++)
     {
-#ifdef INTER_CORE_DEBUG_LOG_ENABLE
-        DLOG_Info("msgPtr[%d].dataAccessed 0x%lx, msgPtr[%d].enDstCpuID 0x%x", i, msgPtr[i].cpu0DataAccessed, i, msgPtr[i].enDstCpuID);
-#endif
+// #ifdef INTER_CORE_DEBUG_LOG_ENABLE
+//         DLOG_Info("msgPtr[%d].dataAccessed 0x%lx, msgPtr[%d].enDstCpuID 0x%x", i, msgPtr[i].cpu0DataAccessed, i, msgPtr[i].enDstCpuID);
+// #endif
         pAccessed = &(msgPtr[i].cpu0DataAccessed) + local_id;
         if((*pAccessed == 0) && ((msgPtr[i].enDstCpuID & dst_filter) != 0))
         {
@@ -228,9 +228,9 @@ uint8_t InterCore_GetMsg(INTER_CORE_MSG_ID* msg_p, uint8_t* buf, uint32_t max_le
     // Check whether some message is found
     if (i == INTER_CORE_MSG_SHARE_MEMORY_NUMBER)
     {
-#ifdef INTER_CORE_DEBUG_LOG_ENABLE
-        DLOG_Info("No specified inter CPU message!");
-#endif
+// #ifdef INTER_CORE_DEBUG_LOG_ENABLE
+        // DLOG_Info("No specified inter CPU message!");
+// #endif
         return 0;
     }
     //else

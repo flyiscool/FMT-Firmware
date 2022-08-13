@@ -97,7 +97,7 @@ HAL_RET_T HAL_SYS_CTL_FpuEnable(uint8_t u8_fpuEnable)
 
 HAL_RET_T HAL_SYS_CTL_SysTickInit(uint32_t u32_sysTickCount)
 {
-    NVIC_SetPriority(HAL_NVIC_SYSTICK_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,0x0f,0));
+    NVIC_SetPriority(HAL_NVIC_SYSTICK_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,0x1f,0));
     // SysTicks_Init(u32_sysTickCount);
     
     return HAL_OK;
@@ -226,7 +226,7 @@ HAL_RET_T HAL_SYS_CTL_Init(STRU_HAL_SYS_CTL_CONFIG *pst_usrHalSysCtlCfg)
     // Inter core SRAM init
     InterCore_Init();
 
-    HAL_NVIC_SetPriorityGrouping(HAL_NVIC_PRIORITYGROUP_4);
+    HAL_NVIC_SetPriorityGrouping(HAL_NVIC_PRIORITYGROUP_5);
     
     // Default clock: CPU0 and CPU1 200M; CPU2 166M.
     HAL_SYS_CTL_SetCpuClk(pst_halSysCtlCfg->u16_cpu0cpu1Clk, pst_halSysCtlCfg->u16_cpu2Clk);

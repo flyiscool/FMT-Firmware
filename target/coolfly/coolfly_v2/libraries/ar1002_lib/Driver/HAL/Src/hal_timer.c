@@ -59,7 +59,7 @@ HAL_RET_T HAL_TIMER_RegisterTimer(ENUM_HAL_TIMER_NUM e_timerNum, uint32_t u32_ti
     TIM_RegisterTimer(st_timer,u32_timeus);
    
     reg_IrqHandle(TIMER_INTR00_VECTOR_NUM + e_timerNum, fun_callBack, TIMER_ClearNvic);
-    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_timerNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
+    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_timerNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
     NVIC_EnableIRQ(TIMER_INTR00_VECTOR_NUM + e_timerNum);
     TIM_StartTimer(st_timer);
     
@@ -129,7 +129,7 @@ HAL_RET_T HAL_TIMER_Start(ENUM_HAL_TIMER_NUM e_timerNum)
     st_timer.time_num = e_timerNum%8;
     st_timer.ctrl |= TIME_ENABLE | USER_DEFINED;
 
-    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_timerNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
+    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_timerNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
     NVIC_EnableIRQ(TIMER_INTR00_VECTOR_NUM + e_timerNum);
     TIM_StartTimer(st_timer);
     

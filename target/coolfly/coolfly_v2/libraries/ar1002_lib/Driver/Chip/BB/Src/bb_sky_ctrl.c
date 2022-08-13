@@ -169,7 +169,7 @@ void BB_SKY_start(void)
     sky_Timer2_5_Init();
 
     reg_IrqHandle(BB_RX_ENABLE_VECTOR_NUM, wimax_vsoc_rx_isr, NULL);
-    NVIC_SetPriority(BB_RX_ENABLE_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_BB_RX,0));
+    NVIC_SetPriority(BB_RX_ENABLE_VECTOR_NUM, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_BB_RX,0));
 
     BB_SetAesOffUartMaxLen(bb_aes_off_max_uart_len[context.uplink_qam_mode]);
     BB_ComInit(sky_lock_status,context.aes_off);    
@@ -1453,7 +1453,7 @@ static void sky_Timer2_6_Init(void)
     TIM_RegisterTimer(stru_skystatus.sky_timer2_6, 3800);
 
     reg_IrqHandle(TIMER_INTR26_VECTOR_NUM, Sky_TIM2_6_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR26_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER00,0));
+    NVIC_SetPriority(TIMER_INTR26_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER00,0));
 }
 
 static void sky_Timer2_5_Init(void)
@@ -1466,7 +1466,7 @@ static void sky_Timer2_5_Init(void)
     TIM_RegisterTimer(sky_timer2_5, 8000);
 
     reg_IrqHandle(TIMER_INTR25_VECTOR_NUM, Sky_TIM2_5_IRQHandler, NULL);
-    NVIC_SetPriority(TIMER_INTR25_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER00,0));
+    NVIC_SetPriority(TIMER_INTR25_VECTOR_NUM,NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER00,0));
 }
 
 

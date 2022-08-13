@@ -16,6 +16,7 @@
 #include <firmament.h>
 
 #include "module/task_manager/task_manager.h"
+#include "module/workqueue/workqueue_manager.h"
 
 #include "sys_event.h"
 // #include "bb_led.h"
@@ -32,7 +33,7 @@ void task_sys_event_process_entry(void* parameter)
 
     while (1) {
         SYS_EVENT_Process();
-        sys_msleep(20);
+        sys_msleep(10);
     }
 }
 
@@ -48,12 +49,29 @@ TASK_EXPORT __fmt_task_desc = {
 
 
 ////////////////////////////////////////////////
+// incore handle
+
+static void run_intercore_irq0_callback(void* parameter)
+{
+    InterCore_IRQ0_CALLBACK();
+}
+
+static struct WorkItem intercore_irq0_callback_item = {
+    .name = "intercore_irq0_callback",
+    .period = 0,
+    .schedule_time = 0,
+    .run = run_intercore_irq0_callback
+};
+
+void intercore_irq0_callback(void)
+{
+    WorkQueue_t hp_wq = workqueue_find("wq:hp_work");
+    
+    RT_ASSERT(hp_wq != NULL);
+
+    FMT_CHECK(workqueue_schedule_work(hp_wq, &intercore_irq0_callback_item));
+}
 
 
 
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////

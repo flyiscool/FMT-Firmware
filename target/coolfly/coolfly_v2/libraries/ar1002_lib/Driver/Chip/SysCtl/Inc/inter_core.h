@@ -39,4 +39,7 @@ void InterCore_TriggerBacktraceIRQ1(void);
 __attribute__((weak)) void cm_backtrace_fault(uint32_t fault_handler_lr, uint32_t fault_handler_sp);
 void InterCore_DebugIRQ1Handler(void);
 
+
+void InterCore_IRQ0_CALLBACK(void);
+
 #endif

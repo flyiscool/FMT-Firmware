@@ -8,18 +8,10 @@ extern "C"
 #endif
 
 
-typedef struct {
-	uint32_t ch[16];
-	uint64_t timestamp;
-} cf_rc_s;
-
-typedef struct  {
-	uint8_t sbus_buff[25];
-	uint64_t timestamp;
-} cf_sbus_s;
 
 
-void just_for_test_printf(void);
+
+
 
 #ifdef __cplusplus
 }

@@ -108,7 +108,7 @@ HAL_RET_T HAL_PWM_RegisterPwmWithIntr(ENUM_HAL_PWM_NUM e_pwmNum, uint32_t u32_lo
     PWM_HIGH_US_LAST[e_pwmNum] = u32_highus;
 
     reg_IrqHandle(TIMER_INTR00_VECTOR_NUM + e_pwmNum, LoadTimerValue, TIMER_ClearNvic);
-    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_pwmNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_4,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
+    NVIC_SetPriority(TIMER_INTR00_VECTOR_NUM + e_pwmNum, NVIC_EncodePriority(NVIC_PRIORITYGROUP_5,INTR_NVIC_PRIORITY_TIMER_DEFAULT,0));
     NVIC_EnableIRQ(TIMER_INTR00_VECTOR_NUM + e_pwmNum);
 
     return HAL_OK;

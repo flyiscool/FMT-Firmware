@@ -1115,7 +1115,7 @@ static void sky_notify_rc_patten()
 		buf[0]= context.rcChgPatten.timeout_cnt;
 		buf[1]= context.rf_info.rc_patten_set_by_usr;
 		BB_Session0SendMsg(DT_NUM_SKY_RC_PATTEN, buf, context.rf_info.rc_ch_patten_need_id_size+2);
-		DLOG_Warning("sky notify grd :cnt=%d,aim_cnt=%d", context.sync_cnt, context.rcChgPatten.timeout_cnt);
+		// DLOG_Warning("sky notify grd :cnt=%d,aim_cnt=%d", context.sync_cnt, context.rcChgPatten.timeout_cnt);
 	}
 }
 

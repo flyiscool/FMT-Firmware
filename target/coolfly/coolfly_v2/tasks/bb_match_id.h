@@ -52,6 +52,8 @@ void reset_dev_info(void);
 void CMD_SET_GND_SEARCH_ID_HANDLE(void);
 
 
+void just_for_test_printf(void);
+
 #ifdef __cplusplus
 }
 #endif 

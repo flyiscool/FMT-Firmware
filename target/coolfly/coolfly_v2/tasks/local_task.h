@@ -19,6 +19,8 @@ typedef struct  {
 } cf_sbus_s;
 
 
+void just_for_test_printf(void);
+
 #ifdef __cplusplus
 }
 #endif

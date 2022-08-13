@@ -33,6 +33,10 @@ void link_led_process(void);
 void link_status_EventHandler(void *p);
 void key_bb_match_process(void);
 
+void cf_sky_bb_spi_irq_handler(void *p);
+static void cf_sbus_parse(void);
+static void cf_sky_sbus_init(void);
+
 void debug_sbus(void)
 {
     static uint64_t t_last;
@@ -48,11 +52,11 @@ void debug_sbus(void)
     t_last = t;
 
     DLOG_Critical("---------sky_rc----------");
-	DLOG_Critical("%d %d %d %d %d %d %d %d",
+	DLOG_Critical("%ld %ld %ld %ld %ld %ld %ld %ld",
 		      sky_rc.ch[0], sky_rc.ch[1], sky_rc.ch[2], sky_rc.ch[3],
 		      sky_rc.ch[4], sky_rc.ch[5], sky_rc.ch[6], sky_rc.ch[7]);
 
-	DLOG_Critical("%d %d %d %d %d %d %d %d",
+	DLOG_Critical("%ld %ld %ld %ld %ld %ld %ld %ld",
 		      sky_rc.ch[8], sky_rc.ch[9], sky_rc.ch[10], sky_rc.ch[11],
 		      sky_rc.ch[12], sky_rc.ch[13], sky_rc.ch[14], sky_rc.ch[15]);
 }
@@ -63,14 +67,18 @@ fmt_err_t task_local_init(void)
 
     HAL_GPIO_InPut(EXTERN_SEARCH_ID_PIN);
 
+
     return FMT_EOK;
 }
+
 
 void task_local_entry(void* parameter)
 {
 
     SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, link_status_EventHandler);
     SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, BB_skyRcIdEventHandler);
+
+    cf_sky_sbus_init();
 
     while (1) {
         key_bb_match_process();
@@ -283,9 +291,6 @@ void key_bb_match_process(void)
 // sky used
 
 
-static void cf_sky_bb_spi_irq_handler(void *p);
-static void cf_sbus_parse(void);
-
 
 void cf_sky_sbus_init(void)
 {
@@ -308,6 +313,7 @@ void cf_sky_sbus_init(void)
 		DLOG_Error("BB ComRegister failed");
 	}
 
+    DLOG_Critical("cf_sky_sbus_init success~");
 }
 
 
@@ -319,7 +325,7 @@ void cf_sky_sbus_init(void)
 * @note   This function only called by sky
 */
 
-static void cf_sky_bb_spi_irq_handler(void *p)
+void cf_sky_bb_spi_irq_handler(void *p)
 {
 
 #define BB_READ_MAX_LEN 32
@@ -327,6 +333,8 @@ static void cf_sky_bb_spi_irq_handler(void *p)
 	uint8_t buffer[BB_READ_MAX_LEN];
 	HAL_RET_T ret;
 	uint8_t i;
+
+    DLOG_Critical("cf_sky_bb_spi_irq_handler~");
 
 	cnt = 0;
 	ret = HAL_BB_ComReceiveMsg(BB_COM_SESSION_SPI, buffer, BB_READ_MAX_LEN, &cnt);

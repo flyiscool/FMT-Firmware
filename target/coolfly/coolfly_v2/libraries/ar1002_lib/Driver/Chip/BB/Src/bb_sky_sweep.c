@@ -977,7 +977,7 @@ void sky_gen_rc_working_patten(void)
 		{
 			sweep_noise_meet = corse_check_sweep_noise(1);
 			begin_lock_sweep_noise_for_selection();
-			DLOG_Critical("change patten because of the working error meet");
+			// DLOG_Critical("change patten because of the working error meet");
 		}
 		else
 		{
@@ -986,7 +986,7 @@ void sky_gen_rc_working_patten(void)
 			{
 				plotlog_en=1;
 				begin_lock_sweep_noise_for_selection();
-				DLOG_Critical("change patten because of the sweep noise meet");
+				// DLOG_Critical("change patten because of the sweep noise meet");
 			}
 		
 		}
@@ -995,7 +995,7 @@ void sky_gen_rc_working_patten(void)
 	{
 		if(context.rf_info.sweep_finished)
 		{
-			DLOG_Critical("begin select good patten");
+			// DLOG_Critical("begin select good patten");
 			find_best_patten();
 			end_lock_sweep_noise_for_selection();
 			plotlog_en=2;

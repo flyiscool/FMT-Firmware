@@ -89,7 +89,7 @@ int FCT_ListAllNode(STRU_FACTORY_SETTING *fct, STRU_NODE_LIST *p_nodelist)
     while (cur_datasize < fct_datasize)
     {
         STRU_cfgNode * node = (STRU_cfgNode *)((uint8_t *)fct_data + cur_datasize);
-        BOOT_Printf("node ptr=0x% 0x%x %d \r\n", node, node->nodeId, node->nodeDataSize);
+        // BOOT_Printf("node ptr=0x% 0x%x %d \r\n", node, node->nodeId, node->nodeDataSize);
 
         if ( (node->nodeId & FACTORY_NODE_ID_MASK) != FACTORY_NODE_ID_MASK)
         {

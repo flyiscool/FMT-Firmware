@@ -443,7 +443,7 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
 
     event_id &= ~SYS_EVENT_INTER_CORE_MASK;
 
-    acquireSysEventList();
+    // acquireSysEventList();
 
     sysEventNode = retrieveRegisteredEventNode(event_id, TRUE);
 
@@ -456,7 +456,7 @@ uint8_t SYS_EVENT_RegisterHandler(uint32_t event_id, SYS_Event_Handler event_han
         }
     }
 
-    releaseSysEventList();
+    // releaseSysEventList();
     
     return retval;
 }
@@ -473,7 +473,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
     uint8_t retval = FALSE;
     STRU_RegisteredSysEvent_Node* sysEventNode;
  
-    acquireSysEventList();   
+    // acquireSysEventList();   
 
     sysEventNode = retrieveRegisteredEventNode(event_id, FALSE);
 
@@ -493,7 +493,7 @@ uint8_t SYS_EVENT_UnRegisterHandler(uint32_t event_id, SYS_Event_Handler event_h
         }
     }
 
-    releaseSysEventList();
+    // releaseSysEventList();
     
     return retval;
 }
@@ -591,11 +591,11 @@ uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter)
 {
     uint8_t retval = FALSE;
 
-    acquireSysEventList();
+    // acquireSysEventList();
 
     retval = notifySysEvent(event_id, parameter);
 
-    releaseSysEventList();
+    // releaseSysEventList();
 
     if (retval)
     {

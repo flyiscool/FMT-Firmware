@@ -21,6 +21,8 @@
 #include "sys_event.h"
 #include "debuglog.h"
 
+#include "inter_core.h"
+
 fmt_err_t task_sys_event_process_init(void)
 {
     return FMT_EOK;
@@ -28,7 +30,7 @@ fmt_err_t task_sys_event_process_init(void)
 
 void task_sys_event_process_entry(void* parameter)
 {
-    DLOG_Critical("Hello ChuanYun! This is a sys_event_process demo task.\n");
+    printf("Hello ChuanYun! This is a sys_event demo task.\n");
 
     while (1) {
         SYS_EVENT_Process();
@@ -37,7 +39,7 @@ void task_sys_event_process_entry(void* parameter)
 }
 
 TASK_EXPORT __fmt_task_desc = {
-    .name = "sys_event_process",
+    .name = "sys_event",
     .init = task_sys_event_process_init,
     .entry = task_sys_event_process_entry,
     .priority = COOLFLY_InterCore,
@@ -45,7 +47,6 @@ TASK_EXPORT __fmt_task_desc = {
     .param = NULL,
     .dependency = NULL
 };
-
 
 ////////////////////////////////////////////////
 // incore handle
@@ -70,7 +71,5 @@ void intercore_irq0_callback(void)
 
     FMT_CHECK(workqueue_schedule_work(hp_wq, &intercore_irq0_callback_item));
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

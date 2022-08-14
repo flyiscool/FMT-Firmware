@@ -18,6 +18,8 @@ typedef struct  {
 	uint64_t timestamp;
 } cf_sbus_s;
 
+rt_err_t register_ar_rc(void);
+
 void sbus_start(void);
 
 

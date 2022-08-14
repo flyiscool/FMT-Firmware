@@ -28,6 +28,32 @@ target = "COOLFLY_S1"\n
 	type = "mavlink"\n
 	name = "mav_console"\n
 	auto-switch = true\n
+[pilot-cmd]\n
+    stick-channel = [4,3,1,2]\n
+	[pilot-cmd.device]\n
+	type = "rc"\n
+	name = "rc"\n
+	protocol = "sbus"\n
+	channel-num = 16\n
+	sample-time = 0.05\n
+	range = [1000,2000]\n
+	[[pilot-cmd.mode]]\n
+	mode = 5\n
+	channel = 8\n
+	range = [1000,1200]\n
+	[[pilot-cmd.mode]]\n
+	mode = 4\n
+	channel = 8\n
+	range = [1400,1600]\n
+	[[pilot-cmd.mode]]\n
+	mode = 3\n
+	channel = 8\n
+	range = [1800,2000]\n
+	[[pilot-cmd.command]]\n
+	type = 1\n
+	cmd = 1002\n
+	channel = 6\n
+	range = [1800,2000]\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n
 	type = "serial"\n

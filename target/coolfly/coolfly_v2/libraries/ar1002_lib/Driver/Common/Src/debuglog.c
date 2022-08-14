@@ -125,7 +125,7 @@ static unsigned char DLOG_CheckDebugBufInitStatus(void)
 
 void DLOG_Process(void* p)
 {
-    while(DLOG_Output(3000))
+    while(DLOG_Output(4096))
     {
     }
 }

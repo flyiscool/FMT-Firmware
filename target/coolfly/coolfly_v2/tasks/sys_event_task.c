@@ -19,7 +19,6 @@
 #include "module/workqueue/workqueue_manager.h"
 
 #include "sys_event.h"
-// #include "bb_led.h"
 #include "debuglog.h"
 
 fmt_err_t task_sys_event_process_init(void)

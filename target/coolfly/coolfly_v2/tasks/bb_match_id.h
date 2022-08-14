@@ -17,14 +17,7 @@ extern "C"
 {
 #endif
 
-typedef enum
-{
-    LINK_UNLOCK = 0,
-    LINK_LOCK,
-    LINK_SEARCH_ID,
-    LINK_ID_NO_MATCH,
-    LINK_INVALID
-}LINK_LED_STATUS;
+
 
                                                              
 #define SEARCH_ID_TIMER             (HAL_TIMER_NUM16)
@@ -49,10 +42,10 @@ void get_nearest_dev_info(uint8_t *pid);
 void reset_dev_info(void);
 
 
-void CMD_SET_GND_SEARCH_ID_HANDLE(void);
+void set_link_led_status_searchid(void);
+void set_link_led_status_unlock(void);
 
-
-void just_for_test_printf(void);
+void bb_match_id_start(void);
 
 #ifdef __cplusplus
 }

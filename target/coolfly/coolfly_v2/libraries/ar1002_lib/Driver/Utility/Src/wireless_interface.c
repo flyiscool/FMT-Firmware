@@ -1350,15 +1350,9 @@ uint8_t WIRELESS_INTERFACE_OSD_DISPLAY_Handler(void *param, uint8_t id)
 }
 
 
-__attribute__((weak)) void CMD_SET_GND_SEARCH_ID_HANDLE(void)
-{
-
-}
-
 uint8_t WIRELESS_INTERFACE_GET_ID_Handler(void *param, uint8_t id)
 {
-    DLOG_Info("WIRELESS_INTERFACE_SET_GND_SEARCH_ID_HANDLE\n");
-    CMD_SET_GND_SEARCH_ID_HANDLE();
+    DLOG_Info("WIRELESS_INTERFACE_GET_ID_Handler\n");
     return 0;
 }
 

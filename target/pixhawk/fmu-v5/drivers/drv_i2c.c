@@ -281,8 +281,7 @@ static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_a
 
         if (msg->flags & RT_I2C_RD) {
             /* start/restart read operation */
-            LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
-                LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_READ);
+            LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_READ);
 
             while (nbytes--) {
                 /* wait data received */
@@ -301,8 +300,7 @@ static rt_size_t i2c_master_transfer(struct rt_i2c_bus* bus, rt_uint16_t slave_a
             }
         } else {
             /* start/restart write operation */
-            LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len,
-                LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+            LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, msg->len, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
 
             while (nbytes--) {
                 if (wait_TXIS_flag_until_timeout(stm32_i2c->I2C, 0, I2C_TIMEOUT_US) != FMT_EOK) {
@@ -325,8 +323,7 @@ _stop:
     /* in master transmit, a STOP condition is automatically sent after the NACK reception */
     if (!LL_I2C_IsActiveFlag_NACK(stm32_i2c->I2C)) {
         /* generate stop condition, NACK is automatically generated before stop */
-        LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, 0,
-            LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_STOP);
+        LL_I2C_HandleTransfer(stm32_i2c->I2C, slave_addr, LL_I2C_ADDRESSING_MODE_7BIT, 0, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_STOP);
     }
 
     /* wait until stop flag is set */
@@ -385,6 +382,11 @@ static struct rt_i2c_device i2c1_dev2 = {
     .flags = 0
 };
 
+static struct rt_i2c_device i2c2_dev1 = {
+    .slave_addr = MS4525_ADDRESS, /* 7 bit address */
+    .flags = 0
+};
+
 static struct rt_i2c_device i2c3_dev1 = {
     .slave_addr = IST8310_ADDRESS, /* 7 bit address */
     .flags = 0
@@ -407,6 +409,7 @@ rt_err_t drv_i2c_init(void)
     /* attach i2c devices */
     RT_TRY(rt_i2c_bus_attach_device(&i2c1_dev1, "i2c1_dev1", "i2c1", RT_NULL));
     RT_TRY(rt_i2c_bus_attach_device(&i2c1_dev2, "i2c1_dev2", "i2c1", RT_NULL));
+    RT_TRY(rt_i2c_bus_attach_device(&i2c2_dev1, "i2c2_dev1", "i2c2", RT_NULL));
     RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev1, "i2c3_dev1", "i2c3", RT_NULL));
 
     return RT_EOK;

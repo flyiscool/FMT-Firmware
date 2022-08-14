@@ -21,7 +21,7 @@
 #include <string.h>
 
 #ifdef FMT_USING_CM_BACKTRACE
-#include <cm_backtrace.h>
+    #include <cm_backtrace.h>
 #endif
 
 #include "default_config.h"
@@ -32,6 +32,7 @@
 #include "driver/mag/ist8310.h"
 #include "driver/mtd/ramtron.h"
 #include "driver/rgb_led/ncp5623c.h"
+#include "driver/vision_flow/pmw3901_fl04.h"
 #include "drv_adc.h"
 #include "drv_gpio.h"
 #include "drv_i2c.h"
@@ -62,10 +63,10 @@
 #include "module/utils/devmq.h"
 #include "module/workqueue/workqueue_manager.h"
 #ifdef FMT_USING_SIH
-#include "model/plant/plant_interface.h"
+    #include "model/plant/plant_interface.h"
 #endif
 
-#define MATCH(a, b) (strcmp(a, b) == 0)
+#define MATCH(a, b)     (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
 static const struct dfs_mount_tbl mnt_table[] = {
@@ -419,6 +420,7 @@ void bsp_initialize(void)
     if (drv_ist8310_init("i2c1_dev1", "mag0") != FMT_EOK) {
         RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
     }
+    RT_CHECK(pmw3901_fl04_drv_init("serial6"));
     RT_CHECK(gps_m8n_init("serial3", "gps"));
 
     /* register sensor to sensor hub */

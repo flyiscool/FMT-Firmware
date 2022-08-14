@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'FMS'.
  *
- * Model version                  : 1.1749
+ * Model version                  : 1.1752
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Sun May  1 21:25:09 2022
+ * C/C++ source code generated on : Sat Aug  6 09:30:23 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -99,6 +99,9 @@ const FMS_Out_Bus FMS_rtZFMS_Out_Bus = {
   0.0F,                                /* u_cmd */
   0.0F,                                /* v_cmd */
   0.0F,                                /* w_cmd */
+  0.0F,                                /* ax_cmd */
+  0.0F,                                /* ay_cmd */
+  0.0F,                                /* az_cmd */
   0U,                                  /* throttle_cmd */
 
   {
@@ -107,11 +110,11 @@ const FMS_Out_Bus FMS_rtZFMS_Out_Bus = {
   0U,                                  /* status */
   0U,                                  /* state */
   0U,                                  /* ctrl_mode */
-  0U,                                  /* reset */
   0U,                                  /* mode */
-  0U,                                  /* reserved1 */
+  0U,                                  /* reset */
   0U,                                  /* wp_consume */
-  0U                                   /* wp_current */
+  0U,                                  /* wp_current */
+  0U                                   /* reserved1 */
 } ;                                    /* FMS_Out_Bus ground */
 
 /* Exported block parameters */

@@ -25,7 +25,6 @@ extern "C" {
 
 // Board Information
 #define TARGET_NAME  "Pixhawk FMUv2"
-#define VEHICLE_TYPE "Quadcopter"
 
 // Interupt Vector Offset
 #define INT_VECTOR_OFFSET 0x4000
@@ -35,17 +34,17 @@ extern "C" {
 #ifdef __ICCARM__
 // Use *.icf ram symbal, to avoid hardcode.
 extern char __ICFEDIT_region_RAM_end__;
-#define SYSTEM_FREE_MEM_END &__ICFEDIT_region_RAM_end__
+    #define SYSTEM_FREE_MEM_END &__ICFEDIT_region_RAM_end__
 #elif defined(__CC_ARM) || defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 /* the size of heap is defined in startup.s, the address can be found in .map file */
 extern int __heap_base;
 extern int __heap_limit;
-#define SYSTEM_FREE_MEM_BEGIN (&__heap_base)
-#define SYSTEM_FREE_MEM_END   (&__heap_limit)
+    #define SYSTEM_FREE_MEM_BEGIN (&__heap_base)
+    #define SYSTEM_FREE_MEM_END   (&__heap_limit)
 #else
 extern int __bss_end;
-#define SYSTEM_FREE_MEM_BEGIN (&__bss_end)
-#define SYSTEM_FREE_MEM_END   (0x20000000 + SYSTEM_TOTAL_MEM_SIZE)
+    #define SYSTEM_FREE_MEM_BEGIN (&__bss_end)
+    #define SYSTEM_FREE_MEM_END   (0x20000000 + SYSTEM_TOTAL_MEM_SIZE)
 #endif
 
 void rt_hw_board_init(void);

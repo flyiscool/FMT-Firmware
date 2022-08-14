@@ -17,6 +17,8 @@
 #ifndef FMTCONFIG_H__
 #define FMTCONFIG_H__
 
+#define VEHICLE_TYPE "Quadcopter"
+
 #define FMT_USING_CHECKED
 
 /* HIL simulation */
@@ -40,8 +42,8 @@
 /* ULog */
 #define FMT_USING_ULOG
 #ifdef FMT_USING_ULOG
-// #define ENABLE_ULOG_FS_BACKEND
-#define ENABLE_ULOG_CONSOLE_BACKEND
+    // #define ENABLE_ULOG_FS_BACKEND
+    #define ENABLE_ULOG_CONSOLE_BACKEND
 #endif
 
 /* Cortex-M Backtrace */

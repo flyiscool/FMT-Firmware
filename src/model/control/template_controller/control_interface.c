@@ -14,8 +14,8 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include <firmament.h>
 #include <Controller.h>
+#include <firmament.h>
 
 /* controller output topic */
 MCN_DEFINE(control_output, sizeof(Control_Out_Bus));
@@ -32,6 +32,9 @@ void control_interface_init(void)
     /* Fill in the modle information */
     control_model_info.period = 10;
     control_model_info.info = "Template Controller";
+
+    /* advertise control_output topic */
+    mcn_advertise(MCN_HUB(control_output), NULL);
 
     /* Add your code here */
 }

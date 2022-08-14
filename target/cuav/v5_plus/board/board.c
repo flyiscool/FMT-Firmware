@@ -21,10 +21,11 @@
 #include <string.h>
 
 #ifdef FMT_USING_CM_BACKTRACE
-#include <cm_backtrace.h>
+    #include <cm_backtrace.h>
 #endif
 
 #include "board_device.h"
+#include "driver/airspeed/ms4525.h"
 #include "driver/barometer/ms5611.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi055.h"
@@ -32,6 +33,7 @@
 #include "driver/mag/ist8310.h"
 #include "driver/mtd/ramtron.h"
 #include "driver/rgb_led/ncp5623c.h"
+#include "driver/vision_flow/pmw3901_fl04.h"
 #include "drv_adc.h"
 #include "drv_gpio.h"
 #include "drv_i2c.h"
@@ -64,10 +66,10 @@
 #include "module/utils/devmq.h"
 #include "module/workqueue/workqueue_manager.h"
 #ifdef FMT_USING_SIH
-#include "model/plant/plant_interface.h"
+    #include "model/plant/plant_interface.h"
 #endif
 
-#define MATCH(a, b) (strcmp(a, b) == 0)
+#define MATCH(a, b)     (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
 static const struct dfs_mount_tbl mnt_table[] = {
@@ -195,7 +197,7 @@ static fmt_err_t bsp_parse_toml_sysconfig(toml_table_t* root_tab)
 
 /**
  * @brief Enable on-board device power supply
- * 
+ *
  */
 static void EnablePower(void)
 {
@@ -239,22 +241,22 @@ static void EnablePower(void)
 }
 
 /*
-* When enabling the D-cache there is cache coherency issue. 
-* This matter crops up when multiple masters (CPU, DMAs...) 
-* share the memory. If the CPU writes something to an area 
-* that has a write-back cache attribute (example SRAM), the 
-* write result is not seen on the SRAM as the access is 
-* buffered, and then if the DMA reads the same memory area 
-* to perform a data transfer, the values read do not match 
-* the intended data. The issue occurs for DMA read as well.
-* Currently not all drivers can ensure the data coherency 
-* when D-Cache enabled, so disable it by default.
-*/
+ * When enabling the D-cache there is cache coherency issue.
+ * This matter crops up when multiple masters (CPU, DMAs...)
+ * share the memory. If the CPU writes something to an area
+ * that has a write-back cache attribute (example SRAM), the
+ * write result is not seen on the SRAM as the access is
+ * buffered, and then if the DMA reads the same memory area
+ * to perform a data transfer, the values read do not match
+ * the intended data. The issue occurs for DMA read as well.
+ * Currently not all drivers can ensure the data coherency
+ * when D-Cache enabled, so disable it by default.
+ */
 /**
-  * @brief  CPU L1-Cache enable.
-  * @param  None
-  * @retval None
-  */
+ * @brief  CPU L1-Cache enable.
+ * @param  None
+ * @retval None
+ */
 static void CPU_CACHE_Enable(void)
 {
     /* Enable I-Cache */
@@ -265,9 +267,9 @@ static void CPU_CACHE_Enable(void)
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
     console_printf("Enter Error_Handler\n");
@@ -280,9 +282,9 @@ void Error_Handler(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
     LL_FLASH_SetLatency(LL_FLASH_LATENCY_7);
@@ -322,6 +324,7 @@ void SystemClock_Config(void)
     LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2);
     LL_RCC_SetUSARTClockSource(LL_RCC_USART2_CLKSOURCE_PCLK1);
     LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_PCLK1);
+    LL_RCC_SetUSARTClockSource(LL_RCC_UART4_CLKSOURCE_PCLK1);
     LL_RCC_SetUSARTClockSource(LL_RCC_USART6_CLKSOURCE_PCLK2);
     LL_RCC_SetUARTClockSource(LL_RCC_UART7_CLKSOURCE_PCLK1);
     LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_PCLK1);
@@ -418,15 +421,24 @@ void bsp_initialize(void)
     RT_CHECK(drv_bmi055_init("spi1_dev3", "gyro1", "accel1"));
     RT_CHECK(drv_ms5611_init("spi4_dev1", "barometer"));
     /* if no gps mag then use onboard mag */
-    if (drv_ist8310_init("i2c1_dev1", "mag0") != FMT_EOK) {
+    if (drv_ist8310_init("i2c1_dev1", "mag0") != RT_EOK) {
         RT_CHECK(drv_ist8310_init("i2c3_dev1", "mag0"));
     }
+    RT_CHECK(pmw3901_fl04_drv_init("serial6"));
     RT_CHECK(gps_m8n_init("serial3", "gps"));
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
     FMT_CHECK(register_sensor_mag("mag0", 0));
     FMT_CHECK(register_sensor_barometer("barometer"));
+    FMT_CHECK(advertise_sensor_optflow(0));
+    FMT_CHECK(advertise_sensor_rangefinder(0));
+
+    if (drv_ms4525_init("i2c2_dev1", "airspeed") == RT_EOK) {
+        FMT_CHECK(register_sensor_airspeed("airspeed"));
+    } else {
+        printf("ms4525 driver init fail!\n");
+    }
 #endif
 
     /* init finsh */

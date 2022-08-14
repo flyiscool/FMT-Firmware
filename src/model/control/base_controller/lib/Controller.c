@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'Controller'.
  *
- * Model version                  : 1.877
+ * Model version                  : 1.885
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Tue Mar 22 09:47:46 2022
+ * C/C++ source code generated on : Sat Aug  6 09:32:05 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -92,7 +92,7 @@ struct_biZzOMrg0u3lxrb7POOubF CONTROL_EXPORT = {
   2U,
 
   { 66, 97, 115, 101, 32, 67, 111, 110, 116, 114, 111, 108, 108, 101, 114, 32,
-    118, 48, 46, 50, 46, 49, 0 }
+    118, 48, 46, 50, 46, 51, 0 }
 } ;                                    /* Variable: CONTROL_EXPORT
                                         * Referenced by: '<S4>/Constant'
                                         */
@@ -1401,7 +1401,7 @@ void Controller_step(void)
    *  Sum: '<S18>/Sum5'
    */
   Controller_DW.DiscreteTimeIntegrator5_DSTATE[0] += (rtb_Cos -
-    Controller_DW.DiscreteTimeIntegrator5_DSTATE[0]) * 314.159271F * 0.002F;
+    Controller_DW.DiscreteTimeIntegrator5_DSTATE[0]) * 188.49556F * 0.002F;
 
   /* Update for DiscreteIntegrator: '<S20>/Discrete-Time Integrator' */
   Controller_DW.DiscreteTimeIntegrator_DSTATE_o[0] += 0.002F *
@@ -1426,7 +1426,7 @@ void Controller_step(void)
    *  Sum: '<S18>/Sum5'
    */
   Controller_DW.DiscreteTimeIntegrator5_DSTATE[1] += (rtb_Cos1 -
-    Controller_DW.DiscreteTimeIntegrator5_DSTATE[1]) * 314.159271F * 0.002F;
+    Controller_DW.DiscreteTimeIntegrator5_DSTATE[1]) * 188.49556F * 0.002F;
 
   /* Update for DiscreteIntegrator: '<S20>/Discrete-Time Integrator' */
   Controller_DW.DiscreteTimeIntegrator_DSTATE_o[1] += 0.002F *
@@ -1450,7 +1450,7 @@ void Controller_step(void)
    *  Sum: '<S18>/Sum5'
    */
   Controller_DW.DiscreteTimeIntegrator5_DSTATE[2] += (rtb_Multiply4_b -
-    Controller_DW.DiscreteTimeIntegrator5_DSTATE[2]) * 314.159271F * 0.002F;
+    Controller_DW.DiscreteTimeIntegrator5_DSTATE[2]) * 188.49556F * 0.002F;
 
   /* Update for DiscreteIntegrator: '<S20>/Discrete-Time Integrator' */
   Controller_DW.DiscreteTimeIntegrator_DSTATE_o[2] += 0.002F *

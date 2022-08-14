@@ -108,16 +108,19 @@ static mlog_elem_t FMS_Out_Elems[] = {
     MLOG_ELEMENT(u_cmd, MLOG_FLOAT),
     MLOG_ELEMENT(v_cmd, MLOG_FLOAT),
     MLOG_ELEMENT(w_cmd, MLOG_FLOAT),
+    MLOG_ELEMENT(ax_cmd, MLOG_FLOAT),
+    MLOG_ELEMENT(ay_cmd, MLOG_FLOAT),
+    MLOG_ELEMENT(az_cmd, MLOG_FLOAT),
     MLOG_ELEMENT(throttle_cmd, MLOG_UINT32),
     MLOG_ELEMENT_VEC(actuator_cmd, MLOG_UINT16, 16),
     MLOG_ELEMENT(status, MLOG_UINT8),
     MLOG_ELEMENT(state, MLOG_UINT8),
     MLOG_ELEMENT(ctrl_mode, MLOG_UINT8),
-    MLOG_ELEMENT(reset, MLOG_UINT8),
     MLOG_ELEMENT(mode, MLOG_UINT8),
-    MLOG_ELEMENT(reserved1, MLOG_UINT8),
+    MLOG_ELEMENT(reset, MLOG_UINT8),
     MLOG_ELEMENT(wp_consume, MLOG_UINT8),
     MLOG_ELEMENT(wp_current, MLOG_UINT8),
+    MLOG_ELEMENT(reserved1, MLOG_UINT8),
 };
 MLOG_BUS_DEFINE(FMS_Out, FMS_Out_Elems);
 
@@ -198,7 +201,7 @@ static int fms_output_echo(void* param)
     printf("throttle cmd: %.2f\n", fms_out.throttle_cmd);
     printf("act cmd: %u %u %u %u\n", fms_out.actuator_cmd[0], fms_out.actuator_cmd[1], fms_out.actuator_cmd[2], fms_out.actuator_cmd[3]);
     printf("status:%s state:%s ctrl_mode:%s\n", fms_status[fms_out.status], fms_state[fms_out.state], fms_ctrl_mode[fms_out.ctrl_mode]);
-    printf("reset:%d mode:%s\n", fms_out.reset, fms_mode[fms_out.mode]);
+    printf("mode:%s reset:%d\n", fms_mode[fms_out.mode], fms_out.reset);
     printf("wp_current:%d wp_consume:%d\n", fms_out.wp_current, fms_out.wp_consume);
     printf("------------------------------------------\n");
 

@@ -2,7 +2,7 @@
 # Modify this file to control which files/modules should be built
 
 DRIVERS = [
-    'imu/icm20600.c',
+    # 'imu/icm20600.c',
     # 'imu/icm20689.c',
     # 'imu/bmi055.c',
     'imu/bmi088.c',

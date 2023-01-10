@@ -30,6 +30,7 @@
 
 #include "inter_core.h"
 #include "xc7027.h"
+#include "mini384.h"
 
 
 //--------------------------------------
@@ -50,7 +51,8 @@ void task_local_entry(void* parameter)
     bb_led_start();
     bb_match_id_start();
 
-    xc7027_start();
+    // xc7027_start();
+    mini384_start();
 
     while (1) {
         DLOG_Process(NULL);

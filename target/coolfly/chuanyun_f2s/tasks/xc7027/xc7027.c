@@ -590,10 +590,6 @@ _EXT_DTCM1
 void xc7027_start(void)
 {
 
-
-
-
-
     WorkQueue_t lp_wq = workqueue_find("wq:lp_work");
 
     RT_ASSERT(lp_wq != NULL);

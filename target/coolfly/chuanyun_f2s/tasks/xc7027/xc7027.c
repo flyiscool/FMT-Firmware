@@ -566,12 +566,12 @@ _EXT_DTCM1
 static void run_xc7027(void* parameter)
 {
     if (!is_Inited) {
-        
+
         XC7027_Reset();
         init();
-        is_Inited = 1;  // just set once.
+        is_Inited = 1; // just set once.
     } else {
-        
+
         XC7027_SENSOR_LoopCallBack();
     }
 }
@@ -590,14 +590,9 @@ _EXT_DTCM1
 void xc7027_start(void)
 {
 
-
-
-
-
     WorkQueue_t lp_wq = workqueue_find("wq:lp_work");
 
     RT_ASSERT(lp_wq != NULL);
 
     FMT_CHECK(workqueue_schedule_work(lp_wq, &xc7027_item));
-    
 }

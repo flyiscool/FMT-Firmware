@@ -316,6 +316,7 @@ rt_err_t pwm_control(actuator_dev_t dev, int cmd, void* arg)
         /* TODO: Support dshot */
         ret = RT_EINVAL;
         break;
+	
     default:
         ret = RT_EINVAL;
         break;

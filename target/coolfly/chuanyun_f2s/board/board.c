@@ -55,7 +55,6 @@
 //#include "tone_alarm.h"
 #include "drv_buzzer_pwm.h"
 
-
 #include "default_config.h"
 #include "model/control/control_interface.h"
 #include "model/fms/fms_interface.h"
@@ -421,7 +420,6 @@ void bsp_early_initialize(void)
 
     /* buzzer pwm driver init */
     RT_CHECK(drv_buzzer_pwm_init());
-
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
 }

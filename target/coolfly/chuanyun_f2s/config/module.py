@@ -19,6 +19,7 @@ MODULES = [
     'filter/*.c',
     'task_manager/*.c',
     'pmu/*.c',
+    'buzzer/*.c'
 ]
 
 MODULES += [

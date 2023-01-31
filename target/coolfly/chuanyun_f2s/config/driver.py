@@ -3,8 +3,8 @@
 DRIVERS = [
     # 'imu/icm20600.c',
     # 'imu/icm20689.c',
-    # 'imu/bmi055.c',
-    'imu/bmi088.c',
+    'imu/bmi055.c',
+    #'imu/bmi088.c',
     # 'mag/ist8310.c',
     'mag/mmc5983ma.c',
     # 'barometer/ms5611.c',

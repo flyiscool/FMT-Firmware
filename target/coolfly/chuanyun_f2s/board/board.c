@@ -29,7 +29,7 @@
 #include "driver/barometer/spl06.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi055.h"
-// #include "driver/imu/bmi088.h"
+//#include "driver/imu/bmi088.h"
 // #include "driver/imu/icm20600.h"
 // #include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
@@ -52,7 +52,8 @@
 #include "drv_usart.h"
 // #include "drv_usbd_cdc.h"
 #include "led.h"
-#include "tone_alarm.h"
+//#include "tone_alarm.h"
+#include "drv_buzzer_pwm.h"
 
 #include "default_config.h"
 #include "model/control/control_interface.h"
@@ -74,6 +75,10 @@
 #include "module/toml/toml.h"
 #include "module/utils/devmq.h"
 #include "module/workqueue/workqueue_manager.h"
+
+#include "module/buzzer/tone_alarm.h"
+
+
 #ifdef FMT_USING_SIH
     #include "model/plant/plant_interface.h"
 #endif
@@ -395,6 +400,9 @@ void bsp_early_initialize(void)
     /* pwm driver init */
     RT_CHECK(drv_pwm_init());
 
+    /* buzzer pwm driver init */
+    RT_CHECK(drv_buzzer_pwm_init());
+	
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
 }
@@ -565,7 +573,7 @@ void bsp_post_initialize(void)
     /* initialize led */
     FMT_CHECK(led_control_init());
 
-    tone_alarm_init();
+    FMT_CHECK(tone_alarm_init("buzzer_pwm"));
 
     /* initialize power management unit */
     FMT_CHECK(pmu_init());

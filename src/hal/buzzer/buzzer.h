@@ -57,5 +57,4 @@ rt_err_t hal_buzzer_register(buzzer_dev_t dev, const char* name, rt_uint32_t fla
 }
 #endif
 
-
 #endif

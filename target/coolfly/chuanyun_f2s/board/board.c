@@ -611,6 +611,8 @@ void bsp_post_initialize(void)
 
     FMT_CHECK(xc7027_init());
 
+    FMT_CHECK(xc7027_init());
+
     FMT_CHECK(tone_alarm_init("buzzer_pwm"));
 
     /* initialize power management unit */

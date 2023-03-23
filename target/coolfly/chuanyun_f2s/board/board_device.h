@@ -17,9 +17,17 @@
 #ifndef BOARD_DEVICE_H__
 #define BOARD_DEVICE_H__
 
-// #define BOARD_F2S
+// #define BOARD_JM_250
 
-#define BOARD_JM_250
+#define BOARD_F2S
+
+// #define USED_RAMTRON   1
+
+// #define USED_BMI055   1
+#define USED_BMI088 1
+
+#define USED_SPL06 1
+// #define USED_MS5611     1
 
 #define WD_DONE_GPIO   HAL_GPIO_NUM74
 #define VIDEO_LED_GPIO HAL_GPIO_NUM55

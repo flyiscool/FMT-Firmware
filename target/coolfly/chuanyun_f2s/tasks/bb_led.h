@@ -17,6 +17,8 @@ void set_link_led_status_searchid(void);
 LINK_LED_STATUS get_link_led_status(void);
 void bb_led_start(void);
 
+void bb_led_status_EventHandler(void* p);
+
 #ifdef __cplusplus
 }
 #endif

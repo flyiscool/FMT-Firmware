@@ -695,7 +695,10 @@ void bmi088_rotate_to_ned(float val[3])
 #include "debuglog.h"
 
 #include "bb_com.h"
+#include "bb_led.h"
 #include "sky_sbus.h"
+#include "xc7027.h"
+
 #define MATCH(a, b)     (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
@@ -974,6 +977,8 @@ void bsp_early_initialize(void)
     pst_cfg->u8_workMode = 0;
     HAL_SYS_CTL_Init(pst_cfg);
 
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_EVENT, bb_led_status_EventHandler);
+
     // SystemClock_Config();
 
     /* usart driver init */
@@ -1192,6 +1197,8 @@ void bsp_post_initialize(void)
 
     /* initialize led */
     FMT_CHECK(led_control_init());
+
+    FMT_CHECK(xc7027_init());
 
     FMT_CHECK(tone_alarm_init("buzzer_pwm"));
 

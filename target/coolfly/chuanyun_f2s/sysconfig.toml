@@ -43,23 +43,23 @@ target = "CHUANYUN_F2S"
 
     [[pilot-cmd.mode]]
     mode = 5                    # Position mode
-    channel = 5
+    channel = 8
     range = [1000,1200]
 
     [[pilot-cmd.mode]]
     mode = 4                    # Altitude mode
-    channel = 5
+    channel = 8
     range = [1400,1600]
 
     [[pilot-cmd.mode]]
     mode = 3                    # Stabilize mode
-    channel = 5
+    channel = 8
     range = [1800,2000]
 
     [[pilot-cmd.command]]
     type = 1                    # 1:event | 2:status
     cmd = 1002                  # FMS_Cmd_Disarm
-    channel = 6
+    channel = 13
     range = [1800,2000]
 
 # Actuator Configuration

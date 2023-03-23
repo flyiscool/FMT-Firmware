@@ -8,9 +8,19 @@
 
 #include "module/workqueue/workqueue_manager.h"
 
-#define MINI384_DVP_CHANNEL 1
-#define MINI384_RST         HAL_GPIO_NUM103
-#define MINI384_I2C         HAL_I2C_COMPONENT_0
+
+
+
+// #define MINI384_DVP_CHANNEL 1
+// #define MINI384_RST         HAL_GPIO_NUM103
+// #define MINI384_I2C         HAL_I2C_COMPONENT_0
+
+#define MINI384_DVP_CHANNEL 0
+#define MINI384_RST         HAL_GPIO_NUM99
+#define MINI384_I2C         HAL_I2C_COMPONENT_1
+
+
+
 #define MINI384_I2C_ADDR    0x3C
 
 // uint8_t config1_640x512_30fps[10] = { 0x9D, 0x00, 0x0F, 0xc1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08 };

@@ -556,24 +556,18 @@ static void init()
 }
 
 _EXT_DTCM1
-void xc7027_re_init(void)
+int xc7027_init(void)
 {
-    is_Inited = 0;
-    // init();
+    XC7027_Reset();
+    init();
+
+    return 0;
 }
 
 _EXT_DTCM1
 static void run_xc7027(void* parameter)
 {
-    if (!is_Inited) {
-
-        XC7027_Reset();
-        init();
-        is_Inited = 1; // just set once.
-    } else {
-
-        XC7027_SENSOR_LoopCallBack();
-    }
+    XC7027_SENSOR_LoopCallBack();
 }
 
 /////////////////////////////////////////////////////

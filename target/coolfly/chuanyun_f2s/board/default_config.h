@@ -52,7 +52,7 @@ target = "CHUANYUN_F2S"\n
 	[[pilot-cmd.command]]\n
 	type = 1\n
 	cmd = 1002\n
-	channel = 9\n
+	channel = 13\n
 	range = [1800,2000]\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n

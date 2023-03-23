@@ -633,11 +633,11 @@ void bmi088_rotate_to_ned(float val[3])
 #endif
 
 #include "board_device.h"
-// #include "driver/barometer/ms5611.h"
+#include "driver/barometer/ms5611.h"
 #include "driver/barometer/spl06.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi055.h"
-//#include "driver/imu/bmi088.h"
+#include "driver/imu/bmi088.h"
 // #include "driver/imu/icm20600.h"
 // #include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
@@ -685,7 +685,6 @@ void bmi088_rotate_to_ned(float val[3])
 
 #include "module/buzzer/tone_alarm.h"
 
-
 #ifdef FMT_USING_SIH
     #include "model/plant/plant_interface.h"
 #endif
@@ -701,8 +700,11 @@ void bmi088_rotate_to_ned(float val[3])
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
 static const struct dfs_mount_tbl mnt_table[] = {
-    // { "mtdblk0", "/", "elm", 0, NULL },
+#ifdef USED_RAMTRON
+    { "mtdblk0", "/", "elm", 0, NULL },
+#else
     { "tfcard", "/", "elm", 0, NULL },
+#endif
     { NULL } /* NULL indicate the end */
 };
 
@@ -1008,7 +1010,7 @@ void bsp_early_initialize(void)
 
     /* buzzer pwm driver init */
     RT_CHECK(drv_buzzer_pwm_init());
-	
+
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
 }
@@ -1034,9 +1036,11 @@ void bsp_initialize(void)
     // console_println("drv_sdio_init~");
 
     /* fram init */
+#ifdef USED_RAMTRON
     if (FMT_EOK != drv_ramtron_init("spi6_dev1")) {
         console_println("=================> can't find the ramtron on spi6_dev1");
     }
+#endif
 
     if (FMT_EOK != drv_spi_tfcard_init("spi1_dev1", "tfcard")) {
         console_println("tfcard init failed!");
@@ -1072,11 +1076,21 @@ void bsp_initialize(void)
     // RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
 
+    #ifdef USED_BMI055
     RT_CHECK(drv_bmi055_init("spi2_dev2", "gyro0", "accel0"));
+    #endif
 
-    // RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
-    // RT_CHECK(drv_ms5611_init("spi3_dev1", "barometer"));
+    #ifdef USED_BMI088
+    RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
+    #endif
+
+    #ifdef USED_MS5611
+    RT_CHECK(drv_ms5611_init("spi3_dev1", "barometer"));
+    #endif
+
+    #ifdef USED_SPL06
     RT_CHECK(drv_spl06_init("spi3_dev2", "barometer"));
+    #endif
 
     /* if no gps mag then use onboard mag */
     // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {

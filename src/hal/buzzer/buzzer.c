@@ -17,10 +17,8 @@
 #include "hal/buzzer/buzzer.h"
 #include <firmament.h>
 
-//#define buzzer_dbg(fmt, ...) console_printf(fmt, ##__VA_ARGS__)
+// #define buzzer_dbg(fmt, ...) console_printf(fmt, ##__VA_ARGS__)
 #define buzzer_dbg(fmt, ...)
-
-
 
 static rt_bool_t dev_suspend;
 
@@ -64,7 +62,7 @@ static rt_err_t hal_buzzer_control(struct rt_device* dev, int cmd, void* args)
 
 static rt_err_t hal_buzzer_open(rt_device_t dev, rt_uint16_t oflag)
 {
-    return hal_buzzer_control(dev, BUZZER_CMD_CHANNEL_ENABLE, NULL);
+    return RT_EOK;
 }
 
 static rt_err_t hal_buzzer_close(rt_device_t dev)
@@ -99,8 +97,8 @@ static rt_size_t hal_buzzer_write(rt_device_t dev, rt_off_t pos, const void* buf
 
     buzzer_dev_t buz_dev = (buzzer_dev_t)dev;
     rt_size_t wb = 0;
-	uint16_t chan_val;
-	uint16_t* val_ptr = (uint16_t*)buffer;
+    uint16_t chan_val;
+    uint16_t* val_ptr = (uint16_t*)buffer;
 
     if (dev_suspend == RT_TRUE || buffer == NULL || pos == 0) {
         return 0;
@@ -113,14 +111,11 @@ static rt_size_t hal_buzzer_write(rt_device_t dev, rt_off_t pos, const void* buf
 
     if (buz_dev->ops->dev_write) {
         wb = buz_dev->ops->dev_write(buz_dev, pos, &chan_val, size);
-		buzzer_dbg("buz write value %d\r\n", chan_val);
+        buzzer_dbg("buz write value %d\r\n", chan_val);
     }
 
     return wb;
 }
-
-
-
 
 rt_err_t hal_buzzer_register(buzzer_dev_t buzzer, const char* name, rt_uint32_t flag, void* data)
 {
@@ -142,7 +137,6 @@ rt_err_t hal_buzzer_register(buzzer_dev_t buzzer, const char* name, rt_uint32_t 
     parent_device->control = hal_buzzer_control;
 
     parent_device->user_data = data;
-
 
     /* register buzzer device */
     return rt_device_register(parent_device, name, flag);

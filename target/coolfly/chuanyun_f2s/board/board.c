@@ -323,7 +323,7 @@ extern WorkQueue_t wq_list[MAX_WQ_SIZE];
 
 fmt_err_t chuanyun_workqueue_manager_init(void)
 {
-    wq_list[2] = workqueue_create("wq:sysevent_work", 5, 2048, 1);
+    wq_list[2] = workqueue_create("wq:sysevent_work", 5, 8192, 1);
     RT_ASSERT(wq_list[2] != NULL);
 
     return FMT_EOK;

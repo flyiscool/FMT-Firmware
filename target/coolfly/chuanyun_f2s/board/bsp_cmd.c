@@ -126,7 +126,7 @@ fmt_err_t __switch_mavlink_to_device(rt_device_t dev)
 
     for (int idx = 0; idx < get_device_num(); idx++) {
         if (rt_device_find(list->name) == dev) {
-            ret = mavproxy_set_device(idx);
+            ret = mavproxy_set_channel(idx);
             break;
         }
         list++;
@@ -140,7 +140,7 @@ static void sw_mav_show_usage(void)
     COMMAND_USAGE("sw_mav", "[options]");
 
     PRINT_STRING("options:\n");
-    SHELL_COMMAND("serial", "swtich the mavlink to uart4");
+    SHELL_COMMAND("serial", "swtich the mavlink to uart7");
     SHELL_COMMAND("usb", "swtich the mavlink to usb");
     SHELL_COMMAND("bb_com", "swtich the mavlink to bb_com, use Remote to show the mavlink");
 }
@@ -154,7 +154,7 @@ static int sw_mav_channel(const char* dev)
     if (set_dev != RT_NULL) {
         ret = __switch_mavlink_to_device(set_dev);
         if (ret != RT_EOK) {
-            DLOG_Critical("mavproxy_set_device %s failed!!! \n", dev);
+            DLOG_Critical("mavproxy_set_channel %s failed!!! \n", dev);
         }
     } else {
         DLOG_Critical(" can't find the %s \n", dev);
@@ -173,7 +173,7 @@ static int handle_sw_mav_cmd(int argc, char** argv, int optc, optv_t* optv)
     arg = optparse_arg(&options);
     if (arg) {
         if (STRING_COMPARE(arg, "serial")) {
-            res = sw_mav_channel("serial4");
+            res = sw_mav_channel("serial7");
         } else if (STRING_COMPARE(arg, "usb0")) {
             res = sw_mav_channel("usb");
         } else if (STRING_COMPARE(arg, "bb_com")) {

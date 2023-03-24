@@ -16,17 +16,17 @@ target = "CHUANYUN_F2S"
     name = "mav_console"
     auto-switch = true
 
-# # Mavproxy Device Configuration
-# [mavproxy]
-#     [[mavproxy.devices]]
-#     type = "serial"
-#     name = "serial1"
-#     baudrate = 57600
+# Mavproxy Device Configuration
+[mavproxy]
+    [[mavproxy.devices]]
+    type = "serial"
+    name = "serial7"
+    baudrate = 460800
 
-#     [[mavproxy.devices]]
-#     type = "usb"
-#     name = "usbd0"
-#     auto-switch = true
+    [[mavproxy.devices]]
+    type = "bb_com"
+    name = "bb_com3"
+    auto-switch = true
 
 # Pilot CMD Configuration
 [pilot-cmd]

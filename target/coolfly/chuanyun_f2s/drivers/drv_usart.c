@@ -119,6 +119,19 @@ struct ar_uart {
     }
 
 /* Default config for serial_configure structure */
+#define SERIAL6_DEFAULT_CONFIG                    \
+    {                                             \
+        BAUD_RATE_115200,    /* 57600 bits/s */   \
+            DATA_BITS_8,     /* 8 databits */     \
+            STOP_BITS_1,     /* 1 stopbit */      \
+            PARITY_NONE,     /* No parity  */     \
+            BIT_ORDER_LSB,   /* LSB first sent */ \
+            NRZ_NORMAL,      /* Normal mode */    \
+            SERIAL_RB_BUFSZ, /* Buffer size */    \
+            0                                     \
+    }
+
+/* Default config for serial_configure structure */
 #define SERIAL7_DEFAULT_CONFIG                    \
     {                                             \
         BAUD_RATE_460800,    /* 57600 bits/s */   \
@@ -142,6 +155,7 @@ static struct serial_device serial0; // FMU Debug
 static struct serial_device serial1; // GPS
 static struct serial_device serial4; // dis
 static struct serial_device serial5; // flow
+static struct serial_device serial6; // opt
 static struct serial_device serial7; // MAVLINK
 
 /* UART0 device driver structure */
@@ -166,6 +180,12 @@ struct ar_uart uart4 = {
 struct ar_uart uart5 = {
     .uart_device = UART5_BASE,
     .irq = UART_INTR5_VECTOR_NUM,
+    .dma = { 0 },
+};
+
+struct ar_uart uart6 = {
+    .uart_device = UART6_BASE,
+    .irq = UART_INTR6_VECTOR_NUM,
     .dma = { 0 },
 };
 
@@ -211,6 +231,16 @@ void UART5_IRQHandler(void)
     rt_interrupt_enter();
     /* uart isr routine */
     uart_isr(&serial5);
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
+
+void UART6_IRQHandler(void)
+{
+    /* enter interrupt */
+    rt_interrupt_enter();
+    /* uart isr routine */
+    uart_isr(&serial6);
     /* leave interrupt */
     rt_interrupt_leave();
 }
@@ -605,11 +635,17 @@ static const struct usart_ops _usart_ops = {
 #define UART5_TX_Pin HAL_GPIO_NUM115
 #define UART5_RX_Pin HAL_GPIO_NUM108
 
+#define UART6_TX_Pin HAL_GPIO_NUM116
+#define UART6_RX_Pin HAL_GPIO_NUM109
+
 rt_err_t drv_usart_init(void)
 {
 
     HAL_GPIO_SetMode(UART5_TX_Pin, HAL_GPIO_PIN_MODE0);
     HAL_GPIO_SetMode(UART5_RX_Pin, HAL_GPIO_PIN_MODE0);
+
+    HAL_GPIO_SetMode(UART6_TX_Pin, HAL_GPIO_PIN_MODE0);
+    HAL_GPIO_SetMode(UART6_RX_Pin, HAL_GPIO_PIN_MODE0);
 
     rt_err_t rt_err = RT_EOK;
 
@@ -667,6 +703,21 @@ rt_err_t drv_usart_init(void)
                                   "serial5",
                                   RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
                                   &uart5);
+
+    //
+    serial6.ops = &_usart_ops;
+
+    struct serial_configure serial6_config = SERIAL6_DEFAULT_CONFIG;
+    serial6.config = serial6_config;
+
+    NVIC_Configuration(&uart6);
+
+    /* register serial device */
+    rt_err |= hal_serial_register(&serial6,
+                                  "serial6",
+                                  RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE | RT_DEVICE_FLAG_INT_RX,
+                                  &uart6);
+
 
     // mavlink
     serial7.ops = &_usart_ops;

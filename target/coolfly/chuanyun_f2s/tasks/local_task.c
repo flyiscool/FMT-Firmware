@@ -56,7 +56,7 @@ void task_local_entry(void* parameter)
 
     while (1) {
         DLOG_Process(NULL);
-        sys_msleep(10);
+        sys_msleep(100);
     }
 }
 
@@ -66,7 +66,7 @@ TASK_EXPORT __fmt_task_desc = {
     .entry = task_local_entry,
     .priority = 25,
     .auto_start = true,
-    .stack_size = 1024,
+    .stack_size = 4096,
     .param = NULL,
     .dependency = NULL
 };

@@ -168,12 +168,7 @@ static struct rt_i2c_device i2c2_dev2 = {
     .flags = 0
 };
 
-// static struct rt_i2c_device i2c3_dev1 = {
-//     .slave_addr = NCP5623C_ADDRESS, /* 7 bit address */
-//     .flags = 0
-// };
-
-static struct rt_i2c_device i2c3_dev2 = {
+static struct rt_i2c_device i2c3_dev1 = {
     .slave_addr = AW2023_ADDRESS, /* 7 bit address */
     .flags = 0
 };
@@ -185,8 +180,7 @@ rt_err_t drv_i2c_init(void)
     reset_i2c2();
     // HAL_I2C_MasterInit( ar1002_i2c2.I2C, i2c2_dev1.slave_addr, HAL_I2C_FAST_SPEED);
     HAL_I2C_MasterInit(ar1002_i2c2.I2C, i2c2_dev2.slave_addr, HAL_I2C_FAST_SPEED);
-    // HAL_I2C_MasterInit( ar1002_i2c3.I2C, i2c3_dev1.slave_addr, HAL_I2C_FAST_SPEED);
-    HAL_I2C_MasterInit(ar1002_i2c3.I2C, i2c3_dev2.slave_addr, HAL_I2C_FAST_SPEED);
+    HAL_I2C_MasterInit(ar1002_i2c3.I2C, i2c3_dev1.slave_addr, HAL_I2C_FAST_SPEED);
 
     /* register i2c bus */
     RT_TRY(rt_i2c_bus_device_register(&ar1002_i2c2.parent, "i2c2"));
@@ -196,7 +190,7 @@ rt_err_t drv_i2c_init(void)
     // RT_TRY(rt_i2c_bus_attach_device(&i2c2_dev1, "i2c2_dev1", "i2c2", RT_NULL));
     RT_TRY(rt_i2c_bus_attach_device(&i2c2_dev2, "i2c2_dev2", "i2c2", RT_NULL));
     // RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev1, "i2c3_dev1", "i2c3", RT_NULL));
-    RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev2, "i2c3_dev2", "i2c3", RT_NULL));
+    RT_TRY(rt_i2c_bus_attach_device(&i2c3_dev1, "i2c3_dev1", "i2c3", RT_NULL));
 
     return RT_EOK;
 }

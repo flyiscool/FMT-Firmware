@@ -184,7 +184,7 @@ static struct WorkItem led_item = {
 
 // static struct WorkItem rgb_led_item = {
 //     .name = "rgb_led",
-//     .period = 3000,
+//     .period = 10,
 //     .schedule_time = 0,
 //     .run = run_rgb_led
 // };

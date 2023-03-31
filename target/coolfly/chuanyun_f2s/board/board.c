@@ -39,6 +39,7 @@
 #include "driver/rgb_led/aw2023.h"
 // #include "driver/rgb_led/ncp5623c.h"
 // #include "driver/vision_flow/lc307.h"
+
 #include "driver/vision_flow/pmw3901_fl04.h"
 #include "driver/temperature/ntc.h"
 
@@ -608,8 +609,6 @@ void bsp_post_initialize(void)
     /* initialize led */
     FMT_CHECK(led_control_init());
 #endif
-
-    FMT_CHECK(xc7027_init());
 
     FMT_CHECK(xc7027_init());
 

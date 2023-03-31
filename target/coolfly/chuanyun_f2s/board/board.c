@@ -55,6 +55,7 @@
 //#include "tone_alarm.h"
 #include "drv_buzzer_pwm.h"
 
+
 #include "default_config.h"
 #include "model/control/control_interface.h"
 #include "model/fms/fms_interface.h"
@@ -338,8 +339,10 @@ void bsp_early_initialize(void)
     HAL_GPIO_OutPut(WD_DONE_GPIO); // wd_done
     HAL_GPIO_SetPin(WD_DONE_GPIO, HAL_GPIO_PIN_SET);
 
+#ifdef SENSOR_POWER_GPIO
     HAL_GPIO_OutPut(SENSOR_POWER_GPIO); //
     HAL_GPIO_SetPin(SENSOR_POWER_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
     HAL_GPIO_OutPut(LINK_LED_GPIO); // blue led close
     HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_SET);
@@ -347,16 +350,24 @@ void bsp_early_initialize(void)
     HAL_GPIO_OutPut(VIDEO_LED_GPIO); // red led close
     HAL_GPIO_SetPin(VIDEO_LED_GPIO, HAL_GPIO_PIN_SET);
 
+#ifdef RGB_R_GPIO
     HAL_GPIO_OutPut(RGB_R_GPIO); // rgb1 R led close
     HAL_GPIO_SetPin(RGB_R_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef RGB_G_GPIO
     HAL_GPIO_OutPut(RGB_G_GPIO); // rgb1 G led close
     HAL_GPIO_SetPin(RGB_G_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef RGB_B_GPIO
     HAL_GPIO_OutPut(RGB_B_GPIO); // rgb1 B led close
     HAL_GPIO_SetPin(RGB_B_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef SENSOR_POWER_GPIO
     HAL_GPIO_SetPin(SENSOR_POWER_GPIO, HAL_GPIO_PIN_SET);
+#endif
 
     /* init system heap */
     rt_system_heap_init((void*)SYSTEM_FREE_MEM_BEGIN, (void*)SYSTEM_FREE_MEM_END);
@@ -459,10 +470,10 @@ void bsp_initialize(void)
     /* adc driver init */
     RT_CHECK(drv_adc_init());
 
+    RT_CHECK(drv_aw2023_init("i2c3_dev1"));
+
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
     // drv_ncp5623c_init("i2c3_dev1");
-
-    RT_CHECK(drv_aw2023_init("i2c3_dev2"));
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
     FMT_CHECK(advertise_sensor_imu(0));
@@ -476,7 +487,7 @@ void bsp_initialize(void)
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
 
     #ifdef USED_BMI055
-    RT_CHECK(drv_bmi055_init("spi2_dev2", "gyro0", "accel0"));
+    RT_CHECK(drv_bmi055_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     #endif
 
     #ifdef USED_BMI088
@@ -511,6 +522,8 @@ void bsp_initialize(void)
     }
     RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
+    RT_CHECK(drv_ntc_init("adc9","temp_board"));
+    
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
     // } else {
@@ -545,7 +558,9 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
 
     FMT_CHECK(register_sensor_barometer("barometer"));
+
     FMT_CHECK(register_sensor_temperature("temp_board", 0));
+    
 #endif
 
     FMT_CHECK(register_ar_rc());
@@ -591,8 +606,10 @@ void bsp_post_initialize(void)
     /* start device message queue work */
     FMT_CHECK(devmq_start_work());
 
+#ifdef USED_RGB
     /* initialize led */
     FMT_CHECK(led_control_init());
+#endif
 
     FMT_CHECK(xc7027_init());
 

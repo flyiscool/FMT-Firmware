@@ -36,8 +36,10 @@
 #include "driver/mtd/ramtron.h"
 // #include "driver/range_finder/tfmini_s.h"
 #include "driver/mtd/spi_tfcard.h"
-#include "driver/rgb_led/ncp5623c.h"
+// #include "driver/rgb_led/ncp5623c.h"
+#include "driver/rgb_led/aw2023.h"
 // #include "driver/vision_flow/lc307.h"
+
 #include "driver/vision_flow/pmw3901_fl04.h"
 
 #include "drv_adc.h"
@@ -335,8 +337,10 @@ void bsp_early_initialize(void)
     HAL_GPIO_OutPut(WD_DONE_GPIO); // wd_done
     HAL_GPIO_SetPin(WD_DONE_GPIO, HAL_GPIO_PIN_SET);
 
+#ifdef SENSOR_POWER_GPIO
     HAL_GPIO_OutPut(SENSOR_POWER_GPIO); //
     HAL_GPIO_SetPin(SENSOR_POWER_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
     HAL_GPIO_OutPut(LINK_LED_GPIO); // blue led close
     HAL_GPIO_SetPin(LINK_LED_GPIO, HAL_GPIO_PIN_SET);
@@ -344,16 +348,24 @@ void bsp_early_initialize(void)
     HAL_GPIO_OutPut(VIDEO_LED_GPIO); // red led close
     HAL_GPIO_SetPin(VIDEO_LED_GPIO, HAL_GPIO_PIN_SET);
 
+#ifdef RGB_R_GPIO
     HAL_GPIO_OutPut(RGB_R_GPIO); // rgb1 R led close
     HAL_GPIO_SetPin(RGB_R_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef RGB_G_GPIO
     HAL_GPIO_OutPut(RGB_G_GPIO); // rgb1 G led close
     HAL_GPIO_SetPin(RGB_G_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef RGB_B_GPIO
     HAL_GPIO_OutPut(RGB_B_GPIO); // rgb1 B led close
     HAL_GPIO_SetPin(RGB_B_GPIO, HAL_GPIO_PIN_RESET);
+#endif
 
+#ifdef SENSOR_POWER_GPIO
     HAL_GPIO_SetPin(SENSOR_POWER_GPIO, HAL_GPIO_PIN_SET);
+#endif
 
     /* init system heap */
     rt_system_heap_init((void*)SYSTEM_FREE_MEM_BEGIN, (void*)SYSTEM_FREE_MEM_END);
@@ -455,6 +467,8 @@ void bsp_initialize(void)
 
     /* adc driver init */
     RT_CHECK(drv_adc_init());
+
+    RT_CHECK(drv_aw2023_init("i2c3_dev1"));
 
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
     // drv_ncp5623c_init("i2c3_dev1");
@@ -584,8 +598,10 @@ void bsp_post_initialize(void)
     /* start device message queue work */
     FMT_CHECK(devmq_start_work());
 
+#ifdef USED_RGB
     /* initialize led */
     FMT_CHECK(led_control_init());
+#endif
 
     FMT_CHECK(xc7027_init());
 

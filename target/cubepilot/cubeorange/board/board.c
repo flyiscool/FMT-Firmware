@@ -119,7 +119,7 @@ static void bsp_show_information(void)
     sprintf(buffer, "%d KB", SYSTEM_TOTAL_MEM_SIZE / 1024);
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
-    banner_item("Vehicle", VEHICLE_TYPE, '.', BANNER_ITEM_LEN);
+    banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -399,6 +399,7 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_mag(0));
     FMT_CHECK(advertise_sensor_baro(0));
     FMT_CHECK(advertise_sensor_gps(0));
+    FMT_CHECK(advertise_sensor_airspeed(0));
 #else
     /* init onboard sensors */
     RT_CHECK(drv_icm20948_init("spi4_dev1", "gyro0", "accel0", "mag0"));

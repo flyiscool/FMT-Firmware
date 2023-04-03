@@ -27,6 +27,7 @@
 #endif
 
 #include "default_config.h"
+#include "driver/airspeed/ms4525.h"
 #include "driver/barometer/ms5611.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/l3gd20h.h"
@@ -125,7 +126,7 @@ static void bsp_show_information(void)
     sprintf(buffer, "%d KB", SYSTEM_TOTAL_MEM_SIZE / 1024);
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
-    banner_item("Vehicle", VEHICLE_TYPE, '.', BANNER_ITEM_LEN);
+    banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -318,6 +319,7 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_mag(0));
     FMT_CHECK(advertise_sensor_baro(0));
     FMT_CHECK(advertise_sensor_gps(0));
+    FMT_CHECK(advertise_sensor_airspeed(0));
 #else
     /* init onboard sensors */
 
@@ -339,6 +341,10 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_barometer("barometer"));
     FMT_CHECK(advertise_sensor_optflow(0));
     FMT_CHECK(advertise_sensor_rangefinder(0));
+    if(strcmp(STR(VEHICLE_TYPE),"Fixwing")==0){
+        RT_CHECK(drv_ms4525_init("i2c1_dev1","airspeed"));
+        FMT_CHECK(register_sensor_airspeed("airspeed"));
+    }
 #endif
 
     /* init finsh */

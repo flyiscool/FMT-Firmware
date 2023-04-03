@@ -21,16 +21,18 @@
 #include <string.h>
 
 #include "default_config.h"
+#include "driver/airspeed/ms4525.h"
 #include "driver/barometer/ms5611.h"
 #include "driver/barometer/spl06.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi088.h"
 #include "driver/imu/icm20948.h"
-#include "driver/imu/icm42688.h"
+#include "driver/imu/icm42688p.h"
 #include "driver/mag/bmm150.h"
 #include "driver/mtd/w25qxx.h"
 #include "driver/rgb_led/aw2023.h"
 #include "driver/vision_flow/mtf_01.h"
+#include "drv_adc.h"
 #include "drv_buzzer.h"
 #include "drv_gpio.h"
 #include "drv_i2c.h"
@@ -62,8 +64,12 @@
 #include "module/toml/toml.h"
 #include "module/utils/devmq.h"
 #include "module/workqueue/workqueue_manager.h"
+
 #ifdef FMT_USING_SIH
     #include "model/plant/plant_interface.h"
+#endif
+#ifdef FMT_USING_UNIT_TEST
+    #include "utest.h"
 #endif
 
 #define MATCH(a, b)     (strcmp(a, b) == 0)
@@ -117,7 +123,7 @@ static void bsp_show_information(void)
     sprintf(buffer, "%d KB", SYSTEM_TOTAL_MEM_SIZE / 1024);
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
-    banner_item("Vehicle", VEHICLE_TYPE, '.', BANNER_ITEM_LEN);
+    banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -256,7 +262,7 @@ void bsp_early_initialize(void)
     RT_CHECK(drv_pwm_init());
 
     /* buzzer(pwm) driver init */
-    RT_CHECK(drv_buzzer_init());
+    // RT_CHECK(drv_buzzer_init());
 
     /* init remote controller driver */
     RT_CHECK(drv_rc_init());
@@ -289,6 +295,9 @@ void bsp_initialize(void)
     /* init usbd_cdc */
     RT_CHECK(drv_usb_cdc_init());
 
+    /* adc driver init */
+    RT_CHECK(drv_adc_init());
+
     RT_CHECK(drv_aw2023_init("i2c0_dev0"));
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
@@ -296,32 +305,40 @@ void bsp_initialize(void)
     FMT_CHECK(advertise_sensor_mag(0));
     FMT_CHECK(advertise_sensor_baro(0));
     FMT_CHECK(advertise_sensor_gps(0));
+    FMT_CHECK(advertise_sensor_airspeed(0));
 #else
     /* init onboard sensors */
     RT_CHECK(drv_bmi088_init("spi0_dev1", "spi0_dev0", "gyro0", "accel0", 0));
+    // RT_CHECK(drv_icm42688_init("spi0_dev4", "gyro1", "accel1", 0));
     RT_CHECK(drv_bmm150_init("spi0_dev2", "mag0"));
-    RT_CHECK(drv_icm42688_init("spi0_dev4", "gyro1", "accel1"));
     RT_CHECK(drv_spl06_init("spi0_dev3", "barometer"));
 
-    RT_CHECK(drv_ms5611_init("spi1_dev2", "barometer2"));
-
-    drv_icm20948_init("spi1_dev1", "gyro2", "accel2", "mag2");
     drv_mtf_01_init("serial3");
 
     RT_CHECK(gps_m8n_init("serial4", "gps"));
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
+    // FMT_CHECK(register_sensor_imu("gyro1", "accel1", 1));
     FMT_CHECK(register_sensor_mag("mag0", 0));
     FMT_CHECK(register_sensor_barometer("barometer"));
     FMT_CHECK(advertise_sensor_optflow(0));
     FMT_CHECK(advertise_sensor_rangefinder(0));
+
+    if (strcmp(STR(VEHICLE_TYPE), "Fixwing") == 0) {
+        RT_CHECK(drv_ms4525_init("i2c0_dev1", "airspeed"));
+        FMT_CHECK(register_sensor_airspeed("airspeed"));
+    }
 #endif
 
     /* init finsh */
     finsh_system_init();
     /* Mount finsh to console after finsh system init */
     FMT_CHECK(console_enable_input());
+
+#ifdef FMT_USING_UNIT_TEST
+    utest_init();
+#endif
 }
 
 void bsp_post_initialize(void)
@@ -355,7 +372,7 @@ void bsp_post_initialize(void)
     FMT_CHECK(devmq_start_work());
 
     /* initialize power management unit */
-    // FMT_CHECK(pmu_init());
+    FMT_CHECK(pmu_init());
 
     /* init led control */
     FMT_CHECK(led_control_init());

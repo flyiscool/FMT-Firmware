@@ -5,7 +5,7 @@
  *
  * Model version                  : 1.1064
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Sep 28 12:34:17 2022
+ * C/C++ source code generated on : Mon Mar 13 16:33:34 2023
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -43,8 +43,8 @@ struct_S6LqEv2YQIg4UXtSkgNiZ CONTROL_PARAM = {
   0.2F,
   0.3F,
   1.0F,
-  -1.0F,
-  -1.0F,
+  1.0F,
+  1.0F,
   1.0F,
   0.052359879F,
   0.1F,
@@ -60,8 +60,8 @@ struct_S6LqEv2YQIg4UXtSkgNiZ CONTROL_PARAM = {
   2.0F,
   1.0F,
   1.0F,
-  1.0F,
-  1.0F,
+  2.0F,
+  0.1F,
   0.1F,
   0.1F
 } ;                                    /* Variable: CONTROL_PARAM
@@ -785,7 +785,7 @@ void Controller_step(void)
       if ((Controller_U.FMS_Out.ctrl_mode == 1) ||
           (Controller_U.FMS_Out.ctrl_mode == 2) ||
           (Controller_U.FMS_Out.ctrl_mode == 3)) {
-        rtb_throttle_cmd = (uint16_T)Controller_U.FMS_Out.throttle_cmd;
+        rtb_throttle_cmd = Controller_U.FMS_Out.throttle_cmd;
       } else {
         if (Controller_U.FMS_Out.reset > 0) {
           /* Switch: '<S41>/Switch' incorporates:

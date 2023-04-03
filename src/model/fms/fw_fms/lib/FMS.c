@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'FMS'.
  *
- * Model version                  : 1.1968
+ * Model version                  : 1.1984
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Fri Oct 14 08:47:05 2022
+ * C/C++ source code generated on : Thu Mar 16 09:31:06 2023
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -101,24 +101,25 @@ const FMS_Out_Bus FMS_rtZFMS_Out_Bus = {
 } ;                                    /* FMS_Out_Bus ground */
 
 /* Exported block parameters */
-struct_E1qbCEGvnS3XtzDqfoNznD FMS_PARAM = {
+struct_l1HpI40xbomqAeio9GydsH FMS_PARAM = {
   0.15F,
   0.15F,
   0.1F,
   0.1F,
   0.95F,
   1.0F,
+  5.0F,
   2.5F,
   2.5F,
   1.04719758F,
   0.52359879F,
-  15.0F,
+  30.0F,
   13.0F,
-  1.5F,
-  15.0F,
+  10.0F,
+  55.0F,
   50.0F,
   0.95F,
-  5.0F,
+  8.0F,
   0.785398185F,
   0.785398185F,
   30.0F,
@@ -127,8 +128,7 @@ struct_E1qbCEGvnS3XtzDqfoNznD FMS_PARAM = {
     0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F },
 
   { 1000.0F, 1000.0F, 1500.0F, 1500.0F, 1500.0F, 1500.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-    0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F },
-  5.0F
+    0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F }
 } ;                                    /* Variable: FMS_PARAM
                                         * Referenced by:
                                         *   '<Root>/ACCEPT_R'
@@ -906,8 +906,10 @@ static boolean_T FMS_CheckCmdValid(FMS_Cmd cmd_in, PilotMode mode_in, uint32_T
     break;
 
    case FMS_Cmd_PreArm:
-    if (((ins_flag & 1U) == 0U) || ((ins_flag & 4U) == 0U) || ((ins_flag & 8U) ==
-         0U)) {
+    if (mode_in == PilotMode_Manual) {
+      valid = true;
+    } else if (((ins_flag & 1U) == 0U) || ((ins_flag & 4U) == 0U) || ((ins_flag
+                 & 8U) == 0U)) {
     } else {
       switch (mode_in) {
        case PilotMode_Position:
@@ -1414,7 +1416,10 @@ static void FMS_Arm(void)
       if (c_sf_internal_predicateOutput) {
         FMS_B.Cmd_In.sp_waypoint[0] = FMS_DW.home[0];
         FMS_B.Cmd_In.sp_waypoint[1] = FMS_DW.home[1];
-        FMS_B.Cmd_In.sp_waypoint[2] = FMS_B.BusConversion_InsertedFor_FMSSt.y_R;
+        FMS_B.Cmd_In.sp_waypoint[2] = FMS_B.BusConversion_InsertedFor_FMSSt.h_R;
+        FMS_B.Cmd_In.cur_waypoint[0] = FMS_B.BusConversion_InsertedFor_FMSSt.x_R;
+        FMS_B.Cmd_In.cur_waypoint[1] = FMS_B.BusConversion_InsertedFor_FMSSt.y_R;
+        FMS_B.Cmd_In.cur_waypoint[2] = FMS_B.BusConversion_InsertedFor_FMSSt.h_R;
         FMS_exit_internal_Arm();
         FMS_DW.is_Arm = FMS_IN_SubMode;
         FMS_DW.stick_val[0] = FMS_B.BusConversion_InsertedFor_FMS_f.stick_yaw;
@@ -6436,7 +6441,7 @@ void FMS_step(void)
        *  Inport: '<Root>/Pilot_Cmd'
        *  SignalConversion: '<S16>/Signal Copy2'
        */
-      rtb_Saturation_bu = fmodf(floorf(-500.0F * FMS_U.Pilot_Cmd.stick_roll +
+      rtb_Saturation_bu = fmodf(floorf(500.0F * FMS_U.Pilot_Cmd.stick_roll +
         1500.0F), 65536.0F);
 
       /* End of Outputs for SubSystem: '<S2>/FMS_Input' */
@@ -6473,7 +6478,7 @@ void FMS_step(void)
        *  Inport: '<Root>/Pilot_Cmd'
        *  SignalConversion: '<S16>/Signal Copy2'
        */
-      rtb_Saturation_bu = fmodf(floorf(500.0F * FMS_U.Pilot_Cmd.stick_pitch +
+      rtb_Saturation_bu = fmodf(floorf(-500.0F * FMS_U.Pilot_Cmd.stick_pitch +
         1500.0F), 65536.0F);
 
       /* End of Outputs for SubSystem: '<S2>/FMS_Input' */

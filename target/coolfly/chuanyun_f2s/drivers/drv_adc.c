@@ -84,6 +84,11 @@ rt_err_t drv_adc_init(void)
     adc1.ops = &_adc_ops;
     adc9.ops = &_adc_ops;
 
+<<<<<<< HEAD
     hal_adc_register(&adc1, "adc1", RT_DEVICE_FLAG_RDONLY, NULL);
     return hal_adc_register(&adc9, "adc9", RT_DEVICE_FLAG_RDONLY, NULL);
 }
+=======
+    return hal_adc_register(&adc1, "adc0", RT_DEVICE_FLAG_RDONLY, NULL);
+}
+>>>>>>> 8a24113c51a63a2243b0b64194fcd9f1539803b0

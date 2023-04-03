@@ -17,8 +17,6 @@
 #ifndef FMTCONFIG_H__
 #define FMTCONFIG_H__
 
-#define VEHICLE_TYPE "Quadcopter"
-
 // #define FMT_USING_CHECKED
 
 /* HIL simulation */
@@ -52,6 +50,6 @@
 
 // #define FMT_RECORD_CALIBRATION_DATA
 
-#define FMT_USING_SYS_DEBUG
+// #define FMT_USING_SYS_DEBUG
 
 #endif

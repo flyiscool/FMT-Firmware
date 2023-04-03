@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2022 The Firmament Authors. All Rights Reserved.
+ * Copyright 2020-2021 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#ifndef ICM42688_H__
-#define ICM42688_H__
 
-#include <rtthread.h>
+#ifndef DRV_USART_H__
+#define DRV_USART_H__
+
+#include "board.h"
+#include <firmament.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-rt_err_t drv_icm42688_init(const char* spi_dev_name, const char* gyro_dev_name, const char* accel_dev_name);
+rt_err_t drv_usart_init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* __DRV_USART_H__ */

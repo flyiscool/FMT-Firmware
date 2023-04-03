@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 /* Firmament version information */
-#define FMT_VERSION "v0.3.0"
+#define FMT_VERSION "v0.4.0"
 
 /* Thread Prority */
 #define VEHICLE_THREAD_PRIORITY    3
@@ -59,7 +59,9 @@ typedef int bool;
 #endif
 
 #ifndef STRING
-    #define STRING(...) #__VA_ARGS__
+    #define STR_EXPAND(x) #x
+    #define STR(x)        STR_EXPAND(x)
+    #define STRING(...)   #__VA_ARGS__
 #endif
 
 #ifdef FMT_USING_SYS_DEBUG

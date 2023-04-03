@@ -55,6 +55,7 @@ rt_size_t hal_adc_read(rt_device_t dev, rt_off_t pos, void* buffer, rt_size_t si
         return 0;
     }
 
+    //console_printf("hal adc read pos=%d\r\n", pos);
     if (adc_dev->ops->measure(adc_dev, pos, buffer) == RT_EOK) {
         res = size;
     }

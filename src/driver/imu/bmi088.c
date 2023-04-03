@@ -676,7 +676,7 @@ rt_err_t drv_bmi088_init(const char* gyro_spi_device_name, const char* accel_spi
     /* gyroscope low-level init */
     RT_TRY(gyroscope_init());
     /* register gyro hal device */
-    RT_TRY(hal_gyro_register(&gyro_dev, gyro_device_name, RT_DEVICE_FLAG_RDWR, (void*)dev_id));
+    RT_TRY(hal_gyro_register(&gyro_dev, gyro_device_name, RT_DEVICE_FLAG_RDWR, &dev_id));
 
     /* Initialize accelerometer */
 
@@ -701,7 +701,7 @@ rt_err_t drv_bmi088_init(const char* gyro_spi_device_name, const char* accel_spi
     /* accelerometer low-level init */
     RT_TRY(accelerometer_init());
     /* register accel hal device */
-    RT_TRY(hal_accel_register(&accel_dev, accel_device_name, RT_DEVICE_FLAG_RDWR, (void*)dev_id));
+    RT_TRY(hal_accel_register(&accel_dev, accel_device_name, RT_DEVICE_FLAG_RDWR, &dev_id));
 
     return RT_EOK;
 }

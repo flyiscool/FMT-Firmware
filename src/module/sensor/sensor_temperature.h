@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2021 The Firmament Authors. All Rights Reserved.
+ * Copyright 2020 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#ifndef BMI055_H__
-#define BMI055_H__
+#ifndef SENSOR_TEMPERATURE_H__
+#define SENSOR_TEMPERATURE_H__
 
-#include <rtthread.h>
+#include <firmament.h>
+
+#include "module/sensor/sensor_hub.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//rt_err_t drv_bmi055_init(const char* spi_device_name, const char* gyro_device_name, const char* accel_device_name);
-rt_err_t drv_bmi055_init(const char* gyro_spi_device_name, const char* accel_spi_device_name,
-                             const char* gyro_device_name, const char* accel_device_name, uint32_t dev_id);
+sensor_temperature_t sensor_temperature_init(const char* temp_dev_name);
+fmt_err_t sensor_temperature_measure(sensor_temperature_t temp_dev, temperature_data_t* temp_report);
 
 #ifdef __cplusplus
 }

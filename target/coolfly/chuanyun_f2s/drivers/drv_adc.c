@@ -22,6 +22,7 @@
 #define ADC_CONVERSION_TIMEOUT_MS 2
 
 static struct adc_device adc1;
+static struct adc_device adc9;
 
 static uint32_t adc_reg_read32(uint32_t regAddr)
 {
@@ -81,6 +82,8 @@ rt_err_t drv_adc_init(void)
     RT_CHECK(adc_hw_init());
 
     adc1.ops = &_adc_ops;
+    adc9.ops = &_adc_ops;
 
-    return hal_adc_register(&adc1, "adc1", RT_DEVICE_FLAG_RDONLY, NULL);
+    hal_adc_register(&adc1, "adc1", RT_DEVICE_FLAG_RDONLY, NULL);
+    return hal_adc_register(&adc9, "adc9", RT_DEVICE_FLAG_RDONLY, NULL);
 }

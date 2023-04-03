@@ -22,6 +22,7 @@ HAL = [
     'adc/*.c',
     'mtd/*.c',
     'airspeed/*.c',
+    'temperature/*.c'
 ]
 
 HAL_CPPPATH = []

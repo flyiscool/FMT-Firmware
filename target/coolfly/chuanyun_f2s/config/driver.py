@@ -16,6 +16,7 @@ DRIVERS = [
     'vision_flow/pmw3901_fl04.c',
     'airspeed/ms4525.c',
     'mtd/spi_tfcard.c',
+    'temperature/ntc.c',
     
 ]
 

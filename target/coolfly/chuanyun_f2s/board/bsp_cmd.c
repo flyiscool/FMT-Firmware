@@ -193,3 +193,4 @@ int cmd_sw_mav(int argc, char** argv)
     return syscmd_process(argc, argv, handle_sw_mav_cmd);
 }
 FINSH_FUNCTION_EXPORT_ALIAS(cmd_sw_mav, __cmd_sw_mav, swtich mavlink channel);
+

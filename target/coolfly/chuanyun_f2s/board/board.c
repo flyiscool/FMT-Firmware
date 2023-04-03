@@ -28,8 +28,8 @@
 // #include "driver/barometer/ms5611.h"
 #include "driver/barometer/spl06.h"
 #include "driver/gps/gps_m8n.h"
-// #include "driver/imu/bmi055.h"
-#include "driver/imu/bmi088.h"
+#include "driver/imu/bmi055.h"
+// #include "driver/imu/bmi088.h"
 // #include "driver/imu/icm20600.h"
 // #include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
@@ -39,6 +39,7 @@
 #include "driver/rgb_led/ncp5623c.h"
 // #include "driver/vision_flow/lc307.h"
 #include "driver/vision_flow/pmw3901_fl04.h"
+#include "driver/temperature/ntc.h"
 
 #include "drv_adc.h"
 #include "drv_gpio.h"
@@ -453,12 +454,10 @@ void bsp_initialize(void)
     // RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
 
-    // RT_CHECK(drv_bmi055_init("spi2_dev2", "gyro0", "accel0"));
-
-    RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
+    RT_CHECK(drv_bmi055_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
+    // RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     // RT_CHECK(drv_ms5611_init("spi3_dev1", "barometer"));
     RT_CHECK(drv_spl06_init("spi3_dev2", "barometer"));
-
     /* if no gps mag then use onboard mag */
     // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
     //     console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
@@ -477,6 +476,7 @@ void bsp_initialize(void)
     if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
+    RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
@@ -512,6 +512,7 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
 
     FMT_CHECK(register_sensor_barometer("barometer"));
+    FMT_CHECK(register_sensor_temperature("temp_board", 0));
 #endif
 
     FMT_CHECK(register_ar_rc());

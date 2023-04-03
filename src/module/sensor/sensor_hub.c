@@ -26,6 +26,7 @@
 #include "module/sensor/sensor_hub.h"
 #include "module/sensor/sensor_imu.h"
 #include "module/sensor/sensor_mag.h"
+#include "module/sensor/sensor_temperature.h"
 
 #define MAX_IMU_DEV_NUM 2
 #define MAX_MAG_DEV_NUM 2
@@ -52,11 +53,14 @@ MCN_DEFINE(sensor_optflow, sizeof(optflow_data_t));
 
 MCN_DEFINE(sensor_rangefinder, sizeof(rf_data_t));
 
+MCN_DEFINE(sensor_temperature, sizeof(temperature_data_t));
+
 static sensor_imu_t imu_dev[MAX_IMU_DEV_NUM] = { NULL };
 static sensor_mag_t mag_dev[MAX_MAG_DEV_NUM] = { NULL };
 static sensor_baro_t baro_dev = NULL;
 static sensor_gps_t gps_dev = NULL;
 static sensor_airspeed_t airspeed_dev = NULL;
+static sensor_temperature_t temperature_dev = NULL;
 
 static Butter3* butter3_gyr[MAX_IMU_DEV_NUM][3];
 static Butter3* butter3_acc[MAX_IMU_DEV_NUM][3];
@@ -162,6 +166,26 @@ static int echo_sensor_airspeed(void* param)
 
     return 0;
 }
+
+static int echo_sensor_temperature(void* param)
+{
+    fmt_err_t err;
+    temperature_data_t temperature_report;
+
+    err = mcn_copy_from_hub((McnHub*)param, &temperature_report);
+
+    if (err != FMT_EOK) {
+        return -1;
+    }
+
+    console_printf("timestamp:%u temperature:%f\n",
+                   temperature_report.timestamp_ms,
+                   temperature_report.temperature_deg);
+
+    return 0;
+}
+
+
 
 static int echo_sensor_gps(void* param)
 {
@@ -472,6 +496,25 @@ fmt_err_t advertise_sensor_airspeed(uint8_t id)
 }
 
 /**
+ * @brief Advertise sensor temperature topic
+ * 
+ * @param id sensor topic
+ * @return fmt_err_t FMT_EOK for success
+ */
+fmt_err_t advertise_sensor_temperature(uint8_t id)
+{
+    switch (id) {
+    case 0:
+        FMT_TRY(mcn_advertise(MCN_HUB(sensor_temperature), echo_sensor_temperature));
+        break;
+    default:
+        return FMT_EINVAL;
+    }
+
+    return FMT_EOK;
+}
+
+/**
  * @brief Advertise sensor gps topic
  * 
  * @param id sensor topic
@@ -644,6 +687,23 @@ fmt_err_t register_sensor_airspeed(const char* dev_name)
 }
 
 /**
+ * @brief Register temperature sensor
+ * 
+ * @param dev_name temperature device name
+ * @return fmt_err_t FMT_EOK for success
+ */
+fmt_err_t register_sensor_temperature(const char* dev_name, uint8_t id)
+{
+    temperature_dev = sensor_temperature_init(dev_name);
+    if (temperature_dev == NULL) {
+        return FMT_ERROR;
+    }
+
+    return advertise_sensor_temperature(id);
+}
+
+
+/**
  * @brief Collect sensor data
  * @note Should be invoked periodically. e.g, at 1KHz
  */
@@ -804,4 +864,20 @@ void sensor_collect(void)
             }
         }
     }
+
+    /*
+     * Collect temperature data
+     */
+    temperature_data_t temperature_data;
+    DEFINE_TIMETAG(temperature_interval, 1000);
+
+    if (check_timetag(TIMETAG(temperature_interval))) {
+        if (temperature_dev != NULL) {
+            if (sensor_temperature_measure(temperature_dev, &temperature_data) == FMT_EOK) {
+                /* publish barometer data */
+                mcn_publish(MCN_HUB(sensor_temperature), &temperature_data);
+            }
+        }
+    }
+    
 }

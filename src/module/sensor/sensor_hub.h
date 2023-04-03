@@ -77,6 +77,11 @@ struct sensor_airspeed {
 };
 typedef struct sensor_airspeed* sensor_airspeed_t;
 
+struct sensor_temperature {
+    rt_device_t dev;
+};
+typedef struct sensor_temperature* sensor_temperature_t;
+
 typedef struct {
     uint32_t timestamp_ms;
     float gyr_B_radDs[3];
@@ -131,6 +136,12 @@ typedef struct {
     float temperature_deg;
 } airspeed_data_t;
 
+typedef struct {
+    uint32_t timestamp_ms;
+    float temperature_deg;
+} temperature_data_t;
+
+
 void sensor_collect(void);
 fmt_err_t advertise_sensor_imu(uint8_t id);
 fmt_err_t advertise_sensor_mag(uint8_t id);
@@ -139,11 +150,13 @@ fmt_err_t advertise_sensor_airspeed(uint8_t id);
 fmt_err_t advertise_sensor_gps(uint8_t id);
 fmt_err_t advertise_sensor_optflow(uint8_t id);
 fmt_err_t advertise_sensor_rangefinder(uint8_t id);
+fmt_err_t advertise_sensor_temperature(uint8_t id);
 fmt_err_t register_sensor_imu(const char* gyr_dev_name, const char* acc_dev_name, uint8_t id);
 fmt_err_t register_sensor_mag(const char* dev_name, uint8_t id);
 fmt_err_t register_sensor_barometer(const char* dev_name);
 fmt_err_t register_sensor_airspeed(const char* dev_name);
 fmt_err_t register_sensor_gps(const char* dev_name);
+fmt_err_t register_sensor_temperature(const char* dev_name, uint8_t id);
 
 #ifdef __cplusplus
 }

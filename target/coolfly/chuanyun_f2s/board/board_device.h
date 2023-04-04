@@ -75,7 +75,7 @@
 
     // #define USED_SPL06 1
     #define USED_MS5611 1
-    // #define USED_RGB    1
+    #define USED_RGB    1
 
     #define WD_DONE_GPIO   HAL_GPIO_NUM74
     #define VIDEO_LED_GPIO HAL_GPIO_NUM55

@@ -45,7 +45,7 @@ struct_2EnWz3ceFwjQa7SDRNn3C CONTROL_PARAM = {
   0.52359879F,
   0.1F,
   0.1F,
-  0.15F,
+  0.15F,+
   0.1F,
   0.1F,
   0.2F,
@@ -98,7 +98,7 @@ struct_2EnWz3ceFwjQa7SDRNn3C CONTROL_PARAM = {
                                         */
 
 struct_biZzOMrg0u3lxrb7POOubF CONTROL_EXPORT = {
-  2U,
+  1U,
 
   { 66, 97, 115, 101, 32, 67, 111, 110, 116, 114, 111, 108, 108, 101, 114, 32,
     118, 48, 46, 50, 46, 52, 0 }
@@ -3009,7 +3009,7 @@ void Controller_step(void)
    */
   Controller_DW.DiscreteTimeIntegrator5_DSTATE[0] +=
     (rtb_rate_error_B_radPs_idx_0 -
-     Controller_DW.DiscreteTimeIntegrator5_DSTATE[0]) * 188.49556F * 0.002F;
+     Controller_DW.DiscreteTimeIntegrator5_DSTATE[0]) * 188.49556F * 0.001F;
 
   /* Update for DiscreteIntegrator: '<S75>/Discrete-Time Integrator' */
   Controller_DW.DiscreteTimeIntegrator_DSTATE_o[0] += 0.002F *
@@ -3061,7 +3061,7 @@ void Controller_step(void)
    */
   Controller_DW.DiscreteTimeIntegrator5_DSTATE[2] +=
     (rtb_rate_error_B_radPs_idx_2 -
-     Controller_DW.DiscreteTimeIntegrator5_DSTATE[2]) * 188.49556F * 0.002F;
+     Controller_DW.DiscreteTimeIntegrator5_DSTATE[2]) * 188.49556F * 0.001F;
 
   /* Update for DiscreteIntegrator: '<S75>/Discrete-Time Integrator' */
   Controller_DW.DiscreteTimeIntegrator_DSTATE_o[2] += 0.002F *

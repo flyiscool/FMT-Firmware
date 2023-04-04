@@ -97,6 +97,7 @@
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
 
 static const struct dfs_mount_tbl mnt_table[] = {
+
 #ifdef USED_RAMTRON
     { "mtdblk0", "/", "elm", 0, NULL },
 #else

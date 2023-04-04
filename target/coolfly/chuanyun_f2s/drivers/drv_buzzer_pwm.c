@@ -15,12 +15,12 @@
  *****************************************************************************/
 #include <firmament.h>
 
-#include "hal/buzzer/buzzer.h"
+
 #include "ar1002_hal.h"
+#include "hal/buzzer/buzzer.h"
 
 //#define DRV_DBG(...) console_println(__VA_ARGS__)
 #define DRV_DBG(...)
-
 
 // static const uint16_t g_notes_freq[84] = {
 // 	0x0041, 0x0045, 0x0049, 0x004d, 0x0052, 0x0057, 0x005c,
@@ -39,17 +39,17 @@
 
 #define PWM_FREQ_0HZ (0)
 
-#define PWM_FREQ_40HZ (40)
+#define PWM_FREQ_40HZ   (40)
 #define PWM_FREQ_8000HZ (8000)
 
 #define BUZZER_PWM_DEFAULT_FREQUENCY PWM_FREQ_8000HZ // pwm default frequqncy
-#define BUZZER_PWM_FREQUENCY_MIN	PWM_FREQ_40HZ
-#define BUZZER_PWM_FREQUENCY_MAX	PWM_FREQ_8000HZ
+#define BUZZER_PWM_FREQUENCY_MIN     PWM_FREQ_40HZ
+#define BUZZER_PWM_FREQUENCY_MAX     PWM_FREQ_8000HZ
 
-#define BUZZER_PWM_CHAN_NUM	HAL_PWM_NUM9
+#define BUZZER_PWM_CHAN_NUM HAL_PWM_NUM9
 
-static uint32_t g_pwm_high_level; // high level of the pwm wave
-static uint32_t g_buzzer_pwm_freq;   // high level of the pwm wave
+static uint32_t g_pwm_high_level;  // high level of the pwm wave
+static uint32_t g_buzzer_pwm_freq; // high level of the pwm wave
 
 void buzzer_pwm_gpio_init(void)
 {
@@ -59,27 +59,22 @@ void buzzer_pwm_timer_init(void)
 {
 }
 
-
 rt_err_t buzzer_pwm_config(buzzer_dev_t dev, const struct buzzer_configure* cfg)
 {
     DRV_DBG("aux out configured: pwm frequency:%d\n", cfg->pwm_config.pwm_freq);
     if (cfg->pwm_config.pwm_freq < BUZZER_PWM_FREQUENCY_MIN || cfg->pwm_config.pwm_freq > BUZZER_PWM_FREQUENCY_MAX) {
         /* invalid frequency */
-		DRV_DBG("Invalid buzzer pwm frequence");
-		return RT_ERROR;
+        DRV_DBG("Invalid buzzer pwm frequence");
+        return RT_ERROR;
     }
 
-    rt_uint32_t buzzer_pwm_period_us = 1* 1000000 / cfg->pwm_config.pwm_freq;
-	HAL_PWM_DynamicModifyPwmDutyCycleByIntr(BUZZER_PWM_CHAN_NUM, buzzer_pwm_period_us/2, buzzer_pwm_period_us/2);
+    rt_uint32_t buzzer_pwm_period_us = 1 * 1000000 / cfg->pwm_config.pwm_freq;
+    HAL_PWM_DynamicModifyPwmDutyCycleByIntr(BUZZER_PWM_CHAN_NUM, buzzer_pwm_period_us / 2, buzzer_pwm_period_us / 2);
     /* update device configuration */
     dev->config = *cfg;
 
     return RT_EOK;
 }
-
-
-
-
 
 rt_err_t buzzer_pwm_control(buzzer_dev_t dev, int cmd, void* arg)
 {
@@ -95,10 +90,10 @@ rt_err_t buzzer_pwm_control(buzzer_dev_t dev, int cmd, void* arg)
         break;
     case BUZZER_CMD_CHANNEL_DISABLE:
         HAL_PWM_Stop(BUZZER_PWM_CHAN_NUM);
-    
+
         DRV_DBG("buzzer pwm disabled\n");
         break;
-		
+
     default:
         ret = RT_EINVAL;
         break;
@@ -109,7 +104,7 @@ rt_err_t buzzer_pwm_control(buzzer_dev_t dev, int cmd, void* arg)
 
 rt_size_t buzzer_pwm_read(buzzer_dev_t dev, rt_uint16_t chan_sel, rt_uint16_t* chan_val, rt_size_t size)
 {
-	// TODO
+    // TODO
     return size;
 }
 
@@ -117,24 +112,19 @@ rt_size_t buzzer_pwm_write(buzzer_dev_t dev, rt_uint16_t chan_sel, const rt_uint
 {
     //const rt_uint16_t* index = chan_val;
 
-	if(*chan_val == 0)
-	{	
-		size = 0;
-	}
-	else
-	{
-		g_buzzer_pwm_freq = *chan_val;
-	    rt_uint32_t pwm_period_us = 1* 1000000 / g_buzzer_pwm_freq;
+    if (*chan_val == 0) {
+        size = 0;
+    } else {
+        g_buzzer_pwm_freq = *chan_val;
+        rt_uint32_t pwm_period_us = 1 * 1000000 / g_buzzer_pwm_freq;
 
-	    /* update pwm signal */
-	    HAL_PWM_DynamicModifyPwmDutyCycleByIntr(BUZZER_PWM_CHAN_NUM,  pwm_period_us/2, pwm_period_us/2);
-		size =2;
-	}
+        /* update pwm signal */
+        HAL_PWM_DynamicModifyPwmDutyCycleByIntr(BUZZER_PWM_CHAN_NUM, pwm_period_us / 2, pwm_period_us / 2);
+        size = 2;
+    }
 
     return size;
 }
-
-
 
 const static struct buzzer_ops __buzzer_ops = {
     .dev_config = buzzer_pwm_config,
@@ -143,28 +133,22 @@ const static struct buzzer_ops __buzzer_ops = {
     .dev_write = buzzer_pwm_write
 };
 
-
-
 //TODO modify channel mask
 static struct buzzer_device buzzer_dev = {
     .chan_mask = 0x0200,
-    .range = {0, 8000},
+    .range = { 0, 8000 },
     .config = {
         .channel = BUZZER_PWM_CHAN_NUM,
         .pwm_config = { .pwm_freq = BUZZER_PWM_DEFAULT_FREQUENCY },
-        },
+    },
     .ops = &__buzzer_ops
 };
-
-
-
-
 
 rt_err_t drv_buzzer_pwm_init(void)
 {
     rt_err_t ret = RT_EOK;
 
-    /* init pwm setting */    
+    /* init pwm setting */
     g_buzzer_pwm_freq = BUZZER_PWM_DEFAULT_FREQUENCY;
 
     /* init pwm gpio pin */
@@ -173,13 +157,13 @@ rt_err_t drv_buzzer_pwm_init(void)
     /* init pwm timer, pwm output mode */
     buzzer_pwm_timer_init();
 
-    rt_uint32_t pwm_period_us = 1* 1000000 / g_buzzer_pwm_freq;
+    rt_uint32_t pwm_period_us = 1 * 1000000 / g_buzzer_pwm_freq;
     HAL_PWM_Stop(BUZZER_PWM_CHAN_NUM);
-    HAL_PWM_RegisterPwmWithIntr(BUZZER_PWM_CHAN_NUM, pwm_period_us/2, pwm_period_us/2);
+    HAL_PWM_RegisterPwmWithIntr(BUZZER_PWM_CHAN_NUM, pwm_period_us / 2, pwm_period_us / 2);
     // HAL_PWM_Start(g_pwm_map[i]);
 
     /* register actuator hal device */
     ret = hal_buzzer_register(&buzzer_dev, "buzzer_pwm", RT_DEVICE_FLAG_RDWR, NULL);
-	DRV_DBG("hal buzzer_pwm dev registered");
+    DRV_DBG("hal buzzer_pwm dev registered");
     return ret;
 }

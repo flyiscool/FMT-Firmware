@@ -7,8 +7,8 @@
  * 2020-05-29     yangjian     the first version
  */
 
-#ifndef BUZZER_H__
-#define BUZZER_H__
+#ifndef MODULE_BUZZER_H__
+#define MODULE_BUZZER_H__
 
 #ifdef __cplusplus
 extern "C" {

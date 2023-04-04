@@ -22,7 +22,7 @@ HAL = [
     'adc/*.c',
     'mtd/*.c',
     'airspeed/*.c',
-    'buzzer/buzzer.c',
+    'buzzer/*.c',
     'temperature/*.c'
 ]
 

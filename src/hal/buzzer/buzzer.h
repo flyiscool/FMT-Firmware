@@ -14,8 +14,8 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef BUZZER_H__
-#define BUZZER_H__
+#ifndef HAL_BUZZER_H__
+#define HAL_BUZZER_H__
 
 #include <firmament.h>
 

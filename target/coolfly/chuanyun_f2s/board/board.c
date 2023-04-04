@@ -41,6 +41,7 @@
 // #include "driver/vision_flow/lc307.h"
 
 #include "driver/vision_flow/pmw3901_fl04.h"
+#include "driver/temperature/ntc.h"
 
 #include "drv_adc.h"
 #include "drv_gpio.h"
@@ -519,6 +520,7 @@ void bsp_initialize(void)
     if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
+    RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
@@ -554,6 +556,7 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));
 
     FMT_CHECK(register_sensor_barometer("barometer"));
+    FMT_CHECK(register_sensor_temperature("temp_board", 0));
 #endif
 
     FMT_CHECK(register_ar_rc());

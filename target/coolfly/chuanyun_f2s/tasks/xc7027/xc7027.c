@@ -10,6 +10,7 @@
 
 #include "memory_config.h"
 #include "spcd_camera_config_1080p_30fps_ahead.h"
+#include "spcd_camera_config_720p_30fps_ahead.h"
 #include "spcd_camera_config_set.h"
 #include "xc7027.h"
 
@@ -60,20 +61,20 @@ void XC7027_SENSOR_Config(ENUM_XC7027_MODE SensorFormat)
         break;
 
         // case XC7027_MODE_720P_50FPS:
-        // 	HAL_DVP_Init(XC7027_DVP_CHANNEL, XC7027_DVP_CHANNEL, 1280, 720, 50);
-        // 	piISPRegister = XC7027_720P_50FPS_SET_AHEAD;
-        // 	iISPRegisterLenght = sizeof(XC7027_720P_50FPS_SET_AHEAD);
-        // 	piSensorRegister = SC2310_720P_50FPS_SET_AHEAD;
-        // 	iSensorRegisterLenght = sizeof(SC2310_720P_50FPS_SET_AHEAD);
-        // 	break;
+        //     HAL_DVP_Init(XC7027_DVP_CHANNEL, XC7027_DVP_CHANNEL, 1280, 720, 50);
+        //     piISPRegister = XC7027_720P_50FPS_SET_AHEAD;
+        //     iISPRegisterLenght = sizeof(XC7027_720P_50FPS_SET_AHEAD);
+        //     piSensorRegister = SC2310_720P_50FPS_SET_AHEAD;
+        //     iSensorRegisterLenght = sizeof(SC2310_720P_50FPS_SET_AHEAD);
+        //     break;
 
-        // case XC7027_MODE_720P_30FPS:
-        // 	HAL_DVP_Init(XC7027_DVP_CHANNEL, XC7027_DVP_CHANNEL, 1280, 720, 30);
-        // 	piISPRegister = XC7027_720P_30FPS_SET_AHEAD;
-        // 	iISPRegisterLenght = sizeof(XC7027_720P_30FPS_SET_AHEAD);
-        // 	piSensorRegister = SC2310_720P_30FPS_SET_AHEAD;
-        // 	iSensorRegisterLenght = sizeof(SC2310_720P_30FPS_SET_AHEAD);
-        // 	break;
+    case XC7027_MODE_720P_30FPS:
+        HAL_DVP_Init(XC7027_DVP_CHANNEL, XC7027_DVP_CHANNEL, 1280, 720, 30);
+        piISPRegister = XC7027_720P_30FPS_SET_AHEAD;
+        iISPRegisterLenght = sizeof(XC7027_720P_30FPS_SET_AHEAD);
+        piSensorRegister = SC2310_720P_30FPS_SET_AHEAD;
+        iSensorRegisterLenght = sizeof(SC2310_720P_30FPS_SET_AHEAD);
+        break;
 
     default:
         HAL_DVP_Init(XC7027_DVP_CHANNEL, XC7027_DVP_CHANNEL, 1920, 1080, 30);
@@ -544,7 +545,7 @@ static void init()
 
     // DLOG_Critical("xc7082 init success~!");
 
-    XC7027_SENSOR_Config(XC7027_MODE_1080P_30FPS);
+    XC7027_SENSOR_Config(XC7027_MODE_720P_30FPS);
 
     sys_msleep(20);
 

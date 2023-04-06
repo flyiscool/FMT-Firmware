@@ -39,8 +39,9 @@
 #include "driver/rgb_led/aw2023.h"
 // #include "driver/rgb_led/ncp5623c.h"
 // #include "driver/vision_flow/lc307.h"
-#include "driver/vision_flow/pmw3901_fl04.h"
+
 #include "driver/temperature/ntc.h"
+#include "driver/vision_flow/pmw3901_fl04.h"
 
 #include "drv_adc.h"
 #include "drv_gpio.h"
@@ -54,7 +55,6 @@
 #include "led.h"
 //#include "tone_alarm.h"
 #include "drv_buzzer_pwm.h"
-
 
 #include "default_config.h"
 #include "model/control/control_interface.h"
@@ -520,10 +520,10 @@ void bsp_initialize(void)
     if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
-    RT_CHECK(drv_ntc_init("adc9","temp_board"));
+    RT_CHECK(drv_ntc_init("adc9", "temp_board"));
 
-    RT_CHECK(drv_ntc_init("adc9","temp_board"));
-    
+    RT_CHECK(drv_ntc_init("adc9", "temp_board"));
+
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
     // } else {
@@ -560,7 +560,7 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_barometer("barometer"));
 
     FMT_CHECK(register_sensor_temperature("temp_board", 0));
-    
+
 #endif
 
     FMT_CHECK(register_ar_rc());

@@ -520,10 +520,9 @@ void bsp_initialize(void)
     if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
+    
     RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
-    RT_CHECK(drv_ntc_init("adc9","temp_board"));
-    
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
     // } else {

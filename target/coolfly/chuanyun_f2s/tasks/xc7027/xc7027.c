@@ -545,7 +545,8 @@ static void init()
 
     // DLOG_Critical("xc7082 init success~!");
 
-    XC7027_SENSOR_Config(XC7027_MODE_720P_30FPS);
+    // XC7027_SENSOR_Config(XC7027_MODE_720P_30FPS);
+    XC7027_SENSOR_Config(XC7027_MODE_1080P_30FPS);
 
     sys_msleep(20);
 

@@ -39,20 +39,30 @@ target = "CHUANYUN_F2S"\n
 	range = [1000,2000]\n
 	[[pilot-cmd.mode]]\n
 	mode = 5\n
-	channel = 8\n
+	channel = 6\n
 	range = [1000,1200]\n
 	[[pilot-cmd.mode]]\n
 	mode = 4\n
-	channel = 8\n
+	channel = 6\n
 	range = [1400,1600]\n
 	[[pilot-cmd.mode]]\n
 	mode = 3\n
-	channel = 8\n
+	channel = 6\n
 	range = [1800,2000]\n
 	[[pilot-cmd.command]]\n
 	type = 1\n
 	cmd = 1002\n
-	channel = 13\n
+	channel = 11\n
+	range = [1800,2000]\n
+	[[pilot-cmd.command]]\n
+	type = 1\n
+	cmd = 1003\n
+	channel = 8\n
+	range = [1800,2000]\n	
+	[[pilot-cmd.command]]\n
+	type = 1\n
+	cmd = 1005\n
+	channel = 7\n
 	range = [1800,2000]\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n

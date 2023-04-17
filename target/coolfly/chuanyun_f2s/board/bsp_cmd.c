@@ -28,10 +28,17 @@
 static int handle_reboot_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
     printf("rebooting...\n");
-    printf("chuanyun will reboot, goodbye !~ \n");
+    printf("chuanyun will reboot in 3 seconds\n");
 
-    sys_msleep(10);
+    sys_msleep(1000);
+    printf("chuanyun will reboot in 2 seconds\n");
+    sys_msleep(1000);
 
+    printf("chuanyun will reboot in 1 seconds\n");
+    sys_msleep(1000);
+
+    printf("goodbye ~~~~~\n");
+    
     HAL_GPIO_SetPin(HAL_GPIO_NUM74, HAL_GPIO_PIN_RESET);
 
     return 0;

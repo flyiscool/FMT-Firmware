@@ -234,7 +234,7 @@ static int ubx_rx_handle(void)
     } break;
 
     case UBX_MSG_ACK_ACK: {
-        //DRV_DBG("Rx ACK-ACK\r\n");
+        // DRV_DBG("Rx ACK-ACK\r\n");
 
         if ((ubx_decoder.ack_state == UBX_ACK_WAITING) && (ubx_decoder.buf.payload_rx_ack_ack.msg == ubx_decoder.ack_waiting_msg)) {
             ubx_decoder.ack_state = UBX_ACK_GOT_ACK;
@@ -244,7 +244,7 @@ static int ubx_rx_handle(void)
     } break;
 
     case UBX_MSG_ACK_NAK: {
-        //DRV_DBG("Rx ACK-NAK\r\n");
+        // DRV_DBG("Rx ACK-NAK\r\n");
 
         if ((ubx_decoder.ack_state == UBX_ACK_WAITING) && (ubx_decoder.buf.payload_rx_ack_ack.msg == ubx_decoder.ack_waiting_msg)) {
             ubx_decoder.ack_state = UBX_ACK_GOT_NAK;
@@ -299,7 +299,8 @@ static rt_err_t set_baudrate(rt_device_t dev, uint32_t baudrate)
 
 static rt_err_t probe(uint32_t* gps_baudrate)
 {
-    uint32_t baudrates[] = { 9600, 19200, 38400, 57600, 115200, 230400, 460800 };
+    uint32_t baudrates[] = { 115200 };
+    // uint32_t baudrates[] = { 9600, 19200, 38400, 57600, 115200, 230400, 460800 };
     uint32_t baudrate;
     uint8_t i;
 

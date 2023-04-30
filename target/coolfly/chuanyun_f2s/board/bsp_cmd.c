@@ -38,7 +38,7 @@ static int handle_reboot_cmd(int argc, char** argv, int optc, optv_t* optv)
     sys_msleep(1000);
 
     printf("goodbye ~~~~~\n");
-    
+
     HAL_GPIO_SetPin(HAL_GPIO_NUM74, HAL_GPIO_PIN_RESET);
 
     return 0;

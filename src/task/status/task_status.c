@@ -260,6 +260,7 @@ fmt_err_t task_status_init(void)
     mission_data_nod = mcn_subscribe(MCN_HUB(mission_data), NULL, NULL);
     RT_ASSERT(mission_data_nod != NULL);
 
+    printf("1----");
     return FMT_EOK;
 }
 
@@ -301,5 +302,6 @@ TASK_EXPORT __fmt_task_desc = {
     .auto_start = true,
     .stack_size = 4096,
     .param = NULL,
-    .dependency = NULL
+    .dependency = (char*[]) { "vehicle", NULL }
 };
+

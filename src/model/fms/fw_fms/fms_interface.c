@@ -39,29 +39,31 @@ MCN_DEFINE(fms_output, sizeof(FMS_Out_Bus));
 /* define parameters */
 static param_t __param_list[] = {
     /* Stick Dead Zone */
-    PARAM_FLOAT(THROTTLE_DZ, 0.15),
-    PARAM_FLOAT(YAW_DZ, 0.15),
-    PARAM_FLOAT(ROLL_DZ, 0.1),
-    PARAM_FLOAT(PITCH_DZ, 0.1),
-    PARAM_FLOAT(XY_P, 0.95),
-    PARAM_FLOAT(Z_P, 1),
-    PARAM_FLOAT(VEL_Z_LIM, 2.5),
-    PARAM_FLOAT(YAW_P, 2.5),
-    PARAM_FLOAT(YAW_RATE_LIM, PI / 3),
-    PARAM_FLOAT(ROLL_PITCH_LIM, PI / 6),
-    PARAM_FLOAT(L1, 30.0),
-    PARAM_FLOAT(CRUISE_SPEED, 13.0),
-    PARAM_FLOAT(TAKEOFF_H, 10.0),
-    PARAM_FLOAT(ACCEPT_R, 55),
-    PARAM_FLOAT(LOITER_R, 50),
-    PARAM_FLOAT(MANUAL_ROLL_REV, 1.0),
-    PARAM_FLOAT(MANUAL_PITCH_REV, 1.0),
-    PARAM_FLOAT(MANUAL_YAW_REV, 1.0),
-    PARAM_FLOAT(Y_P, 0.95),
-    PARAM_FLOAT(ACC_Y_LIM, 8),
-    PARAM_FLOAT(ROLL_LIM, PI / 4),
-    PARAM_FLOAT(PITCH_LIM, PI / 4),
-    PARAM_FLOAT(FW_AIRSPD_MAX, 30),
+    PARAM_FLOAT(THROTTLE_DZ, 0.15, false),
+    PARAM_FLOAT(YAW_DZ, 0.15, false),
+    PARAM_FLOAT(ROLL_DZ, 0.1, false),
+    PARAM_FLOAT(PITCH_DZ, 0.1, false),
+    PARAM_FLOAT(XY_P, 0.95, false),
+    PARAM_FLOAT(Z_P, 1, false),
+    PARAM_FLOAT(VEL_Z_LIM, 2.5, false),
+    PARAM_FLOAT(YAW_P, 2.5, false),
+    PARAM_FLOAT(YAW_RATE_LIM, PI / 3, false),
+    PARAM_FLOAT(ROLL_PITCH_LIM, PI / 6, false),
+    PARAM_FLOAT(L1, 30.0, false),
+    PARAM_FLOAT(CRUISE_SPEED, 13.0, false),
+    PARAM_FLOAT(TAKEOFF_H, 10.0, false),
+    PARAM_FLOAT(ACCEPT_R, 55, false),
+    PARAM_FLOAT(LOITER_R, 50, false),
+    PARAM_FLOAT(MANUAL_ROLL_REV, 1.0, false),
+    PARAM_FLOAT(MANUAL_PITCH_REV, 1.0, false),
+    PARAM_FLOAT(MANUAL_YAW_REV, 1.0, false),
+    PARAM_FLOAT(Y_P, 0.95, false),
+    PARAM_FLOAT(ACC_Y_LIM, 8, false),
+    PARAM_FLOAT(ROLL_LIM, PI / 4, false),
+    PARAM_FLOAT(PITCH_LIM, PI / 4, false),
+    PARAM_FLOAT(FW_AIRSPD_MAX, 30, false),
+    PARAM_UINT16(LOST_RETURN_TIME, 120, false),
+    PARAM_UINT8(LOST_RETURN_EN, 1, false),
 };
 PARAM_GROUP_DEFINE(FMS, __param_list);
 
@@ -83,6 +85,7 @@ static mlog_elem_t GCS_Cmd_Elems[] = {
     MLOG_ELEMENT(mode, MLOG_UINT32),
     MLOG_ELEMENT(cmd_1, MLOG_UINT32),
     MLOG_ELEMENT(cmd_2, MLOG_UINT32),
+    MLOG_ELEMENT_VEC(param, MLOG_FLOAT, 7),
 };
 MLOG_BUS_DEFINE(GCS_Cmd, GCS_Cmd_Elems);
 
@@ -159,6 +162,7 @@ static mlog_elem_t FMS_Out_Elems[] = {
     MLOG_ELEMENT(wp_consume, MLOG_UINT8),
     MLOG_ELEMENT(wp_current, MLOG_UINT8),
     MLOG_ELEMENT(reserved, MLOG_UINT8),
+    MLOG_ELEMENT_VEC(home, MLOG_FLOAT, 4),
 };
 MLOG_BUS_DEFINE(FMS_Out, FMS_Out_Elems);
 
@@ -183,7 +187,7 @@ static char* fms_status[] = {
     "None",
     "Disarm",
     "Standby",
-    "Arm"
+    "Arm",
 };
 
 static char* fms_state[] = {
@@ -204,7 +208,7 @@ static char* fms_state[] = {
     "InvalidArmMode",
     "Land",
     "Return",
-    "Takeoff"
+    "Takeoff",
 };
 
 static char* fms_ctrl_mode[] = {
@@ -213,7 +217,8 @@ static char* fms_ctrl_mode[] = {
     "Acro",
     "Stabilize",
     "ALTCTL",
-    "POSCTL"
+    "POSCTL",
+    "Offboard",
 };
 
 static char* fms_mode[] = {
@@ -224,7 +229,7 @@ static char* fms_mode[] = {
     "Altitude",
     "Position",
     "Mission",
-    "Offboard"
+    "Offboard",
 };
 
 fmt_model_info_t fms_model_info;
@@ -283,6 +288,8 @@ static void init_parameter(void)
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, ROLL_LIM), &FMS_PARAM.ROLL_LIM));
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, PITCH_LIM), &FMS_PARAM.PITCH_LIM));
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, FW_AIRSPD_MAX), &FMS_PARAM.FW_AIRSPD_MAX));
+    FMT_CHECK(param_link_variable(PARAM_GET(FMS, LOST_RETURN_TIME), &FMS_PARAM.LOST_RETURN_TIME));
+    FMT_CHECK(param_link_variable(PARAM_GET(FMS, LOST_RETURN_EN), &FMS_PARAM.LOST_RETURN_EN));
 }
 
 void fms_interface_step(uint32_t timestamp)

@@ -37,21 +37,24 @@ MCN_DEFINE(fms_output, sizeof(FMS_Out_Bus));
 /* define parameters */
 static param_t __param_list[] = {
     /* Stick Dead Zone */
-    PARAM_FLOAT(THROTTLE_DZ, 0.15),
-    PARAM_FLOAT(YAW_DZ, 0.15),
-    PARAM_FLOAT(ROLL_DZ, 0.1),
-    PARAM_FLOAT(PITCH_DZ, 0.1),
-    PARAM_FLOAT(XY_P, 0.95),
-    PARAM_FLOAT(Z_P, 1),
-    PARAM_FLOAT(VEL_XY_LIM, 5.0),
-    PARAM_FLOAT(VEL_Z_LIM, 2.5),
-    PARAM_FLOAT(YAW_P, 2.5),
-    PARAM_FLOAT(YAW_RATE_LIM, PI / 3),
-    PARAM_FLOAT(ROLL_PITCH_LIM, PI / 6),
-    PARAM_FLOAT(L1, 10.0),
-    PARAM_FLOAT(CRUISE_SPEED, 5.0),
-    PARAM_FLOAT(TAKEOFF_H, 1.5),
-    PARAM_FLOAT(ACCEPT_R, 0.5),
+    PARAM_FLOAT(THROTTLE_DZ, 0.15, false),
+    PARAM_FLOAT(YAW_DZ, 0.15, false),
+    PARAM_FLOAT(ROLL_DZ, 0.1, false),
+    PARAM_FLOAT(PITCH_DZ, 0.1, false),
+    PARAM_FLOAT(XY_P, 1.2, false),
+    PARAM_FLOAT(Z_P, 1.5, false),
+    PARAM_FLOAT(VEL_XY_LIM, 5.0, false),
+    PARAM_FLOAT(VEL_Z_LIM, 2.5, false),
+    PARAM_FLOAT(YAW_P, 2.5, false),
+    PARAM_FLOAT(YAW_RATE_LIM, PI / 3, false),
+    PARAM_FLOAT(ROLL_PITCH_LIM, PI / 6, false),
+    PARAM_FLOAT(L1, 10.0, false),
+    PARAM_FLOAT(CRUISE_SPEED, 5.0, false),
+    PARAM_FLOAT(TAKEOFF_H, 1.5, false),
+    PARAM_FLOAT(ACCEPT_R, 0.5, false),
+    PARAM_FLOAT(ASSIST_LAND_H, 0.3, false),
+    PARAM_UINT16(LOST_RETURN_TIME, 120, false),
+    PARAM_UINT8(LOST_RETURN_EN, 1, false),
 };
 PARAM_GROUP_DEFINE(FMS, __param_list);
 
@@ -73,6 +76,7 @@ static mlog_elem_t GCS_Cmd_Elems[] = {
     MLOG_ELEMENT(mode, MLOG_UINT32),
     MLOG_ELEMENT(cmd_1, MLOG_UINT32),
     MLOG_ELEMENT(cmd_2, MLOG_UINT32),
+    MLOG_ELEMENT_VEC(param, MLOG_FLOAT, 7),
 };
 MLOG_BUS_DEFINE(GCS_Cmd, GCS_Cmd_Elems);
 
@@ -149,6 +153,7 @@ static mlog_elem_t FMS_Out_Elems[] = {
     MLOG_ELEMENT(wp_consume, MLOG_UINT8),
     MLOG_ELEMENT(wp_current, MLOG_UINT8),
     MLOG_ELEMENT(reserved, MLOG_UINT8),
+    MLOG_ELEMENT_VEC(home, MLOG_FLOAT, 4),
 };
 MLOG_BUS_DEFINE(FMS_Out, FMS_Out_Elems);
 
@@ -173,7 +178,7 @@ static char* fms_status[] = {
     "None",
     "Disarm",
     "Standby",
-    "Arm"
+    "Arm",
 };
 
 static char* fms_state[] = {
@@ -194,7 +199,7 @@ static char* fms_state[] = {
     "InvalidArmMode",
     "Land",
     "Return",
-    "Takeoff"
+    "Takeoff",
 };
 
 static char* fms_ctrl_mode[] = {
@@ -203,7 +208,8 @@ static char* fms_ctrl_mode[] = {
     "Acro",
     "Stabilize",
     "ALTCTL",
-    "POSCTL"
+    "POSCTL",
+    "Offboard",
 };
 
 static char* fms_mode[] = {
@@ -214,7 +220,7 @@ static char* fms_mode[] = {
     "Altitude",
     "Position",
     "Mission",
-    "Offboard"
+    "Offboard",
 };
 
 fmt_model_info_t fms_model_info;
@@ -229,11 +235,12 @@ static int fms_output_echo(void* param)
     printf("rate cmd: %.2f %.2f %.2f\n", fms_out.p_cmd, fms_out.q_cmd, fms_out.r_cmd);
     printf("att cmd: %.2f %.2f %.2f\n", fms_out.phi_cmd, fms_out.theta_cmd, fms_out.psi_rate_cmd);
     printf("vel cmd: %.2f %.2f %.2f\n", fms_out.u_cmd, fms_out.v_cmd, fms_out.w_cmd);
-    printf("throttle cmd: %.2f\n", fms_out.throttle_cmd);
+    printf("throttle cmd: %u\n", fms_out.throttle_cmd);
     printf("act cmd: %u %u %u %u\n", fms_out.actuator_cmd[0], fms_out.actuator_cmd[1], fms_out.actuator_cmd[2], fms_out.actuator_cmd[3]);
     printf("status:%s state:%s ctrl_mode:%s\n", fms_status[fms_out.status], fms_state[fms_out.state], fms_ctrl_mode[fms_out.ctrl_mode]);
     printf("mode:%s reset:%d\n", fms_mode[fms_out.mode], fms_out.reset);
     printf("wp_current:%d wp_consume:%d\n", fms_out.wp_current, fms_out.wp_consume);
+    printf("home: xyz(m) %.2f %.2f %.2f yaw(deg) %.2f\n", fms_out.home[0], fms_out.home[1], fms_out.home[2], RAD2DEG(fms_out.home[3]));
     printf("------------------------------------------\n");
 
     return 0;
@@ -264,6 +271,9 @@ static void init_parameter(void)
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, CRUISE_SPEED), &FMS_PARAM.CRUISE_SPEED));
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, TAKEOFF_H), &FMS_PARAM.TAKEOFF_H));
     FMT_CHECK(param_link_variable(PARAM_GET(FMS, ACCEPT_R), &FMS_PARAM.ACCEPT_R));
+    FMT_CHECK(param_link_variable(PARAM_GET(FMS, ASSIST_LAND_H), &FMS_PARAM.ASSIST_LAND_H));
+    FMT_CHECK(param_link_variable(PARAM_GET(FMS, LOST_RETURN_TIME), &FMS_PARAM.LOST_RETURN_TIME));
+    FMT_CHECK(param_link_variable(PARAM_GET(FMS, LOST_RETURN_EN), &FMS_PARAM.LOST_RETURN_EN));
 }
 
 void fms_interface_step(uint32_t timestamp)
@@ -352,6 +362,7 @@ void fms_interface_init(void)
     auto_cmd_nod = mcn_subscribe(MCN_HUB(auto_cmd), NULL, NULL);
     mission_data_nod = mcn_subscribe(MCN_HUB(mission_data), NULL, NULL);
     ins_out_nod = mcn_subscribe(MCN_HUB(ins_output), NULL, NULL);
+    
     control_out_nod = mcn_subscribe(MCN_HUB(control_output), NULL, NULL);
 
     Pilot_Cmd_ID = mlog_get_bus_id("Pilot_Cmd");

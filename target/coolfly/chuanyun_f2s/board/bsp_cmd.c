@@ -124,80 +124,79 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_set_chip_id, __cmd_set_chip_id, set<chip id1 ~5>
 ////////////////////////////////////////////////////////////////////////////
 // swtich_mavlink
 
-/* coolfly use to switch mavlink channle */
-fmt_err_t __switch_mavlink_to_device(rt_device_t dev)
-{
-    fmt_err_t ret = RT_ERROR;
+// /* coolfly use to switch mavlink channle */
+// fmt_err_t __switch_mavlink_to_device(rt_device_t dev)
+// {
+//     fmt_err_t ret = RT_ERROR;
 
-    mavproxy_device_info* list = get_device_list();
+//     mavproxy_device_info* list = get_device_list();
 
-    for (int idx = 0; idx < get_device_num(); idx++) {
-        if (rt_device_find(list->name) == dev) {
-            ret = mavproxy_set_channel(idx);
-            break;
-        }
-        list++;
-    }
+//     for (int idx = 0; idx < get_device_num(); idx++) {
+//         if (rt_device_find(list->name) == dev) {
+//             ret = mavproxy_set_channel(idx);
+//             break;
+//         }
+//         list++;
+//     }
 
-    return ret;
-}
+//     return ret;
+// }
 
-static void sw_mav_show_usage(void)
-{
-    COMMAND_USAGE("sw_mav", "[options]");
+// static void sw_mav_show_usage(void)
+// {
+//     COMMAND_USAGE("sw_mav", "[options]");
 
-    PRINT_STRING("options:\n");
-    SHELL_COMMAND("serial", "swtich the mavlink to uart7");
-    SHELL_COMMAND("usb", "swtich the mavlink to usb");
-    SHELL_COMMAND("bb_com", "swtich the mavlink to bb_com, use Remote to show the mavlink");
-}
+//     PRINT_STRING("options:\n");
+//     SHELL_COMMAND("serial", "swtich the mavlink to uart7");
+//     SHELL_COMMAND("usb", "swtich the mavlink to usb");
+//     SHELL_COMMAND("bb_com", "swtich the mavlink to bb_com, use Remote to show the mavlink");
+// }
 
-static int sw_mav_channel(const char* dev)
-{
-    fmt_err_t ret = RT_ERROR;
+// static int sw_mav_channel(const char* dev)
+// {
+//     fmt_err_t ret = RT_ERROR;
 
-    rt_device_t set_dev = rt_device_find(dev);
+//     rt_device_t set_dev = rt_device_find(dev);
 
-    if (set_dev != RT_NULL) {
-        ret = __switch_mavlink_to_device(set_dev);
-        if (ret != RT_EOK) {
-            DLOG_Critical("mavproxy_set_channel %s failed!!! \n", dev);
-        }
-    } else {
-        DLOG_Critical(" can't find the %s \n", dev);
-    }
-    return ret;
-}
+//     if (set_dev != RT_NULL) {
+//         ret = __switch_mavlink_to_device(set_dev);
+//         if (ret != RT_EOK) {
+//             DLOG_Critical("mavproxy_set_channel %s failed!!! \n", dev);
+//         }
+//     } else {
+//         DLOG_Critical(" can't find the %s \n", dev);
+//     }
+//     return ret;
+// }
 
-static int handle_sw_mav_cmd(int argc, char** argv, int optc, optv_t* optv)
-{
-    char* arg;
-    struct optparse options;
-    int res = EXIT_SUCCESS;
+// static int handle_sw_mav_cmd(int argc, char** argv, int optc, optv_t* optv)
+// {
+//     char* arg;
+//     struct optparse options;
+//     int res = EXIT_SUCCESS;
 
-    optparse_init(&options, argv);
+//     optparse_init(&options, argv);
 
-    arg = optparse_arg(&options);
-    if (arg) {
-        if (STRING_COMPARE(arg, "serial")) {
-            res = sw_mav_channel("serial7");
-        } else if (STRING_COMPARE(arg, "usb0")) {
-            res = sw_mav_channel("usb");
-        } else if (STRING_COMPARE(arg, "bb_com")) {
-            res = sw_mav_channel("bb_com3");
-        } else {
-            sw_mav_show_usage();
-        }
-    } else {
-        sw_mav_show_usage();
-    }
+//     arg = optparse_arg(&options);
+//     if (arg) {
+//         if (STRING_COMPARE(arg, "serial")) {
+//             res = sw_mav_channel("serial7");
+//         } else if (STRING_COMPARE(arg, "usb0")) {
+//             res = sw_mav_channel("usb");
+//         } else if (STRING_COMPARE(arg, "bb_com")) {
+//             res = sw_mav_channel("bb_com3");
+//         } else {
+//             sw_mav_show_usage();
+//         }
+//     } else {
+//         sw_mav_show_usage();
+//     }
 
-    return res;
-}
+//     return res;
+// }
 
-int cmd_sw_mav(int argc, char** argv)
-{
-    return syscmd_process(argc, argv, handle_sw_mav_cmd);
-}
-FINSH_FUNCTION_EXPORT_ALIAS(cmd_sw_mav, __cmd_sw_mav, swtich mavlink channel);
-
+// int cmd_sw_mav(int argc, char** argv)
+// {
+//     return syscmd_process(argc, argv, handle_sw_mav_cmd);
+// }
+// FINSH_FUNCTION_EXPORT_ALIAS(cmd_sw_mav, __cmd_sw_mav, swtich mavlink channel);

@@ -286,6 +286,8 @@ McnNode_t mcn_subscribe(McnHub_t hub, MCN_EVENT_HANDLE event, void (*pub_cb)(voi
 {
     MCN_ASSERT(hub != NULL);
 
+
+    printf("hub->link_num = %08x \n", hub->link_num);
     if (hub->link_num >= MCN_MAX_LINK_NUM) {
         printf("mcn link num is already full!\n");
         return NULL;

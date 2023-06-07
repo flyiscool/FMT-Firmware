@@ -715,7 +715,10 @@ fmt_err_t param_link_variable(param_t* param, void* var)
 {
     size_t val_size;
 
+    
+
     if (param == NULL) {
+        printf("param == NULL\r\n");
         return FMT_EINVAL;
     }
 
@@ -753,6 +756,7 @@ fmt_err_t param_link_variable(param_t* param, void* var)
         break;
 
     default:
+        printf("param->type = %d \r\n" , param->type);
         return FMT_ENOTHANDLE;
     }
 

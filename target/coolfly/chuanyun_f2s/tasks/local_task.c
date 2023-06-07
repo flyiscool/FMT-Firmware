@@ -15,23 +15,22 @@
  *****************************************************************************/
 #include <firmament.h>
 
+#include "ar1002_hal.h"
+#include "bb_match_id.h"
+#include "board.h"
+#include "board_device.h"
+#include "debuglog.h"
 #include "module/task_manager/task_manager.h"
 #include "module/workqueue/workqueue_manager.h"
-#include "debuglog.h"
 #include "sys_event.h"
-#include "bb_match_id.h"
-#include "ar1002_hal.h"
-#include "board_device.h"
-#include "board.h"
 
-#include "local_task.h"
 #include "bb_led.h"
+#include "local_task.h"
 #include "sky_sbus.h"
 
 #include "inter_core.h"
-#include "xc7027.h"
 #include "mini384.h"
-
+#include "xc7027.h"
 
 //--------------------------------------
 static void sys_event_start(void);
@@ -71,7 +70,6 @@ TASK_EXPORT __fmt_task_desc = {
     .dependency = NULL
 };
 
-
 /////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
@@ -93,7 +91,10 @@ void intercore_irq0_callback(void)
 {
     WorkQueue_t sysevent_wq = workqueue_find("wq:sysevent_work");
 
-    RT_ASSERT(sysevent_wq != NULL);
+    // bug liuwei for test
+    if (sysevent_wq == NULL) {
+        return;
+    }
 
     FMT_CHECK(workqueue_schedule_work(sysevent_wq, &intercore_irq0_callback_item));
 }
@@ -121,4 +122,3 @@ static void sys_event_start(void)
 
     FMT_CHECK(workqueue_schedule_work(sysevent_wq, &sys_event_item));
 }
-

@@ -10,12 +10,14 @@
  *       MATLAB for code generation function to initialize non-finite, NaN
  */
 #include "rtGetNaN.h"
+#include "board.h"
 
 /* Function: rtGetNaN ==================================================
  * Abstract:
  * Initialize rtNaN needed by the generated code.
  * NaN is initialized as non-signaling. Assumes IEEE.
  */
+_EXT_DTCM1
 real_T rtGetNaN_(void)
 {
     real_T nan = 0.0;
@@ -60,6 +62,7 @@ real_T rtGetNaN_(void)
  * Initialize rtNaNF needed by the generated code.
  * NaN is initialized as non-signaling. Assumes IEEE.
  */
+_EXT_DTCM1
 real32_T rtGetNaNF_(void)
 {
     IEEESingle nanF = { { 0 } };

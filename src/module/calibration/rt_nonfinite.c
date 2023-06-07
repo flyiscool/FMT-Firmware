@@ -13,6 +13,7 @@
 #include "rt_nonfinite.h"
 #include "rtGetInf.h"
 #include "rtGetNaN.h"
+#include "board.h"
 
 real_T rtInf;
 real_T rtMinusInf;
@@ -26,6 +27,7 @@ real32_T rtNaNF;
  * Initialize the rtInf, rtMinusInf, and rtNaN needed by the
  * generated code. NaN is initialized as non-signaling. Assumes IEEE.
  */
+_EXT_DTCM1
 void rt_InitInfAndNaN_(size_t realSize)
 {
     (void)realSize;
@@ -41,6 +43,7 @@ void rt_InitInfAndNaN_(size_t realSize)
  * Abstract:
  * Test if value is infinite
  */
+_EXT_DTCM1
 boolean_T rtIsInf_(real_T value)
 {
     return ((value == rtInf || value == rtMinusInf) ? 1U : 0U);
@@ -50,6 +53,7 @@ boolean_T rtIsInf_(real_T value)
  * Abstract:
  * Test if single-precision value is infinite
  */
+_EXT_DTCM1
 boolean_T rtIsInfF_(real32_T value)
 {
     return (((value) == rtInfF || (value) == rtMinusInfF) ? 1U : 0U);
@@ -59,6 +63,7 @@ boolean_T rtIsInfF_(real32_T value)
  * Abstract:
  * Test if value is not a number
  */
+_EXT_DTCM1
 boolean_T rtIsNaN_(real_T value)
 {
     return (value != value) ? 1U : 0U;
@@ -68,6 +73,7 @@ boolean_T rtIsNaN_(real_T value)
  * Abstract:
  * Test if single-precision value is not a number
  */
+_EXT_DTCM1
 boolean_T rtIsNaNF_(real32_T value)
 {
     return (value != value) ? 1U : 0U;

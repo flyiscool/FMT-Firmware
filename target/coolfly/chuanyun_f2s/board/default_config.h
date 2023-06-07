@@ -66,10 +66,12 @@ target = "CHUANYUN_F2S"\n
 	range = [1800,2000]\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n
+	chan = 0\n
 	type = "serial"\n
 	name = "serial7"\n
 	baudrate = 460800\n
 	[[mavproxy.devices]]\n
+	chan = 0\n
 	type = "bb_com"\n
 	name = "bb_com3"\n
 	auto-switch = true\n

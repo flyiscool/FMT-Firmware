@@ -362,6 +362,7 @@ void fms_interface_init(void)
     auto_cmd_nod = mcn_subscribe(MCN_HUB(auto_cmd), NULL, NULL);
     mission_data_nod = mcn_subscribe(MCN_HUB(mission_data), NULL, NULL);
     ins_out_nod = mcn_subscribe(MCN_HUB(ins_output), NULL, NULL);
+    
     control_out_nod = mcn_subscribe(MCN_HUB(control_output), NULL, NULL);
 
     Pilot_Cmd_ID = mlog_get_bus_id("Pilot_Cmd");

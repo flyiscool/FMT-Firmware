@@ -144,15 +144,15 @@ static int rc_calib(struct optparse options)
         }
     }
 
-    // printf("Before calibration you should move all your sticks to center.\n");
-    // printf("And for safety, please make sure you have disabled all motors!\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o      ●      o  o      ●      o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Before calibration you should move all your sticks to center.\n");
+    printf("And for safety, please make sure you have disabled all motors!\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o      ●      o  o      ●      o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
     printf("Next step (y/n)\n");
     
     ch = syscmd_getc();
@@ -164,105 +164,105 @@ static int rc_calib(struct optparse options)
         return EXIT_FAILURE;
     }
 
-    // printf("Move the throttle stick all the way up and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /    ●    \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o             o  o      ●      o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the throttle stick all the way up and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /    ●    \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o             o  o      ●      o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_THRO, 1700, 2200, &rc_thro_max) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the throttle stick all the way down and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o             o  o      ●      o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\    ●    /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the throttle stick all the way down and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o             o  o      ●      o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\    ●    /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_THRO, 800, 1300, &rc_thro_min) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the yaw stick all the way right and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o           ● o  o      ●      o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the yaw stick all the way right and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o           ● o  o      ●      o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_YAW, 1700, 2200, &rc_yaw_max) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the yaw stick all the way left and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o ●           o  o      ●      o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the yaw stick all the way left and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o ●           o  o      ●      o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_YAW, 800, 1300, &rc_yaw_min) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the pitch stick all the way up and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /    ●    \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o      ●      o  o             o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the pitch stick all the way up and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /    ●    \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o      ●      o  o             o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_PITCH, 1700, 2200, &rc_pitch_max) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the pitch stick all the way down and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o      ●      o  o             o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\    ●    /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the pitch stick all the way down and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o      ●      o  o             o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\    ●    /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_PITCH, 800, 1300, &rc_pitch_min) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the roll stick all the way right and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o      ●      o  o           ● o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the roll stick all the way right and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o      ●      o  o           ● o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_ROLL, 1700, 2200, &rc_roll_max) != FMT_EOK) {
         return EXIT_FAILURE;
     }
 
-    // printf("Move the roll stick all the way left and hold it there\n");
-    // console_println("   o-------o        o-------o   ");
-    // console_println("  /         \\      /         \\  ");
-    // console_println(" /           \\    /           \\ ");
-    // console_println("o      ●      o  o ●           o");
-    // console_println(" \\           /    \\           / ");
-    // console_println("  \\         /      \\         /  ");
-    // console_println("   o-------o        o-------o   ");
+    printf("Move the roll stick all the way left and hold it there\n");
+    console_println("   o-------o        o-------o   ");
+    console_println("  /         \\      /         \\  ");
+    console_println(" /           \\    /           \\ ");
+    console_println("o      ●      o  o ●           o");
+    console_println(" \\           /    \\           / ");
+    console_println("  \\         /      \\         /  ");
+    console_println("   o-------o        o-------o   ");
 
     if (get_stick_corner_value(STICK_ROLL, 800, 1300, &rc_roll_min) != FMT_EOK) {
         return EXIT_FAILURE;

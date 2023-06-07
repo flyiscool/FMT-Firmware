@@ -19,6 +19,7 @@
 #include "hal/rc/rc.h"
 #include "model/fms/fms_interface.h"
 #include "module/mavproxy/mavproxy.h"
+#include "module/sysio/gcs_cmd.h"
 #include "module/sysio/pilot_cmd.h"
 
 /* channel index start from 0 */
@@ -107,7 +108,7 @@ static void mavlink_send_pilot_cmd(void)
 
     mavlink_msg_fmt_pilot_cmd_encode(mav_sys.sysid, mav_sys.compid, &msg, &mav_pilot_cmd);
 
-    mavproxy_send_immediate_msg(&msg, false);
+    mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, false);
 }
 #endif
 
@@ -182,6 +183,11 @@ static void mode_switch(Pilot_Cmd_Bus* pilot_cmd, int16_t* rc_channel)
 
         if (in_range) {
             pilot_cmd->mode = pilotModes[i].mode;
+            /* Sync gcs mode with pilot_cmd mode */
+            GCS_Cmd_Bus gcs_cmd = gcs_cmd_get();
+            if (pilot_cmd->mode <= PilotMode_Offboard && gcs_cmd.mode != pilot_cmd->mode) {
+                gcs_set_mode(pilot_cmd->mode);
+            }
         }
     }
 }
@@ -354,6 +360,11 @@ fmt_err_t pilot_cmd_set_chan_num(uint8_t chan_num)
     rc_chan_num = chan_num;
 
     return FMT_EOK;
+}
+
+uint8_t pilot_cmd_get_chan_num(void)
+{
+    return rc_chan_num;
 }
 
 fmt_err_t pilot_cmd_map_stick(

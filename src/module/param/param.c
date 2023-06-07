@@ -329,6 +329,10 @@ fmt_err_t param_set_str_val(param_t* param, char* val)
         return FMT_EINVAL;
     }
 
+    if (param->read_only) {
+        return FMT_ENOTHANDLE;
+    }
+
     switch (param->type) {
     case PARAM_TYPE_INT8:
         pval.i8 = atoi(val);
@@ -383,10 +387,6 @@ fmt_err_t param_set_str_val_by_name(char* param_name, char* val)
 {
     param_t* p = param_get_by_name(param_name);
 
-    if (p == NULL) {
-        return FMT_EINVAL;
-    }
-
     return param_set_str_val(p, val);
 }
 
@@ -402,10 +402,6 @@ fmt_err_t param_set_str_val_by_name(char* param_name, char* val)
 fmt_err_t param_set_str_val_by_full_name(char* group_name, char* param_name, char* val)
 {
     param_t* p = param_get_by_full_name(group_name, param_name);
-
-    if (p == NULL) {
-        return FMT_EINVAL;
-    }
 
     return param_set_str_val(p, val);
 }
@@ -424,6 +420,10 @@ fmt_err_t param_set_val(param_t* param, void* val)
 
     if (param == NULL) {
         return FMT_EINVAL;
+    }
+
+    if (param->read_only) {
+        return FMT_ENOTHANDLE;
     }
 
     switch (param->type) {
@@ -494,10 +494,6 @@ fmt_err_t param_set_val_by_name(char* param_name, void* val)
 {
     param_t* p = param_get_by_name(param_name);
 
-    if (p == NULL) {
-        return FMT_EINVAL;
-    }
-
     return param_set_val(p, val);
 }
 
@@ -513,10 +509,6 @@ fmt_err_t param_set_val_by_name(char* param_name, void* val)
 fmt_err_t param_set_val_by_full_name(char* group_name, char* param_name, void* val)
 {
     param_t* p = param_get_by_full_name(group_name, param_name);
-
-    if (p == NULL) {
-        return FMT_EINVAL;
-    }
 
     return param_set_val(p, val);
 }
@@ -723,7 +715,10 @@ fmt_err_t param_link_variable(param_t* param, void* var)
 {
     size_t val_size;
 
+    
+
     if (param == NULL) {
+        printf("param == NULL\r\n");
         return FMT_EINVAL;
     }
 
@@ -761,6 +756,7 @@ fmt_err_t param_link_variable(param_t* param, void* var)
         break;
 
     default:
+        printf("param->type = %d \r\n" , param->type);
         return FMT_ENOTHANDLE;
     }
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2021 The Firmament Authors. All Rights Reserved.
+ * Copyright 2020 The Firmament Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef GCS_CMD_H__
-#define GCS_CMD_H__
+#include <firmament.h>
 
-#include <FMS.h>
+#include <string.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "module/syscmd/syscmd.h"
+#include "msh.h"
 
-fmt_err_t gcs_cmd_init(void);
-GCS_Cmd_Bus gcs_cmd_get(void);
-fmt_err_t gcs_cmd_collect(void);
-void gcs_cmd_heartbeat(void);
-fmt_err_t gcs_set_cmd(FMS_Cmd cmd, float param[5]);
-fmt_err_t gcs_set_mode(PilotMode mode);
+int cmd_exec(int argc, char** argv)
+{
+    for (uint8_t i = 0; i < argc - 1; i++) {
+        msh_exec_script(argv[i + 1], strlen(argv[i + 1]));
+    }
 
-#ifdef __cplusplus
+    return 0;
 }
-#endif
 
-#endif
+FINSH_FUNCTION_EXPORT_ALIAS(cmd_exec, __cmd_exec, execute msh script);

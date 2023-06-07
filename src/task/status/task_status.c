@@ -49,7 +49,7 @@ static void send_mission_current(uint16_t seq)
     mavlink_mission_current_t mission_current = { .seq = seq };
 
     mavlink_msg_mission_current_encode(mavsys.sysid, mavsys.compid, &msg, &mission_current);
-    mavproxy_send_immediate_msg(&msg, true);
+    mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
 }
 
 static void send_home_position(void)
@@ -79,7 +79,7 @@ static void send_home_position(void)
     home_position.time_usec = systime_now_us();
 
     mavlink_msg_home_position_encode(mavsys.sysid, mavsys.compid, &msg, &home_position);
-    mavproxy_send_immediate_msg(&msg, true);
+    mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
 }
 
 static void update_fms_status(void)
@@ -260,6 +260,7 @@ fmt_err_t task_status_init(void)
     mission_data_nod = mcn_subscribe(MCN_HUB(mission_data), NULL, NULL);
     RT_ASSERT(mission_data_nod != NULL);
 
+    printf("1----");
     return FMT_EOK;
 }
 
@@ -301,5 +302,6 @@ TASK_EXPORT __fmt_task_desc = {
     .auto_start = true,
     .stack_size = 4096,
     .param = NULL,
-    .dependency = NULL
+    .dependency = (char*[]) { "vehicle", NULL }
 };
+

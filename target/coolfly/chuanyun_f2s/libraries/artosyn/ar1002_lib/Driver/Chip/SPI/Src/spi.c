@@ -174,6 +174,90 @@ int32_t SPI_write_read(ENUM_SPI_COMPONENT en_id,
     return 0;
 }
 
+
+int32_t SPI_write_read_dbg(ENUM_SPI_COMPONENT en_id,
+                       uint8_t* ptr_wbuf, uint32_t u32_wsize,
+                       uint8_t* ptr_rbuf, uint32_t u32_rsize)
+{
+    uint32_t i = 0;
+    uint32_t u32_tmpLen = 0;
+    uint32_t flag = 0;
+
+    Reg_Write32((SPI_BaseList[en_id] + SPI_SLAVE_EN), 0);
+
+    s_st_spiIntData[en_id].dfl = 0;
+
+    if (0 == s_st_spiIntData[en_id].dfl) {
+        u32_tmpLen = ((u32_wsize < (SPI_TXFLR_MAX)) ? u32_wsize : (SPI_TXFLR_MAX));
+    } else {
+        u32_tmpLen = ((u32_wsize < (SPI_TXFLR_MAX * 2)) ? u32_wsize : (SPI_TXFLR_MAX * 2));
+    }
+
+    SPI_SetIntData(en_id, ptr_wbuf + u32_tmpLen, u32_wsize - u32_tmpLen, ptr_rbuf, u32_rsize);
+
+    if (0 == s_st_spiIntData[en_id].dfl) {
+        SPI_SetDataFrameSize(en_id, SPI_CTRLR0_DFS_8BIT);
+    } else {
+        SPI_SetDataFrameSize(en_id, SPI_CTRLR0_DFS_16BIT);
+    }
+
+    if ((0 == u32_wsize) || (NULL == ptr_wbuf)) {
+        SPI_SetMode(en_id, SPI_CTRLR0_TMOD_RO);
+        flag = SPI_CTRLR0_TMOD_RO;
+    } else if ((0 == u32_rsize) || (NULL == ptr_rbuf)) {
+        SPI_SetMode(en_id, SPI_CTRLR0_TMOD_TO);
+    } else {
+        SPI_SetMode(en_id, SPI_CTRLR0_TMOD_EE);
+    }
+
+    if (u32_rsize > 0) {
+        if (0 == s_st_spiIntData[en_id].dfl) {
+            SPI_SetReadDataLen(en_id, u32_rsize - 1);
+            if (u32_rsize <= SPI_RXFTLR_DEF_VALUE) {
+                Reg_Write32((SPI_BaseList[en_id] + SPI_RXFTLR), 0);
+            }
+        } else {
+            SPI_SetReadDataLen(en_id, (u32_rsize - 2) / 2);
+            if (u32_rsize <= (2 * SPI_RXFTLR_DEF_VALUE)) {
+                Reg_Write32((SPI_BaseList[en_id] + SPI_RXFTLR), 0);
+            }
+        }
+        SPI_EnableInt(en_id, SPI_IMR_RXFIM);
+        if (SPI_CTRLR0_TMOD_RO == flag) {
+            Reg_Write32((SPI_BaseList[en_id] + SPI_DR), 0xFF); //start read.
+        }
+    }
+
+    if (0 == s_st_spiIntData[en_id].dfl) {
+        while (i < u32_tmpLen) {
+            Reg_Write32((SPI_BaseList[en_id] + SPI_DR), ptr_wbuf[i]); //write data
+            i += 1;
+        }
+    } else {
+        while (i < u32_tmpLen) {
+            Reg_Write32((SPI_BaseList[en_id] + SPI_DR), (uint16_t)(ptr_wbuf[i] << 8) | ptr_wbuf[i + 1]); //write data
+            i += 2;
+        }
+    }
+
+    Reg_Write32((SPI_BaseList[en_id] + SPI_SLAVE_EN), 1);
+    if (0 == Reg_Read32(SPI_BaseList[en_id] + SPI_SLAVE_EN)) {
+        Reg_Write32((SPI_BaseList[en_id] + SPI_SLAVE_EN), 1);
+    }
+
+    if (0 == s_st_spiIntData[en_id].dfl) {
+        if (u32_wsize > (SPI_TXFLR_MAX)) {
+            SPI_EnableInt(en_id, SPI_IMR_TXEIM);
+        }
+    } else {
+        if (u32_wsize > (SPI_TXFLR_MAX * 2)) {
+            SPI_EnableInt(en_id, SPI_IMR_TXEIM);
+        }
+    }
+
+    return 0;
+}
+
 void SPI_IntrSrvc(uint32_t u32_vectorNum)
 {
     uint8_t u8_spiCh;

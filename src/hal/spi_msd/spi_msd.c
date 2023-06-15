@@ -18,7 +18,7 @@
 
 // #define MSD_TRACE 1
 
-#ifdef MSD_TRACE
+#if MSD_TRACE
     #define MSD_DEBUG(...)                      \
         rt_kprintf("[MSD] %d ", rt_tick_get()); \
         rt_kprintf(__VA_ARGS__);
@@ -333,7 +333,6 @@ static rt_err_t _read_block(struct rt_spi_device* device, void* buffer, uint32_t
 
         /* transfer message */
         device->bus->ops->xfer(device, &message);
-
     } /* get crc */
 
     return RT_EOK;
@@ -1052,8 +1051,8 @@ static rt_err_t rt_msd_init(rt_device_t dev)
         struct rt_spi_configuration cfg;
         cfg.data_width = 8;
         cfg.mode = RT_SPI_MODE_0 | RT_SPI_MSB; /* SPI Compatible Modes 0 */
-        // cfg.max_hz = msd->max_clock;
-        cfg.max_hz = 5 * 1000 * 1000; // fix bug: bad file
+        cfg.max_hz = msd->max_clock;
+        //cfg.max_hz = 5000*1000; // chenbang, to fix "badfile", it would encounter fail if clk >= 8MHz in Coolfly EVB
         rt_spi_configure(msd->spi_device, &cfg);
     } /* config spi */
 
@@ -1144,7 +1143,7 @@ _exit:
 
 static rt_size_t rt_msd_sdhc_read(rt_device_t dev, rt_off_t pos, void* buffer, rt_size_t size)
 {
-    MSD_DEBUG("rt_msd_sdhc_read   size = %d \r\n", size);
+    //MSD_DEBUG("rt_msd_sdhc_read   size = %d \r\n",size);
     struct msd_device* msd = (struct msd_device*)dev;
     uint8_t response[MSD_RESPONSE_MAX_LEN];
     rt_err_t result = RT_EOK;

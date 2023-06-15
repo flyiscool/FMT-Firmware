@@ -133,11 +133,18 @@ HAL_RET_T HAL_SPI_MasterWriteRead(ENUM_HAL_SPI_COMPONENT e_spiComponent,
         return HAL_BUSY;
     }
 
-    SPI_write_read((ENUM_SPI_COMPONENT)(e_spiComponent),
+/*    SPI_write_read((ENUM_SPI_COMPONENT)(e_spiComponent),
                    pu8_wrData,
                    u32_wrSize,
                    pu8_rdData,
                    u32_rdSize);
+	*/	
+    SPI_write_read_dbg((ENUM_SPI_COMPONENT)(e_spiComponent),
+                   pu8_wrData,
+                   u32_wrSize,
+                   pu8_rdData,
+                   u32_rdSize);
+
 
     if (0 != u32_timeOut) {
         start = SysTicks_GetTickCount();
@@ -147,9 +154,33 @@ HAL_RET_T HAL_SPI_MasterWriteRead(ENUM_HAL_SPI_COMPONENT e_spiComponent,
                 return HAL_TIME_OUT;
             }
 
-            SysTicks_DelayUS(5);
+            //SysTicks_DelayUS(5);
         }
     }
+
+//--------chenbang add, for debugging
+#if 0
+	if(e_spiComponent == HAL_SPI_COMPONENT_1)
+	{
+		if((pu8_wrData != NULL) && (u32_wrSize != 0))
+		{
+			console_printf("wr=%d ",u32_wrSize);
+			for(int i=0; i<u32_wrSize; i++)
+			{
+				console_printf("%02X", pu8_wrData[i]);
+			}
+		}
+		if((pu8_rdData != NULL) && (u32_rdSize != 0))
+		{
+			console_printf("rd=%d ",u32_rdSize);
+			for(int i=0; i<u32_rdSize; i++)
+			{
+				console_printf("%02X", pu8_rdData[i]);
+			}
+		}
+		console_printf("\r\n");
+	}
+#endif
 
     return HAL_OK;
 }

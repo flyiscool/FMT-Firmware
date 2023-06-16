@@ -77,7 +77,8 @@ HAL_RET_T HAL_SPI_MasterInit(ENUM_HAL_SPI_COMPONENT e_spiComponent,
         u8_spiVecNum = e_spiComponent + HAL_NVIC_SSI_INTR_N0_VECTOR_NUM;
     }
     HAL_NVIC_SetPriority(u8_spiVecNum, INTR_NVIC_PRIORITY_SPI_DEFAULT, 0);
-    HAL_NVIC_RegisterHandler(u8_spiVecNum, SPI_IntrSrvc, NULL);
+    //HAL_NVIC_RegisterHandler(u8_spiVecNum, SPI_IntrSrvc, NULL);
+    HAL_NVIC_RegisterHandler(u8_spiVecNum, SPI_IntrSrvc_dbg, NULL); // ---- dbg for badfile, chenbang
     SPI_master_init((ENUM_SPI_COMPONENT)(e_spiComponent), &st_spiInit);
     HAL_NVIC_EnableIrq(u8_spiVecNum);
 

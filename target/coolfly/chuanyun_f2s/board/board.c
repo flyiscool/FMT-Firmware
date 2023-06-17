@@ -31,7 +31,7 @@
 #include "driver/imu/bmi055.h"
 #include "driver/imu/bmi088.h"
 // #include "driver/imu/icm20600.h"
-// #include "driver/mag/ist8310.h"
+#include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
 #include "driver/mtd/ramtron.h"
 // #include "driver/range_finder/tfmini_s.h"
@@ -503,13 +503,13 @@ void bsp_initialize(void)
     #endif
 
     /* if no gps mag then use onboard mag */
-    // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
-    //     console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
-    // }
-    // else
-    // {
-    //     console_println("drv_ist8310_init i2c2_dev1~");
-    // }
+    if (drv_ist8310_init("i2c3_dev2", "mag1") != FMT_EOK) {
+         console_println("!!!!!!drv_ist8310_init i2c3_dev2 faild~!!!!");
+    }
+    else
+    {
+        console_println("drv_ist8310_init i2c2_dev1~");
+    }
 
     if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
         console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");

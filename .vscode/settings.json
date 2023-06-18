@@ -23,4 +23,5 @@
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
+    "cmake.sourceDirectory": "/home/fly/workspace/chuanyun_fmt/src/lib/Micro-XRCE-DDS-Client/examples/MultiSessionHelloWorld",
 }

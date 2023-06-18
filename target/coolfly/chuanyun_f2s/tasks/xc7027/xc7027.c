@@ -16,9 +16,16 @@
 
 #include "module/workqueue/workqueue_manager.h"
 
+// #define XC7027_DVP_CHANNEL 0
+// #define DVP_RST_CTRL       HAL_GPIO_NUM99
+// #define XC7027_I2C         HAL_I2C_COMPONENT_1
+
+
 #define XC7027_DVP_CHANNEL 1
 #define DVP_RST_CTRL       HAL_GPIO_NUM103
 #define XC7027_I2C         HAL_I2C_COMPONENT_0
+
+
 
 _EXT_DTCM1_BSS
 static volatile int is_Inited = 0;
@@ -545,8 +552,8 @@ static void init()
 
     // DLOG_Critical("xc7082 init success~!");
 
-    // XC7027_SENSOR_Config(XC7027_MODE_720P_30FPS);
-    XC7027_SENSOR_Config(XC7027_MODE_1080P_30FPS);
+    XC7027_SENSOR_Config(XC7027_MODE_720P_30FPS);
+    // XC7027_SENSOR_Config(XC7027_MODE_1080P_30FPS);
 
     sys_msleep(20);
 

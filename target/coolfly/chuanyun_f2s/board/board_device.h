@@ -48,7 +48,7 @@
 #endif
 
 #ifdef BOARD_F2S
-    #define USED_RAMTRON   1
+    // #define USED_RAMTRON   1
 
     // #define USED_BMI055   1
     #define USED_BMI088 1

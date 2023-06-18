@@ -53,7 +53,7 @@ fmt_err_t pmu_poll_battery_status(void)
 
 
 
-    bat_status.battery_voltage = value * PARAM_GET_FLOAT(CALIB, BAT_V_DIV) + 300; /* millivolt */
+    bat_status.battery_voltage = value * PARAM_GET_FLOAT(CALIB, BAT_V_DIV) + 600; /* millivolt */
 
     if (rt_device_read(adc_dev, 1, &value, sizeof(value)) != sizeof(value)) {
         return FMT_ERROR;

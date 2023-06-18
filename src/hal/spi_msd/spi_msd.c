@@ -16,7 +16,7 @@
 #include "spi_msd.h"
 #include <string.h>
 
-#define MSD_TRACE 1
+// #define MSD_TRACE 1
 
 #ifdef MSD_TRACE
     #define MSD_DEBUG(...)                      \
@@ -334,11 +334,6 @@ static rt_err_t _read_block(struct rt_spi_device* device, void* buffer, uint32_t
         /* transfer message */
         device->bus->ops->xfer(device, &message);
 
-        for (uint32_t tt = 0; tt < 512; tt++) {
-            rt_kprintf("%d %c \r\n", tt, *((char*)buffer + tt));
-        }
-
-        MSD_DEBUG("block_size = %d  recv_buffer = %2x %2x \r\n", block_size, recv_buffer[1], recv_buffer[0]);
     } /* get crc */
 
     return RT_EOK;

@@ -51,7 +51,7 @@ void task_local_entry(void* parameter)
     bb_match_id_start();
 
     xc7027_start();
-    mini384_start();
+    // mini384_start();
 
     while (1) {
         DLOG_Process(NULL);

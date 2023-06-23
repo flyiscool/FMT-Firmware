@@ -513,7 +513,8 @@ void bsp_initialize(void)
     }
     else
     {
-        console_println("drv_ist8310_init i2c2_dev1~");
+        console_println("drv_ist8310_init i2c3_dev2~");
+		FMT_CHECK(register_sensor_mag("mag1", 1));
     }
 
     #ifdef USED_MMC5983MA

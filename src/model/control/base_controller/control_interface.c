@@ -64,7 +64,7 @@ static param_t __param_list[] = {
     PARAM_FLOAT(RATE_D_MAX, 0.1, false),
     PARAM_FLOAT(P_Q_CMD_LIM, PI / 2, false),
     PARAM_FLOAT(R_CMD_LIM, PI, false),
-    PARAM_FLOAT(HOVER_THRO, 0.5, false),
+    PARAM_FLOAT(HOVER_THRO, 0.3, false),
 };
 PARAM_GROUP_DEFINE(CONTROL, __param_list);
 

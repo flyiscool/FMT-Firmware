@@ -41,34 +41,34 @@ MCN_DEFINE(ins_output, sizeof(INS_Out_Bus));
 
 /* define parameters */
 static param_t __param_list[] = {
-    PARAM_FLOAT(GPS_HOR_Q_BIAS, 2.5),
-    PARAM_FLOAT(GPS_HOR_Q_SCALE, 0.4),
-    PARAM_FLOAT(GPS_VER_Q_BIAS, 4.5),
-    PARAM_FLOAT(GPS_VER_Q_SCALE, 0.25),
-    PARAM_FLOAT(GPS_VEL_Q_BIAS, 1),
-    PARAM_FLOAT(GPS_VEL_Q_SCALE, 1),
-    PARAM_FLOAT(ATT_GAIN, 0.2),
-    PARAM_FLOAT(HEADING_GAIN, 0.05),
-    PARAM_FLOAT(MAG_GAIN, 0.2),
-    PARAM_UINT8(MAG_AIR_EN, 0),
-    PARAM_FLOAT(BIAS_G_GAIN, 0.25),
-    PARAM_FLOAT(GPS_POS_GAIN, 0),
-    PARAM_FLOAT(GPS_ALT_GAIN, 0),
-    PARAM_FLOAT(GPS_VEL_GAIN, 2),
-    PARAM_FLOAT(GPS_BIAS_A_GAIN, 1),
-    PARAM_UINT32(GPS_POS_DELAY, 150),
-    PARAM_UINT32(GPS_VEL_DELAY, 100),
-    PARAM_FLOAT(OPF_VEL_GAIN, 2),
-    PARAM_FLOAT(OPF_BIAS_A_GAIN, 1),
-    PARAM_UINT32(OPF_VEL_DELAY, 5),
-    PARAM_FLOAT(BARO_H_GAIN, 2),
-    PARAM_FLOAT(BARO_VZ_GAIN, 1),
-    PARAM_FLOAT(BARO_BIAS_AZ_GAIN, 0.2),
-    PARAM_UINT32(BARO_H_DELAY, 10),
-    PARAM_FLOAT(RF_H_GAIN, 2),
-    PARAM_FLOAT(RF_VZ_GAIN, 1),
-    PARAM_FLOAT(RF_BIAS_AZ_GAIN, 0.2),
-    PARAM_UINT32(RF_H_DELAY, 5),
+    PARAM_FLOAT(GPS_HOR_Q_BIAS, 2.5, false),
+    PARAM_FLOAT(GPS_HOR_Q_SCALE, 0.4, false),
+    PARAM_FLOAT(GPS_VER_Q_BIAS, 4.5, false),
+    PARAM_FLOAT(GPS_VER_Q_SCALE, 0.25, false),
+    PARAM_FLOAT(GPS_VEL_Q_BIAS, 1, false),
+    PARAM_FLOAT(GPS_VEL_Q_SCALE, 1, false),
+    PARAM_FLOAT(ATT_GAIN, 0.2, false),
+    PARAM_FLOAT(HEADING_GAIN, 0.05, false),
+    PARAM_FLOAT(MAG_GAIN, 0.2, false),
+    PARAM_UINT8(MAG_AIR_EN, 0, false),
+    PARAM_FLOAT(BIAS_G_GAIN, 0.25, false),
+    PARAM_FLOAT(GPS_POS_GAIN, 0, false),
+    PARAM_FLOAT(GPS_ALT_GAIN, 0, false),
+    PARAM_FLOAT(GPS_VEL_GAIN, 2, false),
+    PARAM_FLOAT(GPS_BIAS_A_GAIN, 1, false),
+    PARAM_UINT32(GPS_POS_DELAY, 150, false),
+    PARAM_UINT32(GPS_VEL_DELAY, 100, false),
+    PARAM_FLOAT(OPF_VEL_GAIN, 2, false),
+    PARAM_FLOAT(OPF_BIAS_A_GAIN, 1, false),
+    PARAM_UINT32(OPF_VEL_DELAY, 10, false),
+    PARAM_FLOAT(BARO_H_GAIN, 2, false),
+    PARAM_FLOAT(BARO_VZ_GAIN, 1, false),
+    PARAM_FLOAT(BARO_BIAS_AZ_GAIN, 0.2, false),
+    PARAM_UINT32(BARO_H_DELAY, 10, false),
+    PARAM_FLOAT(RF_H_GAIN, 3, false),
+    PARAM_FLOAT(RF_VZ_GAIN, 5, false),
+    PARAM_FLOAT(RF_BIAS_AZ_GAIN, 0.2, false),
+    PARAM_UINT32(RF_H_DELAY, 10, false),
 };
 PARAM_GROUP_DEFINE(INS, __param_list);
 
@@ -178,6 +178,8 @@ mlog_elem_t INS_Out_Elems[] = {
     MLOG_ELEMENT(lat_0, MLOG_DOUBLE),
     MLOG_ELEMENT(lon_0, MLOG_DOUBLE),
     MLOG_ELEMENT(alt_0, MLOG_DOUBLE),
+    MLOG_ELEMENT(dx_dlat, MLOG_DOUBLE),
+    MLOG_ELEMENT(dy_dlon, MLOG_DOUBLE),
     MLOG_ELEMENT(x_R, MLOG_FLOAT),
     MLOG_ELEMENT(y_R, MLOG_FLOAT),
     MLOG_ELEMENT(h_R, MLOG_FLOAT),
@@ -236,8 +238,8 @@ static int ins_output_echo(void* param)
     printf("accel: %.2f %.2f %.2f\n", ins_out.ax, ins_out.ay, ins_out.az);
     printf("vel: %.2f %.2f %.2f airspeed:%.2f\n", ins_out.vn, ins_out.ve, ins_out.vd, ins_out.airspeed);
     printf("xyh: %.2f %.2f %.2f, h_AGL: %.2f\n", ins_out.x_R, ins_out.y_R, ins_out.h_R, ins_out.h_AGL);
-    printf("LLA: %lf %lf %f\n", ins_out.lat, ins_out.lon, ins_out.alt);
-    printf("LLA0: %lf %lf %f\n", ins_out.lat_0, ins_out.lon_0, ins_out.alt_0);
+    printf("LLA: %lf %lf %f LLA0: %lf %lf %f\n", ins_out.lat, ins_out.lon, ins_out.alt, ins_out.lat_0, ins_out.lon_0, ins_out.alt_0);
+    printf("dx/dlat: %lf dy/dlon: %lf\n", ins_out.dx_dlat, ins_out.dy_dlon);
     printf("standstill:%d att:%d heading:%d vel:%d LLA:%d xy:%d h:%d h_AGL:%d\n",
            BIT(ins_out.flag, 1) > 0,
            BIT(ins_out.flag, 2) > 0,

@@ -10,45 +10,46 @@
 #include "rt_nonfinite.h"
 #include <math.h>
 #include <string.h>
+#include "board.h"
 
 /* Function Declarations */
-static void b_sqrt(double* x);
-static void b_svd(const creal_T A[9], double U[3]);
-static void b_xaxpy(int n, const creal_T a, const creal_T x[9], int ix0, creal_T y[3], int iy0);
-static double b_xnrm2(int n, const double x[3]);
-static void b_xzlartg(const creal_T f, const creal_T g, double* cs, creal_T* sn);
-static void c_sqrt(creal_T* x);
-static void c_xaxpy(int n, const creal_T a, const creal_T x[3], int ix0, creal_T y[9], int iy0);
-static double c_xnrm2(int n, const creal_T x[9], int ix0);
-static double d_xnrm2(int n, const creal_T x[3], int ix0);
-static void mldivide(const double A[9], const double B[3], double Y[3]);
-static double rt_hypotd_snf(double u0, double u1);
-static void schur(const double A[9], creal_T V[9], creal_T T[9]);
-static void svd(const creal_T A[9], creal_T U[9], double s[3], creal_T V[9]);
-static void xaxpy(int n, const creal_T a, int ix0, creal_T y[9], int iy0);
-static void xdlanv2(double* a, double* b, double* c, double* d, double* rt1r,
+_EXT_DTCM1 static void b_sqrt(double* x);
+_EXT_DTCM1 static void b_svd(const creal_T A[9], double U[3]);
+_EXT_DTCM1 static void b_xaxpy(int n, const creal_T a, const creal_T x[9], int ix0, creal_T y[3], int iy0);
+_EXT_DTCM1 static double b_xnrm2(int n, const double x[3]);
+_EXT_DTCM1 static void b_xzlartg(const creal_T f, const creal_T g, double* cs, creal_T* sn);
+_EXT_DTCM1 static void c_sqrt(creal_T* x);
+_EXT_DTCM1 static void c_xaxpy(int n, const creal_T a, const creal_T x[3], int ix0, creal_T y[9], int iy0);
+_EXT_DTCM1 static double c_xnrm2(int n, const creal_T x[9], int ix0);
+_EXT_DTCM1 static double d_xnrm2(int n, const creal_T x[3], int ix0);
+_EXT_DTCM1 static void mldivide(const double A[9], const double B[3], double Y[3]);
+_EXT_DTCM1 static double rt_hypotd_snf(double u0, double u1);
+_EXT_DTCM1 static void schur(const double A[9], creal_T V[9], creal_T T[9]);
+_EXT_DTCM1 static void svd(const creal_T A[9], creal_T U[9], double s[3], creal_T V[9]);
+_EXT_DTCM1 static void xaxpy(int n, const creal_T a, int ix0, creal_T y[9], int iy0);
+_EXT_DTCM1 static void xdlanv2(double* a, double* b, double* c, double* d, double* rt1r,
                     double* rt1i, double* rt2r, double* rt2i, double* cs, double* sn);
-static creal_T xdotc(int n, const creal_T x[9], int ix0, const creal_T y[9], int iy0);
-static void xgemv(int m, int n, const double A[9], int ia0, const double x[9],
+_EXT_DTCM1 static creal_T xdotc(int n, const creal_T x[9], int ix0, const creal_T y[9], int iy0);
+_EXT_DTCM1 static void xgemv(int m, int n, const double A[9], int ia0, const double x[9],
                   int ix0, double y[3]);
-static void xgerc(int m, int n, double alpha1, int ix0, const double y[3],
+_EXT_DTCM1 static void xgerc(int m, int n, double alpha1, int ix0, const double y[3],
                   double A[9], int ia0);
-static int xhseqr(double h[9], double z[9]);
-static double xnrm2(int n, const double x[9], int ix0);
-static void xrot(creal_T x[9], int ix0, int iy0, double c, double s);
-static void xrotg(double* a, double* b, double* c, double* s);
-static void xswap(creal_T x[9], int ix0, int iy0);
-static void xzggev(creal_T A[9], int* info, creal_T alpha1[3], creal_T beta1[3],
+_EXT_DTCM1 static int xhseqr(double h[9], double z[9]);
+_EXT_DTCM1 static double xnrm2(int n, const double x[9], int ix0);
+_EXT_DTCM1 static void xrot(creal_T x[9], int ix0, int iy0, double c, double s);
+_EXT_DTCM1 static void xrotg(double* a, double* b, double* c, double* s);
+_EXT_DTCM1 static void xswap(creal_T x[9], int ix0, int iy0);
+_EXT_DTCM1 static void xzggev(creal_T A[9], int* info, creal_T alpha1[3], creal_T beta1[3],
                    creal_T V[9]);
-static void xzhgeqz(creal_T A[9], int ilo, int ihi, creal_T Z[9], int* info,
+_EXT_DTCM1 static void xzhgeqz(creal_T A[9], int ilo, int ihi, creal_T Z[9], int* info,
                     creal_T alpha1[3], creal_T beta1[3]);
-static double xzlanhs(const creal_T A[9], int ilo, int ihi);
-static void xzlarf(int m, int n, int iv0, double tau, double C[9], int ic0,
+_EXT_DTCM1 static double xzlanhs(const creal_T A[9], int ilo, int ihi);
+_EXT_DTCM1 static void xzlarf(int m, int n, int iv0, double tau, double C[9], int ic0,
                    double work[3]);
-static double xzlarfg(int n, double* alpha1, double x[3]);
-static void xzlartg(const creal_T f, const creal_T g, double* cs, creal_T* sn,
+_EXT_DTCM1 static double xzlarfg(int n, double* alpha1, double x[3]);
+_EXT_DTCM1 static void xzlartg(const creal_T f, const creal_T g, double* cs, creal_T* sn,
                     creal_T* r);
-static void xztgevc(const creal_T A[9], creal_T V[9]);
+_EXT_DTCM1 static void xztgevc(const creal_T A[9], creal_T V[9]);
 
 /* Function Definitions */
 

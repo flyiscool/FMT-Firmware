@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'FMS'.
  *
- * Model version                  : 1.1881
+ * Model version                  : 1.1965
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Mar 15 17:59:28 2023
+ * C/C++ source code generated on : Sat May 20 09:23:14 2023
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -56,6 +56,7 @@ typedef struct {
 
   /* Operation channel 2 */
   uint32_T cmd_2;
+  real32_T param[7];
 } GCS_Cmd_Bus;
 
 #endif
@@ -190,6 +191,8 @@ typedef struct {
   real_T lat_0;
   real_T lon_0;
   real_T alt_0;
+  real_T dx_dlat;
+  real_T dy_dlon;
   real32_T x_R;
   real32_T y_R;
   real32_T h_R;
@@ -223,7 +226,8 @@ typedef enum {
   FMS_Cmd_Land,
   FMS_Cmd_Return,
   FMS_Cmd_Pause,
-  FMS_Cmd_Continue
+  FMS_Cmd_Continue,
+  FMS_Cmd_SetHome = 2000
 } FMS_Cmd;
 
 #endif
@@ -377,6 +381,9 @@ typedef struct {
 
   /* enum of PilotMode */
   uint8_T reserved;
+
+  /* home position [x y h yaw], unit [m m m rad] */
+  real32_T home[4];
 } FMS_Out_Bus;
 
 #endif
@@ -477,8 +484,8 @@ typedef enum {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_z8TbXuqo9JNiexfZo6b1iC_
-#define DEFINED_TYPEDEF_FOR_struct_z8TbXuqo9JNiexfZo6b1iC_
+#ifndef DEFINED_TYPEDEF_FOR_struct_YO5IBtWYxHURAIWIvUaGHE_
+#define DEFINED_TYPEDEF_FOR_struct_YO5IBtWYxHURAIWIvUaGHE_
 
 typedef struct {
   real32_T THROTTLE_DZ;
@@ -496,7 +503,10 @@ typedef struct {
   real32_T CRUISE_SPEED;
   real32_T TAKEOFF_H;
   real32_T ACCEPT_R;
-} struct_z8TbXuqo9JNiexfZo6b1iC;
+  real32_T ASSIST_LAND_H;
+  uint16_T LOST_RETURN_TIME;
+  uint8_T LOST_RETURN_EN;
+} struct_YO5IBtWYxHURAIWIvUaGHE;
 
 #endif
 

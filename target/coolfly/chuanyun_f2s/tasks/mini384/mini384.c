@@ -11,13 +11,13 @@
 
 
 
-// #define MINI384_DVP_CHANNEL 1
-// #define MINI384_RST         HAL_GPIO_NUM103
-// #define MINI384_I2C         HAL_I2C_COMPONENT_0
+#define MINI384_DVP_CHANNEL 1
+#define MINI384_RST         HAL_GPIO_NUM103
+#define MINI384_I2C         HAL_I2C_COMPONENT_0 
 
-#define MINI384_DVP_CHANNEL 0
-#define MINI384_RST         HAL_GPIO_NUM99
-#define MINI384_I2C         HAL_I2C_COMPONENT_1
+// #define MINI384_DVP_CHANNEL 0
+// #define MINI384_RST         HAL_GPIO_NUM99
+// #define MINI384_I2C         HAL_I2C_COMPONENT_1
 
 
 
@@ -296,7 +296,7 @@ void mini384_reset(void)
     HAL_GPIO_SetPin(MINI384_RST, HAL_GPIO_PIN_RESET);
     HAL_Delay(10);
     HAL_GPIO_SetPin(MINI384_RST, HAL_GPIO_PIN_SET);
-    HAL_Delay(3000);
+    HAL_Delay(10000);
 }
 
 /////////////////////////////////////////////////////
@@ -318,7 +318,7 @@ _EXT_DTCM1_BSS
 static struct WorkItem mini384_item = {
     .name = "mini384",
     .period = 300,
-    .schedule_time = 2000,
+    .schedule_time = 5000,
     .run = run_mini384
 };
 

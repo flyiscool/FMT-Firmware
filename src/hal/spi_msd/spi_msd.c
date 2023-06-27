@@ -16,7 +16,7 @@
 #include "spi_msd.h"
 #include <string.h>
 
-#define MSD_TRACE  1
+// #define MSD_TRACE 1
 
 #if MSD_TRACE
     #define MSD_DEBUG(...)                      \
@@ -176,10 +176,10 @@ static rt_err_t _send_cmd(
     } /* wait response */
 
     if ((CARD_NCR_MAX + 1) == i) {
-        return RT_ERROR; //fail
+        return RT_ERROR; // fail
     }
 
-    //recieve other byte
+    // recieve other byte
     if (type == response_r1) {
         return RT_EOK;
     } else if (type == response_r1b) {
@@ -333,18 +333,8 @@ static rt_err_t _read_block(struct rt_spi_device* device, void* buffer, uint32_t
 
         /* transfer message */
         device->bus->ops->xfer(device, &message);
-#if 0
-        for(uint32_t tt = 0; tt<512; tt++)
-        {
-            rt_kprintf("%d %c \r\n",tt, *((char *)buffer+tt));
-        }
 
-        MSD_DEBUG("block_size = %d  recv_buffer = %2x %2x \r\n", block_size, recv_buffer[1], recv_buffer[0]);
- #endif
     } /* get crc */
-
-   
-
 
     return RT_EOK;
 }
@@ -946,11 +936,11 @@ static rt_err_t rt_msd_init(rt_device_t dev)
                 tmp8 = CSD_buffer[8] & 0xC0; /* get [63:62] 0b11000000 */
                 tmp8 = tmp8 >> 6;
                 tmp16 = tmp16 + tmp8;
-                C_SIZE = tmp16; //12 bit
+                C_SIZE = tmp16; // 12 bit
                 MSD_DEBUG("[info] CSD : C_SIZE : %d\r\n", C_SIZE);
 
                 /* get C_SIZE_MULT 3bit [49:47] */
-                tmp8 = CSD_buffer[9] & 0x03; //0b00000011;
+                tmp8 = CSD_buffer[9] & 0x03; // 0b00000011;
                 tmp8 = tmp8 << 1;
                 tmp8 = tmp8 + ((CSD_buffer[10] & 0x80 /*0b10000000*/) >> 7);
                 C_SIZE_MULT = tmp8; // 3 bit
@@ -995,11 +985,11 @@ static rt_err_t rt_msd_init(rt_device_t dev)
                     tmp8 = CSD_buffer[8] & 0xC0; /* get [63:62] 0b11000000 */
                     tmp8 = tmp8 >> 6;
                     tmp16 = tmp16 + tmp8;
-                    C_SIZE = tmp16; //12 bit
+                    C_SIZE = tmp16; // 12 bit
                     MSD_DEBUG("[info] CSD : C_SIZE : %d\r\n", C_SIZE);
 
                     /* get C_SIZE_MULT 3bit [49:47] */
-                    tmp8 = CSD_buffer[9] & 0x03; //0b00000011;
+                    tmp8 = CSD_buffer[9] & 0x03; // 0b00000011;
                     tmp8 = tmp8 << 1;
                     tmp8 = tmp8 + ((CSD_buffer[10] & 0x80 /*0b10000000*/) >> 7);
                     C_SIZE_MULT = tmp8; // 3 bit
@@ -1062,8 +1052,8 @@ static rt_err_t rt_msd_init(rt_device_t dev)
         struct rt_spi_configuration cfg;
         cfg.data_width = 8;
         cfg.mode = RT_SPI_MODE_0 | RT_SPI_MSB; /* SPI Compatible Modes 0 */
-        cfg.max_hz = msd->max_clock;
-        //cfg.max_hz = 5000*1000; // chenbang, to fix "badfile", it would encounter fail if clk >= 8MHz in Coolfly EVB
+        // cfg.max_hz = msd->max_clock;
+        cfg.max_hz = 5 * 1000 * 1000; // fix bug: bad file
         rt_spi_configure(msd->spi_device, &cfg);
     } /* config spi */
 
@@ -1154,6 +1144,7 @@ _exit:
 
 static rt_size_t rt_msd_sdhc_read(rt_device_t dev, rt_off_t pos, void* buffer, rt_size_t size)
 {
+
     //MSD_DEBUG("rt_msd_sdhc_read   size = %d \r\n",size);
     struct msd_device* msd = (struct msd_device*)dev;
     uint8_t response[MSD_RESPONSE_MAX_LEN];

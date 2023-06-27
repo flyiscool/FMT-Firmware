@@ -18,8 +18,8 @@
 #define BOARD_DEVICE_H__
 
 // #define BOARD_JM_250
-#define BOARD_F2S 1
-// #define BOARD_LT_V1     1
+// #define BOARD_F2S 1
+#define BOARD_LT_V1     1
 // #define BOARD_HK_HELI     1
 
 #ifdef BOARD_JM_250
@@ -84,9 +84,13 @@
 
     #define USED_MMC5983MA 1
 
+    // #define USED_IST8310 1
+
     #define WD_DONE_GPIO   HAL_GPIO_NUM74
     #define VIDEO_LED_GPIO HAL_GPIO_NUM55
     #define LINK_LED_GPIO  HAL_GPIO_NUM54
+
+    #define FUM_CTRL_GPIO  HAL_GPIO_NUM88
 
     // #define RGB_R_GPIO HAL_GPIO_NUM66
     // #define RGB_G_GPIO HAL_GPIO_NUM62

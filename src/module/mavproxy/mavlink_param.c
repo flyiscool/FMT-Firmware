@@ -331,7 +331,7 @@ fmt_err_t send_mavparam_by_name(char* name)
 
         if (strcmp(mav_param->name, name) == 0) {
             make_mavparam_msg(&msg, mav_param);
-            mavproxy_send_immediate_msg(&msg, true);
+            mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
             return FMT_EOK;
         }
     }
@@ -349,7 +349,7 @@ fmt_err_t send_mavparam_by_index(int16_t index)
     }
 
     make_mavparam_msg(&msg, mav_param);
-    mavproxy_send_immediate_msg(&msg, true);
+    mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
 
     return FMT_EOK;
 }
@@ -420,7 +420,7 @@ static void make_mavlink_param_msg(mavlink_message_t* msg_t, const param_t* para
     mavlink_msg_param_value_encode(mavlink_system.sysid, mavlink_system.compid, msg_t, &mav_param_value);
 }
 
-fmt_err_t mavlink_param_set(const char* name, float val)
+fmt_err_t mavlink_param_set(const char* name, float val, uint8_t mav_param_type)
 {
     fmt_err_t err;
     param_t* param;
@@ -441,27 +441,51 @@ fmt_err_t mavlink_param_set(const char* name, float val)
 
     switch (param->type) {
     case PARAM_TYPE_INT8:
-        i8val = (int8_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            i8val = (int8_t)val;
+        } else {
+            memcpy(&i8val, &val, sizeof(i8val));
+        }
         err = param_set_val(param, &i8val);
         break;
     case PARAM_TYPE_UINT8:
-        u8val = (uint8_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            u8val = (uint8_t)val;
+        } else {
+            memcpy(&u8val, &val, sizeof(u8val));
+        }
         err = param_set_val(param, &u8val);
         break;
     case PARAM_TYPE_INT16:
-        i16val = (int16_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            i16val = (int16_t)val;
+        } else {
+            memcpy(&i16val, &val, sizeof(i16val));
+        }
         err = param_set_val(param, &i16val);
         break;
     case PARAM_TYPE_UINT16:
-        u16val = (uint16_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            u16val = (uint16_t)val;
+        } else {
+            memcpy(&u16val, &val, sizeof(u16val));
+        }
         err = param_set_val(param, &u16val);
         break;
     case PARAM_TYPE_INT32:
-        i32val = (int32_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            i32val = (int32_t)val;
+        } else {
+            memcpy(&i32val, &val, sizeof(i32val));
+        }
         err = param_set_val(param, &i32val);
         break;
     case PARAM_TYPE_UINT32:
-        u32val = (uint32_t)val;
+        if (mav_param_type == MAV_PARAM_TYPE_REAL32 || mav_param_type == MAV_PARAM_TYPE_REAL64) {
+            u32val = (uint32_t)val;
+        } else {
+            memcpy(&u32val, &val, sizeof(u32val));
+        }
         err = param_set_val(param, &u32val);
         break;
     case PARAM_TYPE_FLOAT:
@@ -488,7 +512,7 @@ fmt_err_t mavlink_param_send(const param_t* param)
     }
 
     make_mavlink_param_msg(&msg, param);
-    mavproxy_send_immediate_msg(&msg, true);
+    mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, false);
 
     return FMT_EOK;
 }
@@ -508,7 +532,7 @@ void mavlink_param_sendall(void)
         }
 
         make_mavparam_msg(&msg, mav_param);
-        mavproxy_send_immediate_msg(&msg, true);
+        mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
     }
 
     for (uint32_t i = 0; i < param_get_group_count(); i++) {
@@ -516,7 +540,7 @@ void mavlink_param_sendall(void)
 
         for (uint32_t j = 0; j < gp->param_num; j++) {
             make_mavlink_param_msg(&msg, param);
-            mavproxy_send_immediate_msg(&msg, true);
+            mavproxy_send_immediate_msg(MAVPROXY_GCS_CHAN, &msg, true);
             param++;
         }
 

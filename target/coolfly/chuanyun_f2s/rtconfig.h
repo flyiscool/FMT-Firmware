@@ -106,7 +106,7 @@
 #define RT_DFS_ELM_MAX_SECTOR_SIZE  4096
 
 /* Using ROM file system */
-// #define RT_USING_DFS_ROMFS
+#define RT_USING_DFS_ROMFS
 
 /* C standard library */
 #define RT_USING_LIBC

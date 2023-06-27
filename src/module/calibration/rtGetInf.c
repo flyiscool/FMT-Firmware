@@ -10,11 +10,13 @@
  *       MATLAB for code generation function to initialize non-finite, Inf and MinusInf
  */
 #include "rtGetInf.h"
+#include "board.h"
 
 /* Function: rtGetInf ==================================================
  * Abstract:
  * Initialize rtInf needed by the generated code.
  */
+_EXT_DTCM1
 real_T rtGetInf_(void)
 {
     real_T inf = 0.0;
@@ -58,6 +60,7 @@ real_T rtGetInf_(void)
  * Abstract:
  * Initialize rtInfF needed by the generated code.
  */
+_EXT_DTCM1
 real32_T rtGetInfF_(void)
 {
     IEEESingle infF;
@@ -69,6 +72,7 @@ real32_T rtGetInfF_(void)
  * Abstract:
  * Initialize rtMinusInf needed by the generated code.
  */
+_EXT_DTCM1
 real_T rtGetMinusInf_(void)
 {
     real_T minf = 0.0;
@@ -112,6 +116,7 @@ real_T rtGetMinusInf_(void)
  * Abstract:
  * Initialize rtMinusInfF needed by the generated code.
  */
+_EXT_DTCM1
 real32_T rtGetMinusInfF_(void)
 {
     IEEESingle minfF;

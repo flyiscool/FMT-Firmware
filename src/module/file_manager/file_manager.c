@@ -18,9 +18,10 @@
 
 #include "dfs_elm.h"
 #include "dfs_fs.h"
+#include "dfs_romfs.h"
 #include "module/file_manager/file_manager.h"
 
-#define MAX_LOG_SESSION_NUM 10
+#define MAX_LOG_SESSION_NUM 20
 #define LOG_SESSION_FILE    "/log/session_id"
 
 static int cws_id; /* current work session id */
@@ -205,6 +206,14 @@ fmt_err_t file_manager_init(const struct dfs_mount_tbl* mnt_table)
         return FMT_ERROR;
     }
 
+#ifdef RT_USING_DFS_ROMFS
+    /* init romfs */
+    if (dfs_romfs_init() != 0) {
+        printf("romfs init fail!\n");
+        return FMT_ERROR;
+    }
+#endif
+
     if (mnt_table[0].device_name == NULL) {
         /* empty mount table, just return */
         return FMT_EOK;
@@ -232,7 +241,7 @@ fmt_err_t file_manager_init(const struct dfs_mount_tbl* mnt_table)
 
     /* mount other devices */
     for (int i = 1;; i++) {
-        if (mnt_table[i].device_name == NULL) {
+        if (mnt_table[i].path == NULL) {
             break;
         }
         /* if path doesn't exit, create it */

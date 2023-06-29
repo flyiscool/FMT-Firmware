@@ -18,8 +18,8 @@
 #define BOARD_DEVICE_H__
 
 // #define BOARD_JM_250
-// #define BOARD_F2S 1
-#define BOARD_LT_V1     1
+#define BOARD_F2S 1
+// #define BOARD_LT_V1     1
 // #define BOARD_HK_HELI     1
 
 #ifdef BOARD_JM_250
@@ -48,7 +48,7 @@
 #endif
 
 #ifdef BOARD_F2S
-    // #define USED_RAMTRON   1
+    #define USED_RAMTRON   1
 
     // #define USED_BMI055   1
     #define USED_BMI088 1

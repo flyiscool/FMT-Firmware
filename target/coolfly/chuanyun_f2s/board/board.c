@@ -508,7 +508,7 @@ void bsp_initialize(void)
     #endif
 
     /* if no gps mag then use onboard mag */
-
+    #ifdef USED_IST8310
     if (drv_ist8310_init("i2c3_dev2", "mag1") != FMT_EOK) {
          console_println("!!!!!!drv_ist8310_init i2c3_dev2 faild~!!!!");
     }
@@ -517,6 +517,7 @@ void bsp_initialize(void)
         console_println("drv_ist8310_init i2c3_dev2~");
 		FMT_CHECK(register_sensor_mag("mag1", 1));
     }
+    #endif
 
     #ifdef USED_MMC5983MA
     if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {

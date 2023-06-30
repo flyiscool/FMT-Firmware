@@ -50,7 +50,6 @@ MCN_DECLARE(rc_channels);
 MCN_DECLARE(bat_status);
 MCN_DECLARE(fms_output);
 MCN_DECLARE(auto_cmd);
-MCN_DECLARE(bat_status);
 #ifdef FMT_USING_SIH
 MCN_DECLARE(plant_states);
 #endif
@@ -420,6 +419,9 @@ bool mavlink_msg_gps_raw_int_pack_func(mavlink_message_t* msg_t)
     return true;
 }
 
+extern double g_snr_sky;
+extern int g_rssi[4];
+
 bool mavlink_msg_rc_channels_pack_func(mavlink_message_t* msg_t)
 {
     mavlink_rc_channels_t mavlink_rc_channels = { 0 };
@@ -443,6 +445,64 @@ bool mavlink_msg_rc_channels_pack_func(mavlink_message_t* msg_t)
 
     return true;
 }
+
+bool mavlink_msg_battery_status_pack_func(mavlink_message_t* msg_t)
+{
+    mavlink_battery_status_t mavlink_battery_status = { 0 };
+
+    struct battery_status bat_status;
+    if (mcn_copy_from_hub(MCN_HUB(bat_status), &bat_status) != FMT_EOK) {
+        return false;
+    }
+
+    mavlink_battery_status.current_consumed = -1;
+    mavlink_battery_status.energy_consumed = -1;
+    mavlink_battery_status.temperature = -1;
+
+    uint8_t bat_n_cells =PARAM_GET_UINT8(CALIB, BAT_N_CELLS);
+
+    if (bat_n_cells > 10) {
+        printf("bat_n_cells = %d \r\n", bat_n_cells);
+        return false;
+    }
+
+    for (uint8_t i = 0; i < bat_n_cells; i++) {
+        mavlink_battery_status.voltages[i] = bat_status.battery_voltage / bat_n_cells;
+    }
+
+    mavlink_battery_status.current_battery = bat_status.battery_current;
+    mavlink_battery_status.id = 1;
+    mavlink_battery_status.battery_function = MAV_BATTERY_FUNCTION_ALL;
+    mavlink_battery_status.type = MAV_BATTERY_TYPE_LIPO;
+    mavlink_battery_status.battery_remaining = bat_status.battery_remaining;
+    mavlink_battery_status.time_remaining = 0;
+    mavlink_battery_status.charge_state = MAV_BATTERY_CHARGE_STATE_UNDEFINED;
+
+    mavlink_msg_battery_status_encode(mavlink_system.sysid, mavlink_system.compid, msg_t, &mavlink_battery_status);
+
+    return true;
+}
+
+
+
+bool mavlink_msg_radio_status_pack_func(mavlink_message_t* msg_t)
+{
+    mavlink_radio_status_t mavlink_radio_status = { 0 };
+
+    mavlink_radio_status.rxerrors = 0;
+    mavlink_radio_status.fixed = 0;
+    mavlink_radio_status.rssi = -1 * (g_rssi[0]+g_rssi[1]) / 2;
+    mavlink_radio_status.remrssi = 0;
+    mavlink_radio_status.txbuf = 0;
+    mavlink_radio_status.noise = g_snr_sky;
+    mavlink_radio_status.remnoise = 0;
+
+
+    mavlink_msg_radio_status_encode(mavlink_system.sysid, mavlink_system.compid, msg_t, &mavlink_radio_status);
+
+    return true;
+}
+
 
 bool mavlink_msg_highres_imu_pack_func(mavlink_message_t* msg_t)
 {

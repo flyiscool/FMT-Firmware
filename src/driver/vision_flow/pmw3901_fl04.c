@@ -207,7 +207,7 @@ rt_err_t pmw3901_fl04_drv_init(const char* uart_dev_name)
 
     RT_ASSERT(dev != NULL);
 
-    thread = rt_thread_create("fl04", thread_entry, RT_NULL, 8 * 1024, 7, 1);
+    thread = rt_thread_create("fl04", thread_entry, RT_NULL, 8 * 1024, 30, 1);
 
     RT_ASSERT(thread != NULL);
 

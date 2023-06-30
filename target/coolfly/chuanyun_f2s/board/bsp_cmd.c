@@ -55,7 +55,7 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_reboot, __cmd_reboot, reboot the system);
 static int handle_reset_fct(int argc, char** argv, int optc, optv_t* optv)
 {
     FCT_Reset();
-    FCT_SaveToFlashTest();
+    // FCT_SaveToFlashTest();
 
     printf("fct reset finish~ \r\n");
     return 0;

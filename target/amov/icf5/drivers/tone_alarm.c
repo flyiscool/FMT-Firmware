@@ -545,7 +545,7 @@ void tone_alarm_entry(void* parameter)
 
 int tone_alarm_init(const char* dev_name)
 {
-    uint16_t len;
+    // uint16_t len;
     static rt_uint8_t inited = 0;
 
     /* 检测播放器是否已经在运行 */

@@ -48,7 +48,7 @@
 
 #define BUZZER_PWM_CHAN_NUM HAL_PWM_NUM9
 
-static uint32_t g_pwm_high_level;  // high level of the pwm wave
+// static uint32_t g_pwm_high_level;  // high level of the pwm wave
 static uint32_t g_buzzer_pwm_freq; // high level of the pwm wave
 
 void buzzer_pwm_gpio_init(void)

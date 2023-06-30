@@ -319,7 +319,7 @@ void SPI_IntrSrvc_dbg(uint32_t u32_vectorNum)
     uint8_t u8_spiCh;
     uint8_t u8_spiIsr;
     uint8_t u8_cnt = 0;
-    uint16_t u16_data;
+    // uint16_t u16_data;
     uint8_t tmpLen;
 
     if (VIDEO_SPI_INTR_BB_VECTOR_NUM == u32_vectorNum) {

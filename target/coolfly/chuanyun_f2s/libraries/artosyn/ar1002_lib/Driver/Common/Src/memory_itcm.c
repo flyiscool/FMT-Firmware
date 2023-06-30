@@ -61,11 +61,11 @@ static void *sbrk_itcm(ptrdiff_t increment)
 #define MALLOC_LOCK       do { s_ul_primask = rt_hw_interrupt_disable(); } while(0);
 #endif
 #define MALLOC_UNLOCK     do { rt_hw_interrupt_enable(s_ul_primask); } while(0);
-#define RERRNO errno
+#define RERRNO errno2
 
 static lock_type s_heap_lock = UNLOCK_STATE;
 static long s_ul_primask  = 0;
-static unsigned int errno = 0 ;
+static unsigned int errno2 = 0 ;
 
 #define ALIGN_TO(size, align) \
     (((size) + (align) -1L) & ~((align) -1L))

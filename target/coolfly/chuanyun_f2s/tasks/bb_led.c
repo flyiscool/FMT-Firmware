@@ -126,6 +126,110 @@ void bb_led_status_EventHandler(void* p)
 /////////////////////////////////////////////////////
 
 _EXT_DTCM1
+float GndSnr2Score(float snr)
+{
+    return (3.52 * snr + 19.057);
+}
+
+_EXT_DTCM1
+float SkySnr2Score(float snr)
+{
+    return (7.7 * snr + 27);
+}
+
+
+_EXT_DTCM1
+int GndErrCnt2Score(int errCnt)
+{
+    if(errCnt < 5)
+    {
+        return 2;
+    }
+    else if(errCnt < 10)
+    {
+        return 5;
+    }
+    else if(errCnt < 20)
+    {
+        return 10;
+    }
+    else if(errCnt < 30)
+    {
+        return 20;
+    }
+    else if(errCnt < 40)
+    {
+        return 30;
+    }
+    else if(errCnt < 50)
+    {
+        return 40;
+    }
+    else if(errCnt < 55)
+    {
+        return 50;
+    }
+    else
+    {
+        return 55;
+    }
+
+
+}
+
+_EXT_DTCM1
+uint8_t GndSigQuality(int errCnt, float snr)
+{
+    float score,snr_db;
+		
+    snr_db  = log10(snr/64)*10;
+    
+    score = GndSnr2Score(snr_db) - GndErrCnt2Score(errCnt);
+    if(score <= 0)
+    {
+        return 0;
+    }
+    else if(score >= 100)
+    {
+        return 100;
+    }
+    else
+    {
+        return (uint8_t)score;
+    }
+}
+
+
+_EXT_DTCM1
+uint8_t SkySigQuality(int lockCnt, float snr)
+{
+    float score,snr_db;
+
+    snr_db  = log10(snr/64)*10;
+    score = SkySnr2Score(snr_db)*lockCnt/100;
+    if(score <= 0)
+    {
+        return 0;
+    }
+    else if(score >= 100)
+    {
+        return 100;
+    }
+    else
+    {
+        return (uint8_t)score;
+    }
+
+}
+
+
+int g_rssi[2];
+
+double g_snr_sky;
+int g_connect_status[4] = {0, 0, 0, 0};
+double g_ldpc_error;
+
+_EXT_DTCM1
 static void run_bb_led(void* parameter)
 {
     // ////////////////////////////////
@@ -156,7 +260,47 @@ static void run_bb_led(void* parameter)
         link_led_slowtoggle();
     }
 
-    // DLOG_Critical("_link_led_status = %d ",_link_led_status);
+ if (LINK_LOCK == _link_led_status) {
+		g_connect_status[0] = 1;
+
+	} else {
+		g_connect_status[0] = 0;
+	}
+
+    ////////////////////////////////////////////////////
+	uint8_t *p;
+	HAL_RET_T ret;
+	STRU_WIRELESS_INFO_DISPLAY *pst_bbInfoAddr = (STRU_WIRELESS_INFO_DISPLAY *)&p;;
+	uint8_t sky_sig;
+	ret = HAL_BB_GetInfo(&pst_bbInfoAddr);
+
+	if ((pst_bbInfoAddr == NULL)) {
+		printf("failed %lx", ret);
+	}
+
+	sky_sig = GndSigQuality(pst_bbInfoAddr->errcnt1, pst_bbInfoAddr->snr_vlaue[1]);
+
+	g_snr_sky = sky_sig * 1.0f ;
+
+
+	g_rssi[0] = pst_bbInfoAddr->agc_value[0];//rssia
+	g_rssi[1] = pst_bbInfoAddr->agc_value[1];//rssib
+
+	// printf("gnd_sig = %d SNR= %d sky_sig = %d SNR= %d\r\n", gnd_sig, pst_bbInfoAddr->snr_vlaue[1], sky_sig,
+	// 	      pst_bbInfoAddr->sky_snr);
+
+	// printf("g_snr_sky = %f \r\n", (float)g_snr_sky);
+
+	g_ldpc_error = pst_bbInfoAddr->ldpc_error * 1.0f;
+
+	if (g_connect_status[0] == 0) {
+		g_snr_sky = 0;
+
+		g_rssi[0] = 0;
+		g_rssi[1] = 0;
+
+		g_ldpc_error = 0;
+	}
 }
 
 _EXT_DTCM1_BSS

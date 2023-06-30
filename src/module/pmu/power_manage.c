@@ -40,26 +40,31 @@ fmt_err_t pmu_poll_battery_status(void)
 {
     struct battery_status bat_status;
     uint32_t value;
-    
 
     if (adc_dev == NULL) {
         return FMT_EEMPTY;
     }
 
-
     if (rt_device_read(adc_dev, 0, &value, sizeof(value)) != sizeof(value)) {
         return FMT_ERROR;
     }
-
-
 
     bat_status.battery_voltage = value * PARAM_GET_FLOAT(CALIB, BAT_V_DIV) + 600; /* millivolt */
 
     if (rt_device_read(adc_dev, 1, &value, sizeof(value)) != sizeof(value)) {
         return FMT_ERROR;
     }
+
     bat_status.battery_current = value; /* millicurrent */
-    bat_status.battery_remaining = 0;
+    int32_t bat_remaining = (bat_status.battery_voltage - 3500 * PARAM_GET_UINT8(CALIB, BAT_N_CELLS))*100 / ((4200 - 3500) * PARAM_GET_UINT8(CALIB, BAT_N_CELLS));
+
+    if (bat_remaining < 0) {
+        bat_remaining = 0;
+    } else if (bat_remaining > 100) {
+        bat_remaining = 100;
+    }
+
+    bat_status.battery_remaining = bat_remaining;
 
     /* publish battery 0 status */
     if (mcn_publish(MCN_HUB(bat_status), &bat_status) != FMT_EOK) {

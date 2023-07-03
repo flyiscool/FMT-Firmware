@@ -20,14 +20,14 @@ History:
 #include "debuglog.h"
 #include "hal.h"
 #include "cpu_info.h"
-// #include "cmsis_os.h"
-#include "task.h"
+// // #include "cmsis_os.h"
+// #include "task.h"
 // #include "cmsis_os.h"
 
 extern uint8_t g_u8CurrentHost;
 extern USB_ROLE_TypeDef g_usb_role;
 
-static osSemaphoreId Mutex_id = NULL;
+// static osSemaphoreId Mutex_id = NULL;
 #define TO4TIMES(value) ((((value) + 3) / 4)*4)
 
 
@@ -181,15 +181,15 @@ HAL_RET_T HAL_USB_DeviceSendCtrl(uint8_t *buff, uint32_t u32_len, uint8_t u8_por
         return HAL_USB_ERR_DEVICE_NOT_CONGIURED;
     }
 
-    if(Mutex_id == NULL){
-    	osSemaphoreDef(Mutex);
-    	Mutex_id = osSemaphoreCreate(osSemaphore(Mutex),1);
-    }
-    osSemaphoreWait(Mutex_id, portMAX_DELAY);
+    // if(Mutex_id == NULL){
+    	// osSemaphoreDef(Mutex);
+    	// Mutex_id = osSemaphoreCreate(osSemaphore(Mutex),1);
+    // }
+    // osSemaphoreWait(Mutex_id, portMAX_DELAY);
 
     if (hhid->state[4] != HID_IDLE)
     {
-        osSemaphoreRelease(Mutex_id);
+        // osSemaphoreRelease(Mutex_id);
         return HAL_USB_ERR_DEVICE_BUSY;
     }
 
@@ -203,7 +203,7 @@ HAL_RET_T HAL_USB_DeviceSendCtrl(uint8_t *buff, uint32_t u32_len, uint8_t u8_por
     
     ret = USBD_HID_SendReport(&USBD_Device[u8_portId], (uint8_t *)g_usbUserBuffer[0], factual_len, HID_EPIN_CTRL_ADDR);
     
-    osSemaphoreRelease(Mutex_id);
+    // osSemaphoreRelease(Mutex_id);
     if (ret != USBD_OK)
     {
         if (USBD_BUSY == ret)

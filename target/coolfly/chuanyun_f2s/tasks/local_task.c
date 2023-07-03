@@ -123,15 +123,3 @@ static void sys_event_start(void)
     FMT_CHECK(workqueue_schedule_work(sysevent_wq, &sys_event_item));
 }
 
-
-
-
-
-void get_rf_msg_to_show(void)
-{
-
-
-	
-
-}
-

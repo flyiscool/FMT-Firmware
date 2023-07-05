@@ -89,7 +89,7 @@
 /* Using Device file system */
 #define RT_USING_DFS
 /* the max number of mounted filesystem */
-#define DFS_FILESYSTEMS_MAX			2
+#define DFS_FILESYSTEMS_MAX			4
 /* the max number of opened files 		*/
 #define DFS_FD_MAX					20
 

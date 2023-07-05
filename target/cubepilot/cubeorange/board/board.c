@@ -26,13 +26,14 @@
 
 #include "default_config.h"
 #include "driver/barometer/ms5611.h"
+#include "driver/gps/gps_dronecan.h"
 #include "driver/gps/gps_m8n.h"
 #include "driver/imu/bmi055.h"
 #include "driver/imu/icm20689.h"
 #include "driver/imu/icm20948.h"
 #include "driver/mag/ist8310.h"
 #include "driver/mtd/ramtron.h"
-#include "driver/rgb_led/ncp5623c.h"
+#include "driver/rgb_led/rgb_dronecan.h"
 #include "drv_adc.h"
 #include "drv_fdcan.h"
 #include "drv_gpio.h"
@@ -41,6 +42,7 @@
 #include "drv_sdio.h"
 #include "drv_spi.h"
 #include "drv_systick.h"
+#include "drv_timer.h"
 #include "drv_usart.h"
 #include "drv_usbd_cdc.h"
 #include "led.h"
@@ -48,6 +50,7 @@
 #include "model/fms/fms_interface.h"
 #include "model/ins/ins_interface.h"
 #include "module/console/console_config.h"
+#include "module/dronecan/dronecan.h"
 #include "module/file_manager/file_manager.h"
 #include "module/mavproxy/mavproxy_config.h"
 #include "module/param/param.h"
@@ -120,6 +123,7 @@ static void bsp_show_information(void)
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
     banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
+    banner_item("Airframe", STR(AIRFRAME), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -224,7 +228,7 @@ static void EnablePower(void)
 static void CPU_CACHE_Enable(void)
 {
     /* Enable I-Cache */
-    SCB_EnableICache();
+    // SCB_EnableICache();
 
     /* Enable D-Cache */
     // SCB_EnableDCache();
@@ -253,6 +257,7 @@ void SystemClock_Config(void)
 {
     HAL_RCC_DeInit();
 
+    __set_PRIMASK(0);
     __set_BASEPRI(0);
 
     LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
@@ -260,6 +265,8 @@ void SystemClock_Config(void)
     }
     LL_PWR_ConfigSupply(LL_PWR_LDO_SUPPLY);
     LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE0);
+    while (LL_PWR_IsActiveFlag_VOS() == 0) {
+    }
     LL_RCC_HSE_Enable();
 
     /* Wait till HSE is ready */
@@ -274,7 +281,7 @@ void SystemClock_Config(void)
     LL_RCC_PLL1_SetM(2);
     LL_RCC_PLL1_SetN(80);
     LL_RCC_PLL1_SetP(2);
-    LL_RCC_PLL1_SetQ(20);
+    LL_RCC_PLL1_SetQ(8);
     LL_RCC_PLL1_SetR(2);
     LL_RCC_PLL1_Enable();
 
@@ -286,6 +293,10 @@ void SystemClock_Config(void)
     LL_RCC_SetAHBPrescaler(LL_RCC_AHB_DIV_2);
 
     LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL1);
+
+    /* Wait till System clock is ready */
+    while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL1) {
+    }
     LL_RCC_SetSysPrescaler(LL_RCC_SYSCLK_DIV_1);
     LL_RCC_SetAHBPrescaler(LL_RCC_AHB_DIV_2);
     LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_2);
@@ -294,17 +305,32 @@ void SystemClock_Config(void)
     LL_RCC_SetAPB4Prescaler(LL_RCC_APB4_DIV_2);
     LL_SetSystemCoreClock(480000000);
 
+    LL_RCC_PLL3Q_Enable();
+    LL_RCC_PLL3_SetVCOInputRange(LL_RCC_PLLINPUTRANGE_1_2);
+    LL_RCC_PLL3_SetVCOOutputRange(LL_RCC_PLLVCORANGE_WIDE);
+    LL_RCC_PLL3_SetM(14);
+    LL_RCC_PLL3_SetN(140);
+    LL_RCC_PLL3_SetP(5);
+    LL_RCC_PLL3_SetQ(5);
+    LL_RCC_PLL3_SetR(2);
+    LL_RCC_PLL3_Enable();
+
+    /* Wait till PLL is ready */
+    while (LL_RCC_PLL3_IsReady() != 1) {
+    }
+
     /* Update the time base */
     if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK) {
         Error_Handler();
     }
+
     LL_RCC_SetSPIClockSource(LL_RCC_SPI123_CLKSOURCE_PLL1Q);
     LL_RCC_SetSPIClockSource(LL_RCC_SPI45_CLKSOURCE_PCLK2);
     LL_RCC_SetSDMMCClockSource(LL_RCC_SDMMC_CLKSOURCE_PLL1Q);
     LL_RCC_SetUSARTClockSource(LL_RCC_USART16_CLKSOURCE_PCLK2);
     LL_RCC_SetUSARTClockSource(LL_RCC_USART234578_CLKSOURCE_PCLK1);
     LL_RCC_SetFDCANClockSource(LL_RCC_FDCAN_CLKSOURCE_PLL1Q);
-    LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_PLL1Q);
+    LL_RCC_SetUSBClockSource(LL_RCC_USB_CLKSOURCE_PLL3Q);
 
     __HAL_RCC_D2SRAM1_CLK_ENABLE();
     __HAL_RCC_D2SRAM2_CLK_ENABLE();
@@ -376,6 +402,8 @@ void bsp_initialize(void)
     /* fdcan driver init */
     RT_CHECK(drv_fdcan_init());
 
+    RT_CHECK(dronecan_init());
+
     /* fram init */
     RT_CHECK(drv_ramtron_init("spi2_dev1"));
 
@@ -392,7 +420,7 @@ void bsp_initialize(void)
     RT_CHECK(drv_adc_init());
 
     /* ist8310 and ncp5623c are on gps module and possibly it is not connected */
-    // drv_ncp5623c_init("i2c1_dev2");
+    drv_rgb_dronecan_init("fdcan1");
 
 #if defined(FMT_USING_SIH) || defined(FMT_USING_HIL)
     FMT_CHECK(advertise_sensor_imu(0));
@@ -406,7 +434,7 @@ void bsp_initialize(void)
     RT_CHECK(drv_ms5611_init("spi1_dev2", "barometer"));
 
     // // drv_ist8310_init("i2c1_dev1", "mag0");
-    // // RT_CHECK(gps_m8n_init("serial3", "gps"));
+    RT_CHECK(gps_dronecan_init("fdcan1", "can_gps"));
 
     // // /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));

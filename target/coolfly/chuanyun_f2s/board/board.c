@@ -40,8 +40,8 @@
 // #include "driver/rgb_led/ncp5623c.h"
 // #include "driver/vision_flow/lc307.h"
 
-#include "driver/temperature/ntc.h"
 #include "driver/vision_flow/pmw3901_fl04.h"
+#include "driver/temperature/ntc.h"
 
 #include "drv_adc.h"
 #include "drv_gpio.h"
@@ -163,6 +163,7 @@ static void bsp_show_information(void)
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
     banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
+    banner_item("Airframe", STR(AIRFRAME), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -425,7 +426,7 @@ void bsp_early_initialize(void)
 
     /* buzzer pwm driver init */
     RT_CHECK(drv_buzzer_pwm_init());
-
+    
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
 }
@@ -530,6 +531,8 @@ void bsp_initialize(void)
     if (gps_m8n_init("serial1", "gps") != FMT_EOK) {
         console_println("gps serial1 faild~!!!!");
     }
+    
+    RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
     RT_CHECK(drv_ntc_init("adc9", "temp_board"));
 
@@ -569,7 +572,7 @@ void bsp_initialize(void)
     FMT_CHECK(register_sensor_barometer("barometer"));
 
     FMT_CHECK(register_sensor_temperature("temp_board", 0));
-
+    
 #endif
 
     FMT_CHECK(register_ar_rc());

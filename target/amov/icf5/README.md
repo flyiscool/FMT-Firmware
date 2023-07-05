@@ -110,7 +110,7 @@ Firmware.....................FMT FW v0.3.0
 Kernel....................RT-Thread v4.0.3
 RAM.................................448 KB
 Target...........................Amov-ICF5
-Vehicle.........................Quadcopter
+Vehicle.........................Multicopter
 INS Model..................Base INS v0.3.1
 FMS Model..................Base FMS v0.4.0
 Control Model.......Base Controller v0.2.4
@@ -143,3 +143,7 @@ Task Initialize:
 |  I2C   | Device  | Port |
 |  ----   | ------  | ---- |
 |  I2C0 | / | I2C |
+
+## Maintainer
+Josh Zou
+zoujiachi666@163.com

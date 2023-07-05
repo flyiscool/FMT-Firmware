@@ -17,6 +17,7 @@
 
 #include <board.h>
 #include <board_device.h>
+#include <msh.h>
 #include <shell.h>
 #include <string.h>
 
@@ -69,6 +70,7 @@
 
 #define MATCH(a, b)     (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
+#define SYS_INIT_SCRIPT "/sys/init.sh"
 
 static const struct dfs_mount_tbl mnt_table[] = {
     { "sd0", "/", "elm", 0, NULL },
@@ -118,6 +120,7 @@ static void bsp_show_information(void)
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
     banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
+    banner_item("Airframe", STR(AIRFRAME), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -478,6 +481,9 @@ void bsp_post_initialize(void)
 
     /* show system information */
     bsp_show_information();
+
+    /* execute init script */
+    msh_exec_script(SYS_INIT_SCRIPT, strlen(SYS_INIT_SCRIPT));
 
     /* dump boot log to file */
     boot_log_dump();

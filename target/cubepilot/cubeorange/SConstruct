@@ -15,14 +15,28 @@ except:
     print(RTT_ROOT)
     exit(-1)
 
+
+# DRONECAN DSDL
+DRONECAN_ROOT = FMU_ROOT + "/src/lib/dronecan"
+os.system("python " + DRONECAN_ROOT + "/dsdlc/dronecan_dsdlc.py -O " + DRONECAN_ROOT + "/dsdlc_generated " + DRONECAN_ROOT + "/dsdl/uavcan " +  DRONECAN_ROOT + "/dsdl/ardupilot")
+
+
 TARGET = 'build/fmt_' + rtconfig.BOARD + '.' + rtconfig.TARGET_EXT
 
 # ===== Add option to SCons =====
 AddOption('--vehicle',
                 dest = 'vehicle',
                 type = 'string',
-                default = 'Quadcopter',
-                help = 'set vehicle type')
+                default = 'Multicopter',
+                help = 'Specify the vehicle type')
+
+AddOption('--airframe', 
+                dest='airframe', 
+                type='int', 
+                nargs=1, 
+                default = 1, 
+                action='store',
+                help='Specify the airframe value')
 
 env = Environment(tools=['mingw'],
                   AS=rtconfig.AS, ASFLAGS=rtconfig.AFLAGS,
@@ -33,6 +47,7 @@ env = Environment(tools=['mingw'],
 
 # set VEHICLE_TYPE macro for low-level usage
 env.Append(CPPDEFINES = [('VEHICLE_TYPE', GetOption('vehicle'))])
+env.Append(CPPDEFINES = [('AIRFRAME', GetOption('airframe'))])
 
 # Add sys execute PATH to env PATH
 env.PrependENVPath('PATH', os.getenv('PATH'))

@@ -19,7 +19,7 @@
 
 // clang-format off
 static char* default_conf = STRING(
-target = "Cubepilot cubeorange"\n
+target = "Cubepilot Cubeorange"\n
 [console]\n
 	[[console.devices]]\n
 	type = "serial"\n
@@ -32,10 +32,12 @@ target = "Cubepilot cubeorange"\n
 	auto-switch = true\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n
+	chan = 0\n
 	type = "serial"\n
 	name = "serial1"\n
 	baudrate = 57600\n
     [[mavproxy.devices]]\n
+	chan = 0\n
 	type = "usb"\n
 	name = "usbd0"\n
     auto-switch = true

@@ -123,7 +123,7 @@ Firmware.....................FMT FW v0.3.0
 Kernel....................RT-Thread v4.0.3
 RAM.................................512 KB
 Target............................CUAV V5+
-Vehicle.........................Quadcopter
+Vehicle.........................Multicopter
 INS Model..................Base INS v0.3.1
 FMS Model..................Base FMS v0.4.0
 Control Model.......Base Controller v0.2.4
@@ -165,3 +165,7 @@ msh /usr>fmtio upload /usr/fmt_io.bin
 | USART3 | serial2 | TELEM2       |
 | USART1 | serial3 | GPS          |
 | UART4 | serial4 | UART       |
+
+## Maintainer
+Josh Zou
+zoujiachi666@163.com

@@ -43,7 +43,6 @@ env = Environment(tools=['mingw'],
 env.Append(CPPDEFINES = [('VEHICLE_TYPE', GetOption('vehicle'))])
 env.Append(CPPDEFINES = [('AIRFRAME', GetOption('airframe'))])
 
-
 # Add sys execute PATH to env PATH
 env.PrependENVPath('PATH', os.getenv('PATH'))
 

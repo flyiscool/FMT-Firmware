@@ -17,6 +17,7 @@
 
 #include <board.h>
 #include <board_device.h>
+#include <msh.h>
 #include <shell.h>
 #include <string.h>
 
@@ -36,6 +37,7 @@
 #include "drv_buzzer.h"
 #include "drv_gpio.h"
 #include "drv_i2c.h"
+#include "drv_i2c_soft.h"
 #include "drv_pwm.h"
 #include "drv_rc.h"
 #include "drv_sdio.h"
@@ -74,10 +76,14 @@
 
 #define MATCH(a, b)     (strcmp(a, b) == 0)
 #define SYS_CONFIG_FILE "/sys/sysconfig.toml"
+#define SYS_INIT_SCRIPT "/sys/init.sh"
+
+extern const struct romfs_dirent romfs_root;
 
 static const struct dfs_mount_tbl mnt_table[] = {
     { "sd0", "/", "elm", 0, NULL },
     { "mtdblk0", "/mnt/mtdblk0", "elm", 0, NULL },
+    { NULL, "/mnt/romfs", "rom", 0, &romfs_root },
     { NULL } /* NULL indicate the end */
 };
 
@@ -124,6 +130,7 @@ static void bsp_show_information(void)
     banner_item("RAM", buffer, '.', BANNER_ITEM_LEN);
     banner_item("Target", TARGET_NAME, '.', BANNER_ITEM_LEN);
     banner_item("Vehicle", STR(VEHICLE_TYPE), '.', BANNER_ITEM_LEN);
+    banner_item("Airframe", STR(AIRFRAME), '.', BANNER_ITEM_LEN);
     banner_item("INS Model", ins_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("FMS Model", fms_model_info.info, '.', BANNER_ITEM_LEN);
     banner_item("Control Model", control_model_info.info, '.', BANNER_ITEM_LEN);
@@ -257,6 +264,7 @@ void bsp_early_initialize(void)
 
     /* i2c driver init */
     RT_CHECK(drv_i2c_init());
+    // RT_CHECK(drv_i2c_soft_init());
 
     /* pwm driver init */
     RT_CHECK(drv_pwm_init());
@@ -363,10 +371,8 @@ void bsp_post_initialize(void)
     /* init mission data */
     FMT_CHECK(mission_data_init());
 
-#if defined(FMT_HIL_WITH_ACTUATOR) || (!defined(FMT_USING_HIL) && !defined(FMT_USING_SIH))
     /* init actuator */
     FMT_CHECK(actuator_init());
-#endif
 
     /* start device message queue work */
     FMT_CHECK(devmq_start_work());
@@ -379,6 +385,9 @@ void bsp_post_initialize(void)
 
     /* show system information */
     bsp_show_information();
+
+    /* execute init script */
+    msh_exec_script(SYS_INIT_SCRIPT, strlen(SYS_INIT_SCRIPT));
 
     /* dump boot log to file */
     boot_log_dump();

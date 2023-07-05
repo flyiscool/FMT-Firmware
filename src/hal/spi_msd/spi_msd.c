@@ -333,6 +333,7 @@ static rt_err_t _read_block(struct rt_spi_device* device, void* buffer, uint32_t
 
         /* transfer message */
         device->bus->ops->xfer(device, &message);
+
     } /* get crc */
 
     return RT_EOK;

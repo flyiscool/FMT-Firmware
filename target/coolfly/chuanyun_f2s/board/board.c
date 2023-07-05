@@ -426,6 +426,7 @@ void bsp_early_initialize(void)
 
     /* buzzer pwm driver init */
     RT_CHECK(drv_buzzer_pwm_init());
+    
     /* system statistic module */
     FMT_CHECK(sys_stat_init());
 }
@@ -532,6 +533,8 @@ void bsp_initialize(void)
     }
     
     RT_CHECK(drv_ntc_init("adc9","temp_board"));
+
+    RT_CHECK(drv_ntc_init("adc9", "temp_board"));
 
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");

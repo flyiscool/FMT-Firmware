@@ -534,8 +534,6 @@ void bsp_initialize(void)
     
     RT_CHECK(drv_ntc_init("adc9","temp_board"));
 
-    RT_CHECK(drv_ntc_init("adc9", "temp_board"));
-
     // if (tfmini_s_drv_init("serial4") != FMT_EOK) {
     //     console_println("!!!!!!tfmini_s serial4 faild~!!!!");
     // } else {

@@ -101,7 +101,7 @@ USBD_StatusTypeDef  USBD_CtlSendData (USBD_HandleTypeDef  *pdev,
                                uint16_t len)
 {
   uint8_t      u8_i;
-  uint8_t      u8_swap;
+  // uint8_t      u8_swap;
 
   /* Set EP0 State */
   pdev->ep0_state          = USBD_EP0_DATA_IN;

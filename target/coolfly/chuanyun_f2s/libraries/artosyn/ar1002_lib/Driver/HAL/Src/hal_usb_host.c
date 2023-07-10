@@ -23,7 +23,7 @@ History:
 #include "drv_systick.h"
 #include "hal.h"
 #include "hal_sram_sky.h"
-#include "sram_ground.h"
+// #include "sram_ground.h"
 #include "sram_sky.h"
 #include "dma.h"
 
@@ -265,21 +265,21 @@ void HAL_USB_InitHost(ENUM_HAL_USB_PORT e_usbPort, uint8_t u8_HostMode)
 
     hUSBHost[e_usbPort].u8_HostMode = u8_HostMode;
 
-    USBH_Init(&hUSBHost[e_usbPort], USB_HostAppState, (uint8_t)e_usbPort);
+    // USBH_Init(&hUSBHost[e_usbPort], USB_HostAppState, (uint8_t)e_usbPort);
 
     //support MSC
-    USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_MSC_CLASS);
+    // USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_MSC_CLASS);
 
     //support UVC
-    USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_UVC_CLASS);
+    // USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_UVC_CLASS);
 
     //support CDC
-    USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_CDC_CLASS);
+    // USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_CDC_CLASS);
 
     //support MTP
-    USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_MTP_CLASS);
+    // USBH_RegisterClass(&hUSBHost[e_usbPort], USBH_MTP_CLASS);
 
-    USBH_Start(&hUSBHost[e_usbPort]);
+    // USBH_Start(&hUSBHost[e_usbPort]);
 }
 
 

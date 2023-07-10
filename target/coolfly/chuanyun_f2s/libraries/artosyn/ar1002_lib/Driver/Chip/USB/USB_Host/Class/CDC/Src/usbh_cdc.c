@@ -51,7 +51,7 @@
 #include "r8152.h"
 #include "hal.h"
 #include "sram_sky.h"
-#include "sram_ground.h"
+// #include "sram_ground.h"
 #include "drv_systick.h"
 #include "sys_event.h"
 #include "usbh_core.h"

@@ -53,7 +53,7 @@
 #include "usbd_core.h"
 #include "debuglog.h"
 #include "sram_sky.h"
-#include "sram_ground.h"
+// #include "sram_ground.h"
 #include "bb_types.h"
 #include "sys_event.h"
 #include "gpio.h"
@@ -120,7 +120,7 @@ static uint8_t  USBD_HID_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t  *USBD_HID_GetUsrStrDescriptor(USBD_HandleTypeDef *pdev, uint8_t index, uint16_t *length);
 static uint8_t  USBD_HID_DataInToken (USBD_HandleTypeDef *pdev, uint8_t epnum);
 
-static uint8_t  Check_USB_Is_Apple_By_ID(ENUM_HAL_USB_PORT usb_port_id);
+// static uint8_t  Check_USB_Is_Apple_By_ID(ENUM_HAL_USB_PORT usb_port_id);
 
 /**
   * @}
@@ -585,7 +585,7 @@ uint8_t                       g_u32USBDeviceRecv[HID_EPOUT_CTRL_SIZE]__attribute
 uint8_t                       g_u8CustomerOut[HID_CUSTOMER_OUT_SIZE];
 uint32_t                      g_u32CustomerOutSize;
 uint8_t                       g_u8UsbBypassEncoderBuff[HID_EPOUT_VIDEO_SIZE];
-extern uint8_t                g_u8MFIRecvBuff[MFI_OUT_SIZE];
+// extern uint8_t                g_u8MFIRecvBuff[MFI_OUT_SIZE];
 uint8_t                       g_u8CurrentHost;     /* 0: normal   1: iphone */
 uint8_t                       g_u8iOSSupport = 0;
 uint32_t                      g_u32HostModeGpio;
@@ -618,7 +618,8 @@ static uint8_t  USBD_HID_Init (USBD_HandleTypeDef *pdev,
                  USBD_EP_TYPE_INTR,
                  HID_EPIN_VIDEO_SIZE);
 
-    if(Check_USB_Is_Apple_By_ID(pdev->id))
+    // if(Check_USB_Is_Apple_By_ID(pdev->id))
+    if(0)
     {
         DLOG_Critical("Connected to Apple dev, Set EPOUT_VIDEO_ADDR & EPOUT_CTRL_ADDR Bulk Transfer mode!");
         USBD_LL_OpenEP(pdev,
@@ -705,7 +706,7 @@ static uint8_t  USBD_HID_Init (USBD_HandleTypeDef *pdev,
 
         USBD_LL_PrepareReceive(pdev, HID_EPOUT_VIDEO_ADDR, g_u8UsbBypassEncoderBuff, HID_EPOUT_VIDEO_SIZE);
 
-        USBD_LL_PrepareReceive(pdev, MFI_OUT_ADDR, g_u8MFIRecvBuff, MFI_OUT_SIZE);
+        // USBD_LL_PrepareReceive(pdev, MFI_OUT_ADDR, g_u8MFIRecvBuff, MFI_OUT_SIZE);
     }
 
     pdev->u8_connState  = 1;    //connect
@@ -1036,13 +1037,9 @@ static uint8_t  *USBD_HID_GetCfgDesc (USBD_HandleTypeDef *pdev, uint16_t *length
     }
   }
 
-  if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+  // if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+  if (1)
   {
-#ifdef C201S_ZZ
-    ENUM_USB_OTG_IDTENTITY usb_type = ENUM_USB_ANDROID_HOST;
-    SYS_EVENT_NotifyLocal(SYS_EVENT_ID_USB_DEVICE_IDENTITY, (void *)&usb_type);
-#endif
-
     *length = sizeof (USBD_HID_CfgDesc);
     return USBD_HID_CfgDesc;
   }
@@ -1076,24 +1073,24 @@ static uint8_t  USBD_HID_DataIn (USBD_HandleTypeDef *pdev,
     //#ifdef ARCAST
 #if 0
     if ((epnum | 0x80) == HID_EPIN_VIDEO_ADDR)
-    #else
+#else
     if (((epnum | 0x80) == HID_EPIN_VIDEO_ADDR)||
         ((epnum | 0x80) == HID_EPIN_AUDIO_ADDR))
-    #endif
+#endif
     {
         if (pdev->u8_connState== 1)
         {
             pdev->u8_connState  = 2;
         }
 
-        if (1 == sramReady0)
-        {
-            SRAM_Ready0Confirm();
-        }
-        else if(1 == sramReady1)
-        {
-            SRAM_Ready1Confirm();
-        }
+        // if (1 == sramReady0)
+        // {
+        //     SRAM_Ready0Confirm();
+        // }
+        // else if(1 == sramReady1)
+        // {
+        //     SRAM_Ready1Confirm();
+        // }
     }
 
     return USBD_OK;
@@ -1142,38 +1139,24 @@ static uint8_t USBD_HID_DataOut (USBD_HandleTypeDef *pdev,
 
         USBD_LL_PrepareReceive(pdev, HID_CUSTOMER_OUT_ADDR, g_u8CustomerOut, HID_CUSTOMER_OUT_SIZE);
     }
-    else if (HID_EPOUT_VIDEO_ADDR == epnum)
-    {
-        if (USB_OTG_IsBigEndian(pdev))
-        {
-            USB_LL_ConvertEndian(g_u8UsbBypassEncoderBuff, g_u8UsbBypassEncoderBuff, (uint32_t)sizeof(g_u8UsbBypassEncoderBuff));
-        }
+    // else if (HID_EPOUT_VIDEO_ADDR == epnum)
+    // {
+    //     if (USB_OTG_IsBigEndian(pdev))
+    //     {
+    //         USB_LL_ConvertEndian(g_u8UsbBypassEncoderBuff, g_u8UsbBypassEncoderBuff, (uint32_t)sizeof(g_u8UsbBypassEncoderBuff));
+    //     }
 
-        if (pdev->pUserData)
-        {
-            if (((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream)
-            {
-                ((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream(g_u8UsbBypassEncoderBuff, USBD_LL_GetRxDataSize(pdev, epnum), pdev->id);
-            }
-        }
+    //     if (pdev->pUserData)
+    //     {
+    //         if (((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream)
+    //         {
+    //             ((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream(g_u8UsbBypassEncoderBuff, USBD_LL_GetRxDataSize(pdev, epnum), pdev->id);
+    //         }
+    //     }
 
-        USBD_LL_PrepareReceive(pdev, HID_EPOUT_VIDEO_ADDR, g_u8UsbBypassEncoderBuff, HID_EPOUT_VIDEO_SIZE);
-    }
-    else if (MFI_OUT_ADDR == epnum)
-    {
-        if (USB_OTG_IsBigEndian(pdev))
-        {
-            USB_LL_ConvertEndian(g_u8MFIRecvBuff, g_u8MFIRecvBuff, (uint32_t)sizeof(g_u8MFIRecvBuff));
-        }
+    //     USBD_LL_PrepareReceive(pdev, HID_EPOUT_VIDEO_ADDR, g_u8UsbBypassEncoderBuff, HID_EPOUT_VIDEO_SIZE);
+    // }
 
-        st_mfiNotifyMsg.usb_dev = (uint32_t)pdev;
-        st_mfiNotifyMsg.msg_len = USBD_LL_GetRxDataSize(pdev, epnum);
-        st_mfiNotifyMsg.msg_buf = (uint32_t)g_u8MFIRecvBuff;
-
-        SYS_EVENT_NotifyLocal(SYS_EVENT_ID_IAP2_MSG_EVENT, (void *)&st_mfiNotifyMsg);
-
-        USBD_LL_PrepareReceive(pdev, MFI_OUT_ADDR, g_u8MFIRecvBuff, MFI_OUT_SIZE);
-    }
 
     return USBD_OK;
 }
@@ -1219,10 +1202,10 @@ static uint8_t  *USBD_HID_GetUsrStrDescriptor(USBD_HandleTypeDef *pdev, uint8_t 
         }
     }
 
-    if (Check_USB_Is_Apple_By_ID(pdev->id))
-    {
-        MFI_iAP2DetectApple(pdev);
-    }
+    // if (Check_USB_Is_Apple_By_ID(pdev->id))
+    // {
+    //     MFI_iAP2DetectApple(pdev);
+    // }
 
     switch(index)
     {
@@ -1231,47 +1214,47 @@ static uint8_t  *USBD_HID_GetUsrStrDescriptor(USBD_HandleTypeDef *pdev, uint8_t 
         break;
 
     case HID_COMM_STRING_INTERFACE:
-        if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
-        {
+        // if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+        // {
             USBD_GetString((uint8_t *)HID_COMM_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
-        else
-        {
-            USBD_GetString((uint8_t *)MFI_COMM_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
+        // }
+        // else
+        // {
+            // USBD_GetString((uint8_t *)MFI_COMM_STRING_DESC, HID_USER_INTERFACE_DESC, length);
+        // }
         break;
 
     case HID_VIDEO0_STRING_INTERFACE:
-        if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
-        {
+        // if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+        // {
             USBD_GetString((uint8_t *)HID_VIDEO0_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
-        else
-        {
-            USBD_GetString((uint8_t *)MFI_VIDEO0_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
+        // }
+        // else
+        // {
+            // USBD_GetString((uint8_t *)MFI_VIDEO0_STRING_DESC, HID_USER_INTERFACE_DESC, length);
+        // }
         break;
 
     case HID_AUDIO_STRING_INTERFACE:
-        if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
-        {
+        // if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+        // {
             USBD_GetString((uint8_t *)HID_AUDIO_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
-        else
-        {
-            USBD_GetString((uint8_t *)MFI_AUDIO_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
+        // }
+        // else
+        // {
+            // USBD_GetString((uint8_t *)MFI_AUDIO_STRING_DESC, HID_USER_INTERFACE_DESC, length);
+        // }
         break;
 
     case HID_CUSTOMER_STRING_INTERFACE:
-        if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
-        {
+        // if (FALSE == Check_USB_Is_Apple_By_ID(pdev->id))
+        // {
             USBD_GetString((uint8_t *)HID_CUSTOMER_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
-        else
-        {
-            USBD_GetString((uint8_t *)MFI_CUSTOMER_STRING_DESC, HID_USER_INTERFACE_DESC, length);
-        }
+        // }
+        // else
+        // {
+        //     USBD_GetString((uint8_t *)MFI_CUSTOMER_STRING_DESC, HID_USER_INTERFACE_DESC, length);
+        // }
         break;
 
     default:
@@ -1328,18 +1311,18 @@ void USBD_HID_SetHostTypeGPIO(uint32_t u32_hostModeGpio)
     g_u8iOSSupport = 1;
 }
 
-extern USB_ROLE_TypeDef g_usb_role;
+// extern USB_ROLE_TypeDef g_usb_role;
 
-static uint8_t Check_USB_Is_Apple_By_ID(ENUM_HAL_USB_PORT usb_port_id)
-{
-    if (g_usb_role.e_usbPort == usb_port_id)
-    {
-        if (g_usb_role.dev_type == USB_APPLE_DEVICE)
-            return TRUE;
-    }
+// static uint8_t Check_USB_Is_Apple_By_ID(ENUM_HAL_USB_PORT usb_port_id)
+// {
+//     if (g_usb_role.e_usbPort == usb_port_id)
+//     {
+//         if (g_usb_role.dev_type == USB_APPLE_DEVICE)
+//             return TRUE;
+//     }
 
-    return FALSE;
-}
+//     return FALSE;
+// }
 
 
 /**

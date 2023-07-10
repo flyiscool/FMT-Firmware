@@ -32,6 +32,7 @@
 #include "mini384.h"
 #include "xc7027.h"
 
+
 //--------------------------------------
 static void sys_event_start(void);
 
@@ -44,7 +45,8 @@ fmt_err_t task_local_init(void)
 _EXT_DTCM1
 void task_local_entry(void* parameter)
 {
-
+    HAL_USB_Init(HAL_USB_PORT_0, HAL_USB_DR_MODE_DEVICE);
+    // HAL_USB_Init(HAL_USB_PORT_1, HAL_USB_DR_MODE_DEVICE);
     sys_event_start();
     sbus_start();
     bb_led_start();

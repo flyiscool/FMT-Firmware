@@ -470,7 +470,7 @@ void              USB_LL_EnterHostTestMode(USB_OTG_GlobalTypeDef *USBx);
 void              USB_LL_EnterDeviceTestMode(USB_OTG_GlobalTypeDef *USBx, uint8_t test_mode);
 void              USB_LL_ConfigPhy(void);
 void              USB_LL_SetHighImpedance(USB_OTG_GlobalTypeDef *USBx);
-uint8_t			  Check_USB_Is_Apple_Device(USB_OTG_GlobalTypeDef *USBx);
+// uint8_t			  Check_USB_Is_Apple_Device(USB_OTG_GlobalTypeDef *USBx);
 
 /**
   * @}

@@ -215,7 +215,7 @@ HAL_StatusTypeDef USB_SetCurrentMode(USB_OTG_GlobalTypeDef *USBx , USB_OTG_ModeT
 static volatile uint32_t g_usb_value = 0;
 static volatile uint8_t timer_registered = 0;
 
-osTimerId usbCheckTimer = NULL;
+// osTimerId usbCheckTimer = NULL;
 
 extern USBD_HandleTypeDef USBD_Device[USBD_PORT_NUM];
 
@@ -261,68 +261,68 @@ static void USB_Task(void const *argument)
 }
 
 
-static void HAL_USB_CheckUSBType(void* p)
-{
-  int temp_value = *(uint32_t *)p;
-  uint32_t reg_val = 0;
+// static void HAL_USB_CheckUSBType(void* p)
+// {
+//   int temp_value = *(uint32_t *)p;
+//   uint32_t reg_val = 0;
 
-#if 1
-  DLOG_Critical("*************** osTimer function *************************");
+// #if 1
+//   DLOG_Critical("*************** osTimer function *************************");
 
-  g_usb_value = *(uint32_t *)p;
-  if(timer_registered == 0)
-  {
-     osTimerDef(UsbTask, USB_Task);
-     usbCheckTimer = osTimerCreate(osTimer(UsbTask), osTimerOnce, NULL);
+//   g_usb_value = *(uint32_t *)p;
+//   if(timer_registered == 0)
+//   {
+//      osTimerDef(UsbTask, USB_Task);
+//      usbCheckTimer = osTimerCreate(osTimer(UsbTask), osTimerOnce, NULL);
 
-     osTimerStart(usbCheckTimer, 200);
-     timer_registered = 1;
-  }
-  else
-  {
-     osTimerStop(usbCheckTimer);
-     osTimerStart(usbCheckTimer, 200);
-  }
+//      osTimerStart(usbCheckTimer, 200);
+//      timer_registered = 1;
+//   }
+//   else
+//   {
+//      osTimerStop(usbCheckTimer);
+//      osTimerStart(usbCheckTimer, 200);
+//   }
 
-#else
+// #else
 
-  STRU_SysEvent_OTG_HOST_DEV_SWITCH     stSyseventOtgHostDevSwitch;
-  USB_OTG_GlobalTypeDef *USBx = (USB_OTG_GlobalTypeDef *)temp_value;
+//   STRU_SysEvent_OTG_HOST_DEV_SWITCH     stSyseventOtgHostDevSwitch;
+//   USB_OTG_GlobalTypeDef *USBx = (USB_OTG_GlobalTypeDef *)temp_value;
 
-  HAL_Delay(300);
-  reg_val = USBx->GINTSTS;
-  DLOG_Critical ("USB1 GINTSTS:  %08x; temp_value is: %08x, USBx GINTSTS: %08x, time: %u",  *(uint32_t *)(0x43100014), temp_value, reg_val, SysTicks_GetTickCount());
-  if((reg_val & USB_OTG_GINTSTS_CMOD) == USB_OTG_GINTSTS_CMOD)
-  {
-    if(g_usb_role.dev_type == USB_APPLE_DEVICE)
-    {
-      DLOG_Critical ("Set device from USB_APPLE_DEVICE to USB_DEVICE_UNKNOWN !");
+//   HAL_Delay(300);
+//   reg_val = USBx->GINTSTS;
+//   DLOG_Critical ("USB1 GINTSTS:  %08x; temp_value is: %08x, USBx GINTSTS: %08x, time: %u",  *(uint32_t *)(0x43100014), temp_value, reg_val, SysTicks_GetTickCount());
+//   if((reg_val & USB_OTG_GINTSTS_CMOD) == USB_OTG_GINTSTS_CMOD)
+//   {
+//     if(g_usb_role.dev_type == USB_APPLE_DEVICE)
+//     {
+//       DLOG_Critical ("Set device from USB_APPLE_DEVICE to USB_DEVICE_UNKNOWN !");
 
-      g_usb_role.dev_type = USB_DEVICE_UNKNOWN;
-      g_u8CurrentHost = 0;
+//       g_usb_role.dev_type = USB_DEVICE_UNKNOWN;
+//       g_u8CurrentHost = 0;
 
-      if (USBx == USB_OTG0_HS)
-      {
-        stSyseventOtgHostDevSwitch.otg_port_id = 0;
-      }
-      else
-      {
-        stSyseventOtgHostDevSwitch.otg_port_id = 1;
-      }
+//       if (USBx == USB_OTG0_HS)
+//       {
+//         stSyseventOtgHostDevSwitch.otg_port_id = 0;
+//       }
+//       else
+//       {
+//         stSyseventOtgHostDevSwitch.otg_port_id = 1;
+//       }
 
-      stSyseventOtgHostDevSwitch.otg_state = 1;
+//       stSyseventOtgHostDevSwitch.otg_state = 1;
 
-      SYS_EVENT_NotifyLocal(SYS_EVENT_ID_USB_SWITCH_HOST_DEVICE,
-                              (void *)&stSyseventOtgHostDevSwitch);
+//       SYS_EVENT_NotifyLocal(SYS_EVENT_ID_USB_SWITCH_HOST_DEVICE,
+//                               (void *)&stSyseventOtgHostDevSwitch);
 
-      USBD_HandleTypeDef *pdev = &USBD_Device[stSyseventOtgHostDevSwitch.otg_port_id];
-      pdev->u8_connState = 0;    //disconnect
+//       USBD_HandleTypeDef *pdev = &USBD_Device[stSyseventOtgHostDevSwitch.otg_port_id];
+//       pdev->u8_connState = 0;    //disconnect
 
-    }
-  }
+//     }
+//   }
 
-#endif
-}
+// #endif
+// }
 
 /**
   * @brief  USB_DevInit : Initializes the USB_OTG controller registers 
@@ -350,7 +350,7 @@ HAL_StatusTypeDef USB_DevInit (USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
   }
    
   /* Restart the Phy Clock */
-  if(!Check_USB_Is_Apple_Device(USBx))
+  // if(!Check_USB_Is_Apple_Device(USBx))
     USBx_PCGCCTL = 0;
 
   /* Device mode configuration */
@@ -456,18 +456,18 @@ HAL_StatusTypeDef USB_DevInit (USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
     USBx->GINTMSK |= (USB_OTG_GINTMSK_SRQIM | USB_OTG_GINTMSK_OTGINT); 
   }
 
-  SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USB_DEVICE_TYPE, HAL_USB_CheckUSBType);
+  // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USB_DEVICE_TYPE, HAL_USB_CheckUSBType);
 
-  if (Check_USB_Is_Apple_Device(USBx))
-  {
-#if 0
-    if (USBx == USB_OTG0_HS) {
-        SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_USER_DEFINE, (void *)NULL);
-    }
-#else
-    SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_USER_DEFINE, (void *)NULL);
-#endif
-  }
+//   if (Check_USB_Is_Apple_Device(USBx))
+//   {
+// #if 0
+//     if (USBx == USB_OTG0_HS) {
+//         SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_USER_DEFINE, (void *)NULL);
+//     }
+// #else
+//     SYS_EVENT_NotifyInterCore(SYS_EVENT_ID_USER_DEFINE, (void *)NULL);
+// #endif
+//   }
 
   return HAL_USB_OK;
 }
@@ -1063,8 +1063,8 @@ HAL_StatusTypeDef  USB_SetDevAddress (USB_OTG_GlobalTypeDef *USBx, uint8_t addre
   */
 HAL_StatusTypeDef  USB_DevConnect (USB_OTG_GlobalTypeDef *USBx)
 {
-  if (Check_USB_Is_Apple_Device(USBx))
-	return HAL_USB_OK;
+  // if (Check_USB_Is_Apple_Device(USBx))
+	// return HAL_USB_OK;
 
   USBx_DEVICE->DCTL &= ~USB_OTG_DCTL_SDIS ;
   SysTicks_DelayMS(3);
@@ -1826,19 +1826,11 @@ HAL_StatusTypeDef USB_StopHost(USB_OTG_GlobalTypeDef *USBx)
 void USB_LL_OTG0_IRQHandler(uint32_t u32_vectorNum)
 {
   STRU_SysEvent_OTG_HOST_DEV_SWITCH     stSyseventOtgHostDevSwitch;
-  STRU_SysEvent_USB_ID_STS stSysUsbId;
+  // STRU_SysEvent_USB_ID_STS stSysUsbId;
 
   if (USB_OTG0_HS->GINTSTS & USB_OTG_GINTSTS_CIDSCHG)
   {
     stSyseventOtgHostDevSwitch.otg_port_id = 0;
-
-#ifdef C201S_ZZ
-    USB_OTG_GlobalTypeDef *USBx = USB_OTG0_HS;
-    stSysUsbId.usb_port_id = 0;
-    stSysUsbId.usb_id_state = USB_LL_GetCurrentOTGIDStatus(USBx);
-
-    SYS_EVENT_Notify_From_ISR(SYS_EVENT_ID_USB_ID_STS, (void *)&stSysUsbId);
-#endif
 
     if (USB_OTG0_HS->GINTSTS & USB_OTG_GINTSTS_CMOD)
     {
@@ -1891,7 +1883,7 @@ void USB_LL_OTG0_IRQHandler(uint32_t u32_vectorNum)
                         USB_OTG_GINTMSK_SOFM | USB_OTG_GINTMSK_NPTXFEM);
 
         /* Handle Host Port Interrupts */
-        HAL_HCD_HNP_Disconnect_Callback(&hhcd[0]);
+        // HAL_HCD_HNP_Disconnect_Callback(&hhcd[0]);
 
         stSyseventOtgHostDevSwitch.otg_port_id = 0;
         stSyseventOtgHostDevSwitch.otg_state = 0;
@@ -1917,8 +1909,7 @@ void USB_LL_OTG0_IRQHandler(uint32_t u32_vectorNum)
     {
         USB_OTG0_HS->GINTMSK = (uint32_t)0xB320000C;
     }
-
-    HAL_HCD_IRQHandler(&hhcd[0]);
+  // HAL_HCD_IRQHandler(&hhcd[0]);
   }
   else
   {
@@ -1929,19 +1920,11 @@ void USB_LL_OTG0_IRQHandler(uint32_t u32_vectorNum)
 void USB_LL_OTG1_IRQHandler(uint32_t u32_vectorNum)
 {
   STRU_SysEvent_OTG_HOST_DEV_SWITCH     stSyseventOtgHostDevSwitch;
-  STRU_SysEvent_USB_ID_STS stSysUsbId;
+  // STRU_SysEvent_USB_ID_STS stSysUsbId;
 
   if (USB_OTG1_HS->GINTSTS & USB_OTG_GINTSTS_CIDSCHG)
   {
     stSyseventOtgHostDevSwitch.otg_port_id = 1;
-
-#ifdef C201S_ZZ
-    USB_OTG_GlobalTypeDef *USBx = USB_OTG1_HS;
-    stSysUsbId.usb_port_id = 1;
-    stSysUsbId.usb_id_state = USB_LL_GetCurrentOTGIDStatus(USBx);
-
-    SYS_EVENT_Notify_From_ISR(SYS_EVENT_ID_USB_ID_STS, (void *)&stSysUsbId);
-#endif
 
     if (USB_OTG1_HS->GINTSTS & USB_OTG_GINTSTS_CMOD)
     {
@@ -1993,7 +1976,7 @@ void USB_LL_OTG1_IRQHandler(uint32_t u32_vectorNum)
                         USB_OTG_GINTMSK_SOFM | USB_OTG_GINTMSK_NPTXFEM);
 
         /* Handle Host Port Interrupts */
-        HAL_HCD_HNP_Disconnect_Callback(&hhcd[1]);
+        // HAL_HCD_HNP_Disconnect_Callback(&hhcd[1]);
 
         stSyseventOtgHostDevSwitch.otg_port_id = 1;
         stSyseventOtgHostDevSwitch.otg_state = 0;
@@ -2020,7 +2003,7 @@ void USB_LL_OTG1_IRQHandler(uint32_t u32_vectorNum)
         USB_OTG1_HS->GINTMSK = (uint32_t)0xB320000C;
     }
 
-    HAL_HCD_IRQHandler(&hhcd[1]);
+    // HAL_HCD_IRQHandler(&hhcd[1]);
   }
   else
   {
@@ -2099,21 +2082,11 @@ void USB_LL_ConfigPhy(void)
 
     *ahbSlaveCtrlReg            = 0x1010;
     
-    //write_reg32((uint32_t *)0x40b000b8, 0x00000003); // USB_PHY_TXPREEMPHASISTUNE
-    //write_reg32((uint32_t *)0x40b000bc, 0x00000003); // USB_PHY_TXRISETUNE
     write_reg32((uint32_t *)0x40b000c0, 0x00000099); // USB_PHY_TXVREFTUNE
     write_reg32((uint32_t *)0x40b000dc, 0x00000003); // USB PHY RESET
     HAL_Delay(1);
     write_reg32((uint32_t *)0x40b000dc, 0x00000000); // USB PHY CLAER RESET
 
-    //USB_PHY_TXPREEMPHASISTUNE   = 0x3;
-    //USB_PHY_TXVREFTUNE          = 0xdd;
-
-    //USB_PHY_PROT_RESET          = 0x3;
-
-    //SysTicks_DelayMS(1);
-
-    //USB_PHY_PROT_RESET          = 0;
 }
 
 void USB_LL_SetHighImpedance(USB_OTG_GlobalTypeDef *USBx)
@@ -2123,26 +2096,26 @@ void USB_LL_SetHighImpedance(USB_OTG_GlobalTypeDef *USBx)
 //  DLOG_Critical("GUSBCFG Addr: %08x, Value: %08x ;  DCTL Addr: %08x,  Value: %08x", &(USBx->GUSBCFG), USBx->GUSBCFG, &(USBx_DEVICE->DCTL), USBx_DEVICE->DCTL);
 }
 
-uint8_t Check_USB_Is_Apple_Device(USB_OTG_GlobalTypeDef *USBx)
-{
-	if (USBx == USB_OTG0_HS && g_usb_role.e_usbPort == HAL_USB_PORT_0)
-	{
-		if (g_usb_role.dev_type == USB_APPLE_DEVICE)
-			return 1;
-		else
-			return 0;
-	}
+// uint8_t Check_USB_Is_Apple_Device(USB_OTG_GlobalTypeDef *USBx)
+// {
+// 	if (USBx == USB_OTG0_HS && g_usb_role.e_usbPort == HAL_USB_PORT_0)
+// 	{
+// 		if (g_usb_role.dev_type == USB_APPLE_DEVICE)
+// 			return 1;
+// 		else
+// 			return 0;
+// 	}
 
-	if (USBx == USB_OTG1_HS && g_usb_role.e_usbPort == HAL_USB_PORT_1)
-	{
-		if (g_usb_role.dev_type == USB_APPLE_DEVICE)
-            return 1;
-        else
-            return 0;
-	}
+// 	if (USBx == USB_OTG1_HS && g_usb_role.e_usbPort == HAL_USB_PORT_1)
+// 	{
+// 		if (g_usb_role.dev_type == USB_APPLE_DEVICE)
+//             return 1;
+//         else
+//             return 0;
+// 	}
 
-	return 0;
-}
+// 	return 0;
+// }
 
 /**
   * @}

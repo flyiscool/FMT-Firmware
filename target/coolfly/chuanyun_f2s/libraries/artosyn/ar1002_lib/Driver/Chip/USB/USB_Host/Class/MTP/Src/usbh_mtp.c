@@ -42,9 +42,9 @@
 #include "usbh_mtp.h"
 #include "debuglog.h"
 #include "drv_systick.h"
-#include "sram_ground.h"
-#include "cmsis_os.h"
-#include "task.h"
+// #include "sram_ground.h"
+// #include "cmsis_os.h"
+// #include "task.h"
 #include "sys_event.h"
 
 
@@ -576,7 +576,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0000;
-            phost->Control.setup.b.wLength.w = strlen(g_vendor) + 1;
+            phost->Control.setup.b.wLength.w = strlen((char *)g_vendor) + 1;
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_vendor, phost->Control.setup.b.wLength.w))
             {
@@ -599,7 +599,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0001;
-            phost->Control.setup.b.wLength.w = strlen(g_model) + 1;
+            phost->Control.setup.b.wLength.w = strlen((char *)g_model) + 1;
 
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_model, phost->Control.setup.b.wLength.w))
@@ -623,7 +623,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0002;
-            phost->Control.setup.b.wLength.w = strlen(g_product) + 1;
+            phost->Control.setup.b.wLength.w = strlen((char *)g_product) + 1;
 
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_product, phost->Control.setup.b.wLength.w))
@@ -647,7 +647,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0003;
-            phost->Control.setup.b.wLength.w = strlen(g_version) + 1;
+            phost->Control.setup.b.wLength.w = strlen((char *)g_version) + 1;
 
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_version, phost->Control.setup.b.wLength.w))
@@ -662,7 +662,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             }
             else
             {
-                if (strlen(g_uri) > 0)
+                if (strlen((char *)g_uri) > 0)
                 {
                     phost->ClassRequestState = MTP_REQ_URI;
                     phost->timeout_count = 0;
@@ -679,7 +679,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0004;
-            phost->Control.setup.b.wLength.w = strlen(g_uri) + 1;   //30
+            phost->Control.setup.b.wLength.w = strlen((char *)g_uri) + 1;   //30
 
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_uri, phost->Control.setup.b.wLength.w))
@@ -708,7 +708,7 @@ static USBH_StatusTypeDef USBH_MTP_ClassRequest (USBH_HandleTypeDef *phost)
             phost->Control.setup.b.bRequest = 0x34;
             phost->Control.setup.b.wValue.w = 0x0000;
             phost->Control.setup.b.wIndex.w = 0x0005;
-            phost->Control.setup.b.wLength.w = strlen(g_serial) + 1;   //30
+            phost->Control.setup.b.wLength.w = strlen((char *)g_serial) + 1;   //30
 
 
             if (USBH_BUSY == USBH_CtlReq(phost, g_serial, phost->Control.setup.b.wLength.w))
@@ -1887,11 +1887,11 @@ void USBH_MTP_SendVideoData(uint8_t *data_buffer, uint32_t data_size, uint32_t c
 
 uint8_t USBH_MTP_Send_From_Task(uint8_t *buffer, uint32_t size)
 {
-    taskENTER_CRITICAL();
+    // taskENTER_CRITICAL();
     if(size < MAX_PACKET_SIZE && 0 == g_mtpSendSize[DATA_BUF_DEPTH])
     {
         g_mtpSendSize[DATA_BUF_DEPTH] = size;
-        taskEXIT_CRITICAL();
+        // taskEXIT_CRITICAL();
 
         memcpy(g_mtpSendBuffer[DATA_BUF_DEPTH], buffer, size);
 
@@ -1899,13 +1899,13 @@ uint8_t USBH_MTP_Send_From_Task(uint8_t *buffer, uint32_t size)
     }
     else if(0 != g_mtpSendSize[DATA_BUF_DEPTH])
     {
-        taskEXIT_CRITICAL();
+        // taskEXIT_CRITICAL();
         DLOG_Info("task send busy!");
         return 1;
     }
     else
     {
-        taskEXIT_CRITICAL();
+        // taskEXIT_CRITICAL();
         DLOG_Error("send data too long( > 512)!");
         g_mtpSendSize[DATA_BUF_DEPTH] = 0;
         return 1;
@@ -1913,15 +1913,15 @@ uint8_t USBH_MTP_Send_From_Task(uint8_t *buffer, uint32_t size)
 }
 
 
-#define USBH_MTP_Getlock(x)           x = taskENTER_CRITICAL_FROM_ISR();++g_mtp_send_lock;taskEXIT_CRITICAL_FROM_ISR(x)
-#define USBH_MTP_Releaselock(x)       x = taskENTER_CRITICAL_FROM_ISR();--g_mtp_send_lock;taskEXIT_CRITICAL_FROM_ISR(x)
+// #define USBH_MTP_Getlock(x)           x = taskENTER_CRITICAL_FROM_ISR();++g_mtp_send_lock;taskEXIT_CRITICAL_FROM_ISR(x)
+// #define USBH_MTP_Releaselock(x)       x = taskENTER_CRITICAL_FROM_ISR();--g_mtp_send_lock;taskEXIT_CRITICAL_FROM_ISR(x)
 
 uint8_t USBH_MTP_Send(uint8_t *buffer, uint32_t size)
 {
     uint32_t   i;
     uint32_t Savestatus;
 
-    USBH_MTP_Getlock(Savestatus);
+    // USBH_MTP_Getlock(Savestatus);
 
     DLOG_Info("mtp send data: %d, %d", g_mtpSendRdIndex, g_mtpSendWrIndex);
     DLOG_Info("mtp send data: %02x, %02x, %02x, %02x, %02x, %02x, %02x, %02x",
@@ -1930,7 +1930,7 @@ uint8_t USBH_MTP_Send(uint8_t *buffer, uint32_t size)
 
     if(1 != g_mtp_send_lock)
     {
-        USBH_MTP_Releaselock(Savestatus);
+        // USBH_MTP_Releaselock(Savestatus);
         DLOG_Error("mtp send busy");
         return 1;
     }
@@ -1938,7 +1938,7 @@ uint8_t USBH_MTP_Send(uint8_t *buffer, uint32_t size)
     if (((g_mtpSendWrIndex + 1) % DATA_BUF_DEPTH) == g_mtpSendRdIndex)
     {
         DLOG_Critical("mtp buffer is full");
-        USBH_MTP_Releaselock(Savestatus);
+        // USBH_MTP_Releaselock(Savestatus);
         return 1;
     }
 
@@ -1952,7 +1952,7 @@ uint8_t USBH_MTP_Send(uint8_t *buffer, uint32_t size)
         if (((g_mtpSendWrIndex + 1) % DATA_BUF_DEPTH) == g_mtpSendRdIndex)
         {
             DLOG_Critical("mtp buffer is full");
-            USBH_MTP_Releaselock(Savestatus);
+            // USBH_MTP_Releaselock(Savestatus);
             return 1;
         }
     }
@@ -1976,7 +1976,7 @@ uint8_t USBH_MTP_Send(uint8_t *buffer, uint32_t size)
         g_mtpSendWrIndex = 0;
     }
 
-    USBH_MTP_Releaselock(Savestatus);
+    // USBH_MTP_Releaselock(Savestatus);
 
     return 0;
 }

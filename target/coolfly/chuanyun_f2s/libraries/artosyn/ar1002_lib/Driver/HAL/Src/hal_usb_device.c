@@ -13,7 +13,7 @@ History:
 #include "usbd_core.h"
 #include "usbd_hid.h"
 #include "usbd_hid_desc.h"
-#include "sram_ground.h"
+// #include "sram_ground.h"
 #include "sys_event.h"
 #include "interrupt.h"
 #include "hal_nvic.h"
@@ -114,14 +114,14 @@ void HAL_USB_ResetDevice(void * p)
     USBD_LL_Init(&USBD_Device[u8_portId]);
     USBD_LL_Start(&USBD_Device[u8_portId]);
 
-    if (sramReady0 == 1)
-    {
-        SRAM_Ready0Confirm();
-    }
-    if (sramReady1 == 1)
-    {
-        SRAM_Ready1Confirm();
-    }
+    // if (sramReady0 == 1)
+    // {
+    //     SRAM_Ready0Confirm();
+    // }
+    // if (sramReady1 == 1)
+    // {
+    //     SRAM_Ready1Confirm();
+    // }
 
     return;
 }

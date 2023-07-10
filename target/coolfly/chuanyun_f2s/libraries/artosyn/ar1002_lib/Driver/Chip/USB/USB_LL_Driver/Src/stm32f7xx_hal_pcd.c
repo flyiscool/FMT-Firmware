@@ -153,7 +153,7 @@ HAL_StatusTypeDef HAL_PCD_Init(PCD_HandleTypeDef *hpcd, uint8_t u8_DeviceMode)
 
   hpcd->State = HAL_PCD_STATE_BUSY;
 
-  if (!Check_USB_Is_Apple_Device(hpcd->Instance))
+  // if (!Check_USB_Is_Apple_Device(hpcd->Instance))
   {
       /* Init the low level hardware : GPIO, CLOCK, NVIC... */
       HAL_PCD_MspInit(hpcd);
@@ -206,7 +206,7 @@ HAL_StatusTypeDef HAL_PCD_Init(PCD_HandleTypeDef *hpcd, uint8_t u8_DeviceMode)
    HAL_PCDEx_ActivateLPM(hpcd);
  }
  DLOG_Critical("It is HAL_PCD_Init");
- if(!Check_USB_Is_Apple_Device(hpcd->Instance))
+//  if(!Check_USB_Is_Apple_Device(hpcd->Instance))
    USB_DevDisconnect (hpcd->Instance);
 
  return HAL_USB_OK;
@@ -501,7 +501,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
       }
       __HAL_PCD_CLEAR_FLAG(hpcd, USB_OTG_GINTSTS_USBSUSP);
 
-      if (Check_USB_Is_Apple_Device(hpcd->Instance))
+      // if (Check_USB_Is_Apple_Device(hpcd->Instance))
       {
         argc_value = (uint32_t)USBx;
         DLOG_Critical("USBx (temp_value) is: %08x, INTSTS: %08x, GOTGINT: %08x", argc_value, hpcd->Instance->GINTSTS, hpcd->Instance->GOTGINT);

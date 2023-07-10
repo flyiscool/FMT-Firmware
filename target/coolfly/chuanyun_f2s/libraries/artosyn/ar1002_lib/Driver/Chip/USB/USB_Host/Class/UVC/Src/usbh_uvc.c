@@ -261,7 +261,7 @@ static USBH_StatusTypeDef USBH_UVC_SOFProcess (USBH_HandleTypeDef *phost)
 static void USBH_UVC_Probe(USBH_HandleTypeDef *phost)
 {
     UVC_HandleTypeDef        *UVC_Handle =  (UVC_HandleTypeDef *)phost->pActiveClass->pData;
-    USBH_StatusTypeDef        status = USBH_BUSY;
+    // USBH_StatusTypeDef        status = USBH_BUSY;
     uint32_t                  default_interval = 0;
 
     phost->Control.setup.b.wValue.w = 0x0100;
@@ -377,7 +377,8 @@ static void USBH_UVC_Commit(USBH_HandleTypeDef *phost)
                                           UVC_Handle->u8_selInterface,
                                           UVC_Handle->u8_selAltInterface))
     {
-        ar_osDelay(1);
+        // ar_osDelay(1);
+        HAL_Delay(1);
     }
 
     u8_recvBuff         = USBH_GetRecvBuffer(phost);
@@ -395,7 +396,7 @@ uint8_t USBH_UVC_StartView(USBH_HandleTypeDef *phost,
                           UVC_SupportedFormatsDef uvc_format)
 {
     UVC_HandleTypeDef          *UVC_Handle =  (UVC_HandleTypeDef *)phost->pActiveClass->pData;
-    uint8_t                    *u8_recvBuff = NULL;
+    // uint8_t                    *u8_recvBuff = NULL;
 
     UVC_Handle->u8_selFrameIndex        = u8_frameIndex;
     UVC_Handle->u8_selFormatIndex       = u8_formatIndex;
@@ -1270,7 +1271,7 @@ uint32_t USBH_UVC_GetUVCAttributionMask(void)
 
 static int32_t USBH_UVC_ExtractValidData(int32_t *data, uint8_t dataLen)
 {
-    uint8_t         i;
+    // uint8_t         i;
     uint32_t        negtive_check = 0x80;
     int32_t         temp;
 
@@ -1302,7 +1303,7 @@ static int32_t USBH_UVC_ExtractValidData(int32_t *data, uint8_t dataLen)
 
 void USBH_UVC_GetUVCAttribution(USBH_HandleTypeDef *phost, uint8_t index)
 {
-    UVC_HandleTypeDef        *UVC_Handle;
+    volatile UVC_HandleTypeDef        *UVC_Handle;
 
     UVC_Handle =  (UVC_HandleTypeDef *) phost->pActiveClass->pData;
 
@@ -1373,7 +1374,8 @@ void USBH_UVC_SetUVCAttribution(USBH_HandleTypeDef *phost)
 
     while (USBH_BUSY == USBH_CtlReq(phost, (uint8_t *)(&(g_stUVCAttrCtrl[UVC_Handle->u8_setAttrIndex].cur)) , phost->Control.setup.b.wLength.w))
     {
-        ar_osDelay(1);
+        // ar_osDelay(1);
+        HAL_Delay(1);
     }
 }
 
@@ -1381,7 +1383,7 @@ void USBH_UVC_SetUVCAttribution(USBH_HandleTypeDef *phost)
 int8_t USBH_UVC_SetUVCAttrInterface(USBH_HandleTypeDef *phost, uint8_t attr_index, int32_t attr_value)
 {
     UVC_HandleTypeDef      *UVC_Handle;
-    uint8_t                 i;
+    // uint8_t                 i;
 
     UVC_Handle =  (UVC_HandleTypeDef *) phost->pActiveClass->pData;
 

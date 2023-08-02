@@ -866,33 +866,33 @@ HAL_RET_T HAL_USB_CheckNetLineConnect(void)
 
 HAL_RET_T HAL_USB_HostSendCtrl(uint8_t *buff, uint32_t u32_len, uint8_t u8_portId)
 {
-    if(u8_portId >= HAL_USB_PORT_NUM)
-    {
+    // if(u8_portId >= HAL_USB_PORT_NUM)
+    // {
         return HAL_USB_ERR_PORT_INVALID;
-    }
+    // }
 
-    if(hUSBHost[u8_portId].pActiveClass != NULL)
-    {
-        if(0 == strcmp(hUSBHost[u8_portId].pActiveClass->Name, "MTP"))
-        {
-            if(0 == USBH_MTP_Send(buff, u32_len))
-            {
-                return HAL_OK;
-            }
-            else
-            {
-                return HAL_USB_ERR_DEVICE_NOT_CONGIURED;
-            }
-        }
-        else// only mtp now
-        {
-            return HAL_NOT_INITED;
-        }
-    }
-    else
-    {
-        return HAL_NOT_INITED;
-    }
+    // if(hUSBHost[u8_portId].pActiveClass != NULL)
+    // {
+    //     if(0 == strcmp(hUSBHost[u8_portId].pActiveClass->Name, "MTP"))
+    //     {
+    //         // if(0 == USBH_MTP_Send(buff, u32_len))
+    //         // {
+    //         //     return HAL_OK;
+    //         // }
+    //         // else
+    //         // {
+    //         //     return HAL_USB_ERR_DEVICE_NOT_CONGIURED;
+    //         // }
+    //     }
+    //     else// only mtp now
+    //     {
+    //         return HAL_NOT_INITED;
+    //     }
+    // }
+    // else
+    // {
+    //     return HAL_NOT_INITED;
+    // }
 }
 
 

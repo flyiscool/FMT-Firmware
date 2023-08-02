@@ -31,7 +31,7 @@
 #include "inter_core.h"
 #include "mini384.h"
 #include "xc7027.h"
-
+#include "wireless_interface.h"
 
 //--------------------------------------
 static void sys_event_start(void);
@@ -55,8 +55,15 @@ void task_local_entry(void* parameter)
     xc7027_start();
     // mini384_start();
 
+
+    
+    usr_usb0_interface();
+    Wireless_TaskInit(0);
+
+
     while (1) {
         DLOG_Process(NULL);
+        Wireless_MessageProcess();
         sys_msleep(100);
     }
 }

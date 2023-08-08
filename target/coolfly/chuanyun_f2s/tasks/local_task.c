@@ -32,9 +32,12 @@
 #include "mini384.h"
 #include "xc7027.h"
 #include "wireless_interface.h"
+#include "usr_usb_task.h"
 
 //--------------------------------------
 static void sys_event_start(void);
+
+_EXT_DTCM1 void wireless_start(void);
 
 _EXT_DTCM1
 fmt_err_t task_local_init(void)
@@ -46,7 +49,7 @@ _EXT_DTCM1
 void task_local_entry(void* parameter)
 {
     HAL_USB_Init(HAL_USB_PORT_0, HAL_USB_DR_MODE_DEVICE);
-    // HAL_USB_Init(HAL_USB_PORT_1, HAL_USB_DR_MODE_DEVICE);
+    HAL_USB_Init(HAL_USB_PORT_1, HAL_USB_DR_MODE_DEVICE);
     sys_event_start();
     sbus_start();
     bb_led_start();
@@ -55,15 +58,12 @@ void task_local_entry(void* parameter)
     xc7027_start();
     // mini384_start();
 
-
-    
     usr_usb0_interface();
     Wireless_TaskInit(0);
-
+    wireless_start();
 
     while (1) {
         DLOG_Process(NULL);
-        Wireless_MessageProcess();
         sys_msleep(100);
     }
 }
@@ -132,3 +132,33 @@ static void sys_event_start(void)
     FMT_CHECK(workqueue_schedule_work(sysevent_wq, &sys_event_item));
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_EXT_DTCM1
+static void run_wireless(void* parameter)
+{
+    Wireless_MessageProcess();
+}
+
+/////////////////////////////////////////////////////
+
+_EXT_DTCM1_BSS
+static struct WorkItem wireless_item = {
+    .name = "wireless",
+    .period = 20,
+    .schedule_time = 0,
+    .run = run_wireless
+};
+
+_EXT_DTCM1
+void wireless_start(void)
+{
+
+    WorkQueue_t lp_wq = workqueue_find("wq:lp_work");
+
+    RT_ASSERT(lp_wq != NULL);
+
+    FMT_CHECK(workqueue_schedule_work(lp_wq, &wireless_item));
+}

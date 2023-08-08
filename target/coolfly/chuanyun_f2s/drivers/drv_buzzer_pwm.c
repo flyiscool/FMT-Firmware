@@ -158,7 +158,9 @@ rt_err_t drv_buzzer_pwm_init(void)
     buzzer_pwm_timer_init();
 
     rt_uint32_t pwm_period_us = 1 * 1000000 / g_buzzer_pwm_freq;
-    HAL_PWM_Stop(BUZZER_PWM_CHAN_NUM);
+
+    //HAL_PWM_Stop(BUZZER_PWM_CHAN_NUM);
+    
     HAL_PWM_RegisterPwmWithIntr(BUZZER_PWM_CHAN_NUM, pwm_period_us / 2, pwm_period_us / 2);
     // HAL_PWM_Start(g_pwm_map[i]);
 

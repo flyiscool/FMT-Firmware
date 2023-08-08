@@ -8,7 +8,6 @@ extern "C"
 
 #include "hal_sram_sky.h"
 
-void bypass_encoder_init(void);
 void usr_usb0_interface(void);
 uint32_t get_usb_recv_size0(void);
 uint32_t get_usb_recv_size1(void);

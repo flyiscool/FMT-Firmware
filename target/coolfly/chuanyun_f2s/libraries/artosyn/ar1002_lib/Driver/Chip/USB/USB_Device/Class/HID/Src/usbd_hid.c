@@ -1139,23 +1139,23 @@ static uint8_t USBD_HID_DataOut (USBD_HandleTypeDef *pdev,
 
         USBD_LL_PrepareReceive(pdev, HID_CUSTOMER_OUT_ADDR, g_u8CustomerOut, HID_CUSTOMER_OUT_SIZE);
     }
-    // else if (HID_EPOUT_VIDEO_ADDR == epnum)
-    // {
-    //     if (USB_OTG_IsBigEndian(pdev))
-    //     {
-    //         USB_LL_ConvertEndian(g_u8UsbBypassEncoderBuff, g_u8UsbBypassEncoderBuff, (uint32_t)sizeof(g_u8UsbBypassEncoderBuff));
-    //     }
+    else if (HID_EPOUT_VIDEO_ADDR == epnum)
+    {
+        if (USB_OTG_IsBigEndian(pdev))
+        {
+            USB_LL_ConvertEndian(g_u8UsbBypassEncoderBuff, g_u8UsbBypassEncoderBuff, (uint32_t)sizeof(g_u8UsbBypassEncoderBuff));
+        }
 
-    //     if (pdev->pUserData)
-    //     {
-    //         if (((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream)
-    //         {
-    //             ((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream(g_u8UsbBypassEncoderBuff, USBD_LL_GetRxDataSize(pdev, epnum), pdev->id);
-    //         }
-    //     }
+        if (pdev->pUserData)
+        {
+            if (((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream)
+            {
+                ((USBD_HID_ItfTypeDef *)pdev->pUserData)->recvVideoStream(g_u8UsbBypassEncoderBuff, USBD_LL_GetRxDataSize(pdev, epnum), pdev->id);
+            }
+        }
 
-    //     USBD_LL_PrepareReceive(pdev, HID_EPOUT_VIDEO_ADDR, g_u8UsbBypassEncoderBuff, HID_EPOUT_VIDEO_SIZE);
-    // }
+        USBD_LL_PrepareReceive(pdev, HID_EPOUT_VIDEO_ADDR, g_u8UsbBypassEncoderBuff, HID_EPOUT_VIDEO_SIZE);
+    }
 
 
     return USBD_OK;

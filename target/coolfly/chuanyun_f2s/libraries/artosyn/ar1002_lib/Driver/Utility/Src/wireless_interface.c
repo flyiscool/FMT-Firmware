@@ -1312,39 +1312,39 @@ uint8_t WIRELESS_INTERFACE_MIMO_2T2R_Handler(void *param, uint8_t id)
 
 uint8_t WIRELESS_INTERFACE_OSD_DISPLAY_Handler(void *param, uint8_t id)
 {
-    uint8_t                *msgContent;
+    // uint8_t                *msgContent;
 
-    msgContent              = (uint8_t *)param;
-    msgContent             += sizeof(STRU_WIRELESS_MSG_HEADER);
+    // msgContent              = (uint8_t *)param;
+    // msgContent             += sizeof(STRU_WIRELESS_MSG_HEADER);
 
-    if (id > HAL_USB_PORT_NUM)
-    {
-        DLOG_Error("error usb port id");
+    // if (id > HAL_USB_PORT_NUM)
+    // {
+    //     DLOG_Error("error usb port id");
 
-        return 1;
-    }
+    //     return 1;
+    // }
 
-    g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
+    // g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
 
-    if (msgContent[0] == 0)
-    {
-        DLOG_Info("close osd: %d", id);
+    // if (msgContent[0] == 0)
+    // {
+    //     DLOG_Info("close osd: %d", id);
 
-        g_u8OSDEnable[id] = 0;
+    //     g_u8OSDEnable[id] = 0;
 
-        if ((g_u8OSDEnable[0] == 0)&&
-            (g_u8OSDEnable[1] == 0))
-        {
-            g_pstWirelessInfoDisplay->osd_enable = 0;
-        }
-    }
-    else
-    {
-        DLOG_Info("open osd: %d", id);
+    //     if ((g_u8OSDEnable[0] == 0)&&
+    //         (g_u8OSDEnable[1] == 0))
+    //     {
+    //         g_pstWirelessInfoDisplay->osd_enable = 0;
+    //     }
+    // }
+    // else
+    // {
+    //     DLOG_Info("open osd: %d", id);
 
-        g_u8OSDEnable[id] = 1;
-        g_pstWirelessInfoDisplay->osd_enable = 1;
-    }
+    //     g_u8OSDEnable[id] = 1;
+    //     g_pstWirelessInfoDisplay->osd_enable = 1;
+    // }
 
     return 0;
 }
@@ -1810,27 +1810,27 @@ uint8_t WIRELESS_INTERFACE_BB_SET_TMP_RC_VT_ID_Handler(void *param, uint8_t id)
 
 uint8_t WIRELESS_INTERFACE_GET_OSD_INFO_ONCE_Handler(void *param, uint8_t id)
 {
-    g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
+    // g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
 
-    if (g_pstWirelessInfoDisplay->osd_enable)
-    {
-        if (g_u8OSDEnable[id])
-        {
-            return 0;
-        }
-        else
-        {
-            g_u8OSDOnce[id] = 1;
-            g_u8OSDEnable[id] = 1;
-        }
-    }
-    else
-    {
-        g_u8OSDOnce[id] = 1;
-        g_u8OSDEnable[id] = 1;
+    // if (g_pstWirelessInfoDisplay->osd_enable)
+    // {
+    //     if (g_u8OSDEnable[id])
+    //     {
+    //         return 0;
+    //     }
+    //     else
+    //     {
+    //         g_u8OSDOnce[id] = 1;
+    //         g_u8OSDEnable[id] = 1;
+    //     }
+    // }
+    // else
+    // {
+    //     g_u8OSDOnce[id] = 1;
+    //     g_u8OSDEnable[id] = 1;
 
-        g_pstWirelessInfoDisplay->osd_enable = 1;
-    }
+    //     g_pstWirelessInfoDisplay->osd_enable = 1;
+    // }
 
     return 0;
 }
@@ -2842,25 +2842,25 @@ uint8_t PAD_ENCODER_DYNAMIC_BITRATE_SELECT_Handler(void *param, uint8_t id)
 
 uint8_t PAD_WIRELESS_OSD_DISPLAY_Handler(void *param, uint8_t id)
 {
-    uint8_t                *msgContent;
+    // uint8_t                *msgContent;
 
-    msgContent              = (uint8_t *)param;
-    msgContent             += sizeof(STRU_WIRELESS_MSG_HEADER);
+    // msgContent              = (uint8_t *)param;
+    // msgContent             += sizeof(STRU_WIRELESS_MSG_HEADER);
 
-    g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
+    // g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
 
-    if (msgContent[0] == 0)
-    {
-        DLOG_Info("close osd");
+    // if (msgContent[0] == 0)
+    // {
+    //     DLOG_Info("close osd");
 
-        g_pstWirelessInfoDisplay->osd_enable    = 0;
-    }
-    else
-    {
-        DLOG_Info("open osd");
+    //     g_pstWirelessInfoDisplay->osd_enable    = 0;
+    // }
+    // else
+    // {
+    //     DLOG_Info("open osd");
 
-        g_pstWirelessInfoDisplay->osd_enable    = 1;
-    }
+    //     g_pstWirelessInfoDisplay->osd_enable    = 1;
+    // }
 
     return 0;
 }
@@ -3229,42 +3229,7 @@ void Wireless_MessageProcess(void)
             }
         // }
     }
-    else if (g_pstWirelessInfoDisplay->osd_enable)
-    {
-        g_u8OSDToggle  ^= 1;
-
-        if (g_u8OSDToggle == 1)
-        {
-            if (g_u8OSDEnable[0])
-            {
-                // WIRELESS_SendOSDInfo(0);
-
-                if (g_u8OSDOnce[0])
-                {
-                    g_u8OSDOnce[0] = 0;
-                    g_u8OSDEnable[0] = 0;
-                }
-            }
-        }
-        else
-        {
-            if (g_u8OSDEnable[1])
-            {
-                // WIRELESS_SendOSDInfo(1);
-
-                if (g_u8OSDOnce[1])
-                {
-                    g_u8OSDOnce[1] = 0;
-                    g_u8OSDEnable[1] = 0;
-                }
-            }
-        }
-
-        if ((g_u8OSDEnable[0] == 0) && (g_u8OSDEnable[1] == 0))
-        {
-            g_pstWirelessInfoDisplay->osd_enable = 0;
-        }
-    }
+  
 
     if (g_stWirelessParamConfig.u8_buffTail != g_stWirelessParamConfig.u8_buffHead)
     {
@@ -3300,6 +3265,8 @@ void Wireless_MessageProcess(void)
         }
     }
 
+
+    
 }
 
 static void Wireless_Task(void const *argument)
@@ -3320,9 +3287,8 @@ void Wireless_InitBuffer(void)
     memset((void *)&g_stWirelessParamConfig, 0, sizeof(STRU_WIRELESS_MESSAGE_BUFF));
     memset((void *)&g_stWirelessReply, 0, sizeof(STRU_WIRELESS_MESSAGE_BUFF));
 
-    g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
-
-    g_pstWirelessInfoDisplay->osd_enable = 0;
+    // g_pstWirelessInfoDisplay  = (STRU_WIRELESS_INFO_DISPLAY *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR;
+    // g_pstWirelessInfoDisplay->osd_enable = 0;
 }
 
 __attribute__((weak)) void ar_osWirelessTaskInit(void TaskHandler(void const *argument))
@@ -3331,34 +3297,14 @@ __attribute__((weak)) void ar_osWirelessTaskInit(void TaskHandler(void const *ar
 
 
 void Wireless_TaskInit(uint8_t u8_useRTOS)
-{
-
-    // WIRELESS_INTERFACE_RegisterUserHandler(Cmd_Handler,CMD_HANDLER_CNT);
-    
+{    
     Wireless_InitBuffer();
 
     memset((void *)SRAM_BB_STATUS_SHARE_MEMORY_ST_ADDR, 0, 512);
 
     HAL_USB_RegisterUserProcess(WIRELESS_ParseParamConfig, Wireless_InitBuffer);
 
-    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_FACTORY_DATA, Wireless_FactoryDataEvent);
-
-    // if (u8_useRTOS)
-    // {
-    //     osMessageQDef(upgrade_msg_queue, 8, uint8_t);
-    //     upgrade_msg_queue_id = osMessageCreate(osMessageQ(upgrade_msg_queue), NULL);
-    //     if(upgrade_msg_queue_id != NULL)
-    //     {
-    //         osThreadDef(WIRELESS_Upgrade, WIRELESS_GndForSky, osPriorityNormal, 0, 16 * 128);
-    //         osThreadCreate(osThread(WIRELESS_Upgrade), NULL);
-    //     }
-    //     else
-    //     {
-    //         DLOG_Critical("upgrade_msg_queue create fail!");
-    //     }
-
-    // ar_osWirelessTaskInit(Wireless_Task);
-    // }
+    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_FACTORY_DATA, Wireless_FactoryDataEvent);
 }
 
 

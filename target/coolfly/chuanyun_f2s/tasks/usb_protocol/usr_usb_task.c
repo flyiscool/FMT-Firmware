@@ -412,7 +412,7 @@ void receive_video_stream(void *video_buff, uint32_t length, uint8_t port_id)
     
     i=0;
     skip=0;
-    //DLOG_Warning("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,",pbuf[0],
+    // DLOG_Warning("%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x,",pbuf[0],
     //    pbuf[1],pbuf[2],pbuf[3],pbuf[4],pbuf[5],pbuf[6],pbuf[7],pbuf[8],pbuf[9],pbuf[10],pbuf[11]);
         
     do{
@@ -525,12 +525,7 @@ void receive_video_stream(void *video_buff, uint32_t length, uint8_t port_id)
     }while(i < length);
 }
 
-void bypass_encoder_init(void)
-{
-    //SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_SUPPORT_BR_CHANGE, bitrate_change_callback);
-    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USB_PLUG_OUT, usb_plug_out_callback);
-    HAL_USB_RegisterEncoderBypassVideo(receive_video_stream);
-}
+
 
 static void COMTASK_Rx3Function(void const *argument)
 {
@@ -633,17 +628,22 @@ static void Usr_Usb_Debug(void const *argument)
     	// HAL_SRAM_GetReceivedDataSize(&sram0DataSize, &sram1DataSize);
         // DLOG_Info("sram0 sram1: %d %d", sram0DataSize, sram1DataSize);
     }
-
 }
+
+
+
+
 
 void usr_usb0_interface(void)
 {
 
     WIRELESS_INTERFACE_RegisterUserHandler(Cmd_Handler,CMD_HANDLER_CNT);
-
-    // SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_SUPPORT_BR_CHANGE, bitrate_change_callback);
-
-    bypass_encoder_init();
+    
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_BB_SUPPORT_BR_CHANGE, bitrate_change_callback);
+    
+    SYS_EVENT_RegisterHandler(SYS_EVENT_ID_USB_PLUG_OUT, usb_plug_out_callback);
+    
+    HAL_USB_RegisterEncoderBypassVideo(receive_video_stream);
 
 }
 

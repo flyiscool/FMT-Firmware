@@ -664,18 +664,18 @@ uint8_t SYS_EVENT_Process(void)
  **/
 void SYS_EVENT_DumpAllListNodes(void)
 {
-    // STRU_RegisteredSysEvent_Node* rEventNode = g_registeredSysEventList;
-    // while(rEventNode != NULL)
-    // {
-    //     printf("Registered EventNode: event_id 0x%lx\n", rEventNode->event_id);
-    //     STRU_RegisteredSysEventHandler_Node* hNode = rEventNode->handler_list;
-    //     while(hNode != NULL)
-    //     {
-    //         printf("                      handler %p\n", hNode->handler);
-    //         hNode = hNode->next;
-    //     }
-    //     rEventNode = rEventNode->next;
-    // }
+    STRU_RegisteredSysEvent_Node* rEventNode = g_registeredSysEventList;
+    while(rEventNode != NULL)
+    {
+        printf("Registered EventNode: event_id 0x%lx\n", rEventNode->event_id);
+        STRU_RegisteredSysEventHandler_Node* hNode = rEventNode->handler_list;
+        while(hNode != NULL)
+        {
+            printf("                      handler %p\n", hNode->handler);
+            hNode = hNode->next;
+        }
+        rEventNode = rEventNode->next;
+    }
 
     STRU_NotifiedSysEvent_Node* nEventNode = g_notifiedSysEventList;
     while(nEventNode != NULL)

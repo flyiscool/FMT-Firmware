@@ -52,7 +52,7 @@ target = "CHUANYUN_F2S"\n
 	[[pilot-cmd.command]]\n
 	type = 1\n
 	cmd = 1002\n
-	channel = 11\n
+	channel = 12\n
 	range = [1800,2000]\n
 	[[pilot-cmd.command]]\n
 	type = 1\n
@@ -62,7 +62,7 @@ target = "CHUANYUN_F2S"\n
 	[[pilot-cmd.command]]\n
 	type = 1\n
 	cmd = 1005\n
-	channel = 7\n
+	channel = 11\n
 	range = [1800,2000]\n
 [mavproxy]\n
 	[[mavproxy.devices]]\n
@@ -84,4 +84,8 @@ target = "CHUANYUN_F2S"\n
     from = "control_out"\n
     to = "main_out"\n
     chan-map = [[1,2,3,4],[1,2,3,4]]\n
+    [[actuator.mappings]]\n
+    from = "rc_channels"\n
+    to = "main_out"\n
+    chan-map = [[5,7,8,9],[5,6,7,8]]\n
 );

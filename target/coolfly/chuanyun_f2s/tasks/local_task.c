@@ -102,8 +102,19 @@ void intercore_irq0_callback(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void run_sys_event(void* parameter)
 {
-    // SYS_EVENT_DumpAllListNodes();
-    // SYS_EVENT_MallocFreeCntCheck();
+
+    static uint32_t old = 0;
+
+    uint32_t now = systime_now_ms();
+    
+    if(now - old > 2000)
+    {
+        SYS_EVENT_DumpAllListNodes();
+        SYS_EVENT_MallocFreeCntCheck();
+
+        old = now;
+    }
+
     SYS_EVENT_Process();
 }
 

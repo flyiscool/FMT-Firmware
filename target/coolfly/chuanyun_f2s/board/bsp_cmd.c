@@ -122,8 +122,21 @@ int cmd_set_chip_id(int argc, char** argv)
 FINSH_FUNCTION_EXPORT_ALIAS(cmd_set_chip_id, __cmd_set_chip_id, set<chip id1 ~5>);
 
 ////////////////////////////////////////////////////////////////////////////
-// swtich_mavlink
+// testlog
+static int handle_testlog_cmd(int argc, char** argv, int optc, optv_t* optv)
+{
 
+    // SYS_EVENT_DumpAllListNodes();
+    SYS_EVENT_MallocFreeCntCheck();
+
+    return 0;
+}
+
+int cmd_testlog(int argc, char** argv)
+{
+    return syscmd_process(argc, argv, handle_testlog_cmd);
+}
+FINSH_FUNCTION_EXPORT_ALIAS(cmd_testlog, __cmd_testlog, testlog the system);
 // /* coolfly use to switch mavlink channle */
 // fmt_err_t __switch_mavlink_to_device(rt_device_t dev)
 // {

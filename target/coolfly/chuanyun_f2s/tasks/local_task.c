@@ -109,7 +109,7 @@ static void run_sys_event(void* parameter)
     
     if(now - old > 2000)
     {
-        SYS_EVENT_DumpAllListNodes();
+        // SYS_EVENT_DumpAllListNodes();s
         SYS_EVENT_MallocFreeCntCheck();
 
         old = now;

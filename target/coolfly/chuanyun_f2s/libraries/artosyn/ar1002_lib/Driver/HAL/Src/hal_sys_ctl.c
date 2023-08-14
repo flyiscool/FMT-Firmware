@@ -24,7 +24,7 @@ History:
 #include "interrupt.h"
 #include "driver_mutex.h"
 #include "bb_uart_com.h"
-#include "nosys.h"
+// #include "nosys.h"
 
 #include  "ar1002_hal.h"
 

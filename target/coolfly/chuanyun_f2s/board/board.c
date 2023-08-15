@@ -412,6 +412,8 @@ void bsp_early_initialize(void)
 
     HAL_NV_Init();
 
+    HAL_USB_ConfigPHY();
+
     /* gpio driver init */
     RT_CHECK(drv_gpio_init());
 

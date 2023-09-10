@@ -427,6 +427,12 @@ void bsp_early_initialize(void)
     /* pwm driver init */
     RT_CHECK(drv_pwm_init());
 
+#ifdef USED_PTZ_LS
+    // add ptz
+    HAL_PWM_RegisterPwmWithIntr(HAL_PWM_NUM8, 7000 , 13000);
+    HAL_PWM_Start(HAL_PWM_NUM8);
+#endif
+
     /* buzzer pwm driver init */
     RT_CHECK(drv_buzzer_pwm_init());
 
@@ -503,14 +509,13 @@ void bsp_initialize(void)
     RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     #endif
 
-    #ifdef USED_MS5611
-    RT_CHECK(drv_ms5611_init("spi3_dev1", "barometer"));
-    #endif
 
-    #ifdef USED_SPL06
-    RT_CHECK(drv_spl06_init("spi3_dev2", "barometer"));
-    #endif
-
+    if(drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK){
+        if(drv_spl06_init("spi3_dev2", "barometer") != RT_EOK){
+            RT_CHECK(0);    
+        }
+    }
+    
     /* if no gps mag then use onboard mag */
     #ifdef USED_IST8310
     if (drv_ist8310_init("i2c3_dev2", "mag1") != FMT_EOK) {

@@ -326,7 +326,7 @@ extern WorkQueue_t wq_list[MAX_WQ_SIZE];
 
 fmt_err_t chuanyun_workqueue_manager_init(void)
 {
-    wq_list[2] = workqueue_create("wq:sysevent_work", 5, 8192, 1);
+    wq_list[2] = workqueue_create("wq:sysevent_work", 20, 4096, 1);
     RT_ASSERT(wq_list[2] != NULL);
 
     return FMT_EOK;
@@ -379,7 +379,7 @@ void bsp_early_initialize(void)
     /* init system heap */
     rt_system_heap_init((void*)SYSTEM_FREE_MEM_BEGIN, (void*)SYSTEM_FREE_MEM_END);
 
-    dlog_set_output_level(4);
+    // dlog_set_output_level(4);
 
     STRU_HAL_SYS_CTL_CONFIG* pst_cfg;
     HAL_SYS_CTL_GetConfig(&pst_cfg);

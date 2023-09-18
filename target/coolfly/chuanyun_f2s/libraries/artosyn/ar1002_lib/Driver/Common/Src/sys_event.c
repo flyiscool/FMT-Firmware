@@ -356,11 +356,12 @@ static uint8_t removeNotifiedSysEventNode(STRU_NotifiedSysEvent_Node* pNode)
  
     if(NULL == pNode)
     {
+        printf("free node is null\r\n");
         return FALSE;  
     }
     
     // Avoid event notification in ISR functions to change the notified event list at the same time
-    level = rt_hw_interrupt_disable();
+    // level = rt_hw_interrupt_disable();
 
     if(pNode == *ppFirstNode)
     {
@@ -393,7 +394,7 @@ static uint8_t removeNotifiedSysEventNode(STRU_NotifiedSysEvent_Node* pNode)
         pNode->prev->next = pNode->next;  
     }
 
-    rt_hw_interrupt_enable(level);
+    // rt_hw_interrupt_enable(level);
 
     rt_free(pNode);  
 
@@ -474,39 +475,48 @@ static uint8_t notifySysEvent(uint32_t event_id, void* parameter)
     // Local CPU core process
     if (retrieveRegisteredEventNode((event_id & ~SYS_EVENT_INTER_CORE_MASK), FALSE) != NULL)
     {
-        STRU_NotifiedSysEvent_Node** ppFirstNode = &g_notifiedSysEventList;
-        STRU_NotifiedSysEvent_Node** ppLastNode  = &g_notifiedSysEventList_tail;
-
-        STRU_NotifiedSysEvent_Node* pNewNode = (STRU_NotifiedSysEvent_Node*)rt_malloc(sizeof(STRU_NotifiedSysEvent_Node));
-  
-        if (pNewNode != NULL)
+        // if(msg_malloc_cnt - msg_free_cnt > 150)
+        if(0)
         {
-            // Add the new node to the tail, unmask the inter core bit.
-            pNewNode->event_id = (event_id & ~SYS_EVENT_INTER_CORE_MASK);
-            memcpy((void*)(pNewNode->parameter), parameter, sizeof(pNewNode->parameter));
-            pNewNode->prev = *ppLastNode;
-            pNewNode->next = NULL;
-
-            if (*ppLastNode == NULL)
-            {
-                // The first node to be created
-                *ppFirstNode = pNewNode;
-            }
-            else
-            {
-                (*ppLastNode)->next = pNewNode;
-            }
-
-            *ppLastNode = pNewNode;
-
-            retval = TRUE;
-            
-            msg_malloc_cnt ++;
+            printf("malloc cnt is much bigger than free cnt !!!!!!\r\n");
+            SYS_EVENT_MallocFreeCntCheck();
         }
         else
         {
-            // DLOG_Info("Malloc Fail g_notifiedSysEventList = %p ", g_notifiedSysEventList);
-            retval = FALSE;
+            STRU_NotifiedSysEvent_Node** ppFirstNode = &g_notifiedSysEventList;
+            STRU_NotifiedSysEvent_Node** ppLastNode  = &g_notifiedSysEventList_tail;
+
+            STRU_NotifiedSysEvent_Node* pNewNode = (STRU_NotifiedSysEvent_Node*)rt_malloc(sizeof(STRU_NotifiedSysEvent_Node));
+  
+            if (pNewNode != NULL)
+            {
+                // Add the new node to the tail, unmask the inter core bit.
+                pNewNode->event_id = (event_id & ~SYS_EVENT_INTER_CORE_MASK);
+                memcpy((void*)(pNewNode->parameter), parameter, sizeof(pNewNode->parameter));
+                pNewNode->prev = *ppLastNode;
+                pNewNode->next = NULL;
+
+                if (*ppLastNode == NULL)
+                {
+                    // The first node to be created
+                    *ppFirstNode = pNewNode;
+                }
+                else
+                {
+                    (*ppLastNode)->next = pNewNode;
+                }
+
+                *ppLastNode = pNewNode;
+
+                retval = TRUE;
+                
+                msg_malloc_cnt ++;
+            }
+            else
+            {
+                // DLOG_Info("Malloc Fail g_notifiedSysEventList = %p ", g_notifiedSysEventList);
+                retval = FALSE;
+            }
         }
     }
     else
@@ -580,6 +590,10 @@ uint8_t SYS_EVENT_NotifyInterCore(uint32_t event_id, void* parameter)
     return SYS_EVENT_Notify(event_id | SYS_EVENT_INTER_CORE_MASK, parameter);
 }
 
+static uint32_t t_cnt0 =0;
+static uint32_t t_cnt1 =0;
+static uint32_t t_cnt2 =0;
+
 
 /** 
  * @brief       API for main loop to process the notified events.
@@ -595,14 +609,17 @@ uint8_t SYS_EVENT_Process(void)
     // Get the notification node with the highest priority in the notification list
     STRU_NotifiedSysEvent_Node* processNode = findNotifiedSysEventNodeByPriority();
     
+    t_cnt0++;
     if (processNode != NULL)
     {
+        t_cnt1++;
         // Get the event node with same event ID as the nitification node 
         STRU_RegisteredSysEvent_Node* event_node = retrieveRegisteredEventNode(processNode->event_id, FALSE);
         if (event_node != NULL)
         {
             STRU_RegisteredSysEventHandler_Node* handler_node = event_node->handler_list;
 
+            t_cnt2++;
             // Process all the handlers in the handler list
             while (handler_node != NULL)
             {
@@ -620,6 +637,14 @@ uint8_t SYS_EVENT_Process(void)
 
         // Remove such notification node after it is processed
         retval = removeNotifiedSysEventNode(processNode);
+    }
+    else
+    {
+        
+        if(msg_malloc_cnt != msg_free_cnt){
+            printf("findNotifiedSysEventNodeByPriority = null but msg_malloc != msg_free \r\n");
+            SYS_EVENT_MallocFreeCntCheck();
+        }
     }
 
     //check IDLE event, avoid idle event starve or too often
@@ -688,7 +713,7 @@ void SYS_EVENT_DumpAllListNodes(void)
 
 void SYS_EVENT_MallocFreeCntCheck(void)
 {
-    printf("--------%ld %ld %ld %ld %ld %ld \r\n\n", msg_malloc_cnt, msg_free_cnt, 
+    printf("--------%ld %ld %ld %ld %ld %ld --- %ld %ld %ld\r\n\n", msg_malloc_cnt, msg_free_cnt, 
                                        handler_malloc_cnt, handler_free_cnt, 
-                                       node_malloc_cnt, node_free_cnt);
+                                       node_malloc_cnt, node_free_cnt ,t_cnt0, t_cnt1, t_cnt2);
 }

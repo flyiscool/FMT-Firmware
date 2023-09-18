@@ -77,7 +77,7 @@ void InterCore_IRQ0_CALL(void)
             uint32_t event = msg & ~SYS_EVENT_INTER_CORE_MASK;
 
             // Notify the message as a system event to the local CPU
-            SYS_EVENT_Notify_From_ISR(event, (void*)buf);
+            SYS_EVENT_Notify(event, (void*)buf);
         }
         else
         {
@@ -177,7 +177,7 @@ uint8_t InterCore_SendMsg(INTER_CORE_CPU_ID dst, INTER_CORE_MSG_ID msg, uint8_t*
     // Check whether the right section is found
     if (0 == found)
     {
-        DLOG_Warning("SRAM inter CPU share memory buffer is full!");
+        printf("SRAM inter CPU share memory buffer is full!\r\n");
         return 0;
     }
 

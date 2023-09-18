@@ -37,15 +37,14 @@
 //--------------------------------------
 static void sys_event_start(void);
 
-_EXT_DTCM1 void wireless_start(void);
+void wireless_start(void);
 
-_EXT_DTCM1
 fmt_err_t task_local_init(void)
 {
     return FMT_EOK;
 }
 
-_EXT_DTCM1
+
 void task_local_entry(void* parameter)
 {
     HAL_USB_Init(HAL_USB_PORT_0, HAL_USB_DR_MODE_DEVICE);
@@ -112,16 +111,16 @@ void intercore_irq0_callback(void)
 static void run_sys_event(void* parameter)
 {
 
-    static uint32_t old = 0;
+    // static uint32_t old = 0;
 
-    uint32_t now = systime_now_ms();
+    // uint32_t now = systime_now_ms();
 
-    if (now - old > 2000) {
-        // SYS_EVENT_DumpAllListNodes();s
-        SYS_EVENT_MallocFreeCntCheck();
+    // if (now - old > 2000) {
+    //     // SYS_EVENT_DumpAllListNodes();
+    //     // SYS_EVENT_MallocFreeCntCheck();
 
-        old = now;
-    }
+    //     old = now;
+    // }
 
     SYS_EVENT_Process();
 }
@@ -144,7 +143,7 @@ static void sys_event_start(void)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_EXT_DTCM1
+
 static void run_wireless(void* parameter)
 {
     Wireless_MessageProcess();

@@ -4,7 +4,7 @@
 #include "usbh_cdc.h"
 #include "debuglog.h"
 #include "drv_systick.h"
-#include "memory.h"
+// #include "memory.h"
 
 
 static const struct r8152_version const r8152_versions[R8152_VERSION_NUM] = {

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include "driver_buffer.h"
 #include "debuglog.h"
-#include "memory.h"
+// #include "memory.h"
 
 int8_t COMMON_getNewBuffer(uint8_t **ppu8_drvBuf, uint8_t *pu8_usrBuf, uint32_t *pu32_txLenLast, uint32_t u32_size)
 {

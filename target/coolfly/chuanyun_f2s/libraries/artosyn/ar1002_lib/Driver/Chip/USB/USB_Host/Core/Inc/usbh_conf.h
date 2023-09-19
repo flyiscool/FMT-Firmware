@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stm32f7xx_hal_hcd.h"
-#include "memory.h"
+// #include "memory.h"
 
 extern HCD_HandleTypeDef hhcd[2];
 

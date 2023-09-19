@@ -559,6 +559,14 @@ void bsp_initialize(void)
     }
     #endif
 
+    #ifdef USED_QMC5883L
+    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
+        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
+    } else {
+        FMT_CHECK(register_sensor_mag("mag0", 0));
+    }
+    #endif
+
     RT_CHECK(gps_ubx_init("serial1", "gps"));
 
     RT_CHECK(drv_ntc_init("adc9", "temp_board"));

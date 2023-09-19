@@ -86,7 +86,7 @@ void SYS_EVENT_Notify_From_ISR(uint32_t event_id, void* parameter);
 uint8_t SYS_EVENT_Process(void);
 void SYS_EVENT_DumpAllListNodes(void);
 void SYS_EVENT_MallocFreeCntCheck(void);
-
+uint8_t SYS_EVENT_Notify(uint32_t event_id, void* parameter);
 
 // Idle event
 

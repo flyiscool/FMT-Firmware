@@ -5,10 +5,10 @@
 #include <string.h>
 #include "sys_event.h"
 #include "debuglog.h"
-#include "memory.h"
+// #include "memory.h"
 #include "cpu_info.h"
 #include "drv_systick.h"
-#include "memory.h"
+// #include "memory.h"
 #include "hal.h"
 
 #include "inter_core.h"

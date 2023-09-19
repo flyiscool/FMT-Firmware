@@ -1,12 +1,9 @@
 {
     "C_Cpp.autoAddFileAssociations": false,
     "files.associations": {
-        "*.h": "c",
-        "*.c": "c",
-        "*.cpp": "cpp",
-        "*.hpp": "cpp",
-        "Sconstruct": "python",
-        "SConscript": "python",
+        "*.lds": "makefile",
+        "Makefile": "makefile",
+        "debuglog.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "git.ignoreLimitWarning": true,

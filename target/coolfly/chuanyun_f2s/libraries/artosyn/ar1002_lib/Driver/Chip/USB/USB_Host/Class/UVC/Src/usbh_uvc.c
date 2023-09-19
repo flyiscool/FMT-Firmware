@@ -5,7 +5,7 @@
 #include "cpu_info.h"
 #include "sram_sky.h"
 #include "memory_itcm.h"
-#include "memory.h"
+// #include "memory.h"
 
 USBH_ClassTypeDef  UVC_Class = 
 {

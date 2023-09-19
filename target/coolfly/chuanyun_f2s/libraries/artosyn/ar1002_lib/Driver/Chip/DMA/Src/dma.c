@@ -23,7 +23,7 @@ History:
 #include "memory_config.h"
 #include "drv_systick.h"
 #include "data_type.h"
-#include "memory.h"
+// #include "memory.h"
 
 
 typedef struct

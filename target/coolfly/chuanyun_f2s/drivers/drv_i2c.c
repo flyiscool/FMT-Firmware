@@ -20,6 +20,7 @@
 #include "ar1002_hal.h"
 #include "board_device.h"
 #include "i2c.h"
+#include "board_device.h"
 
 // #define DRV_DBG(...) console_printf(__VA_ARGS__)
 #define DRV_DBG(...)

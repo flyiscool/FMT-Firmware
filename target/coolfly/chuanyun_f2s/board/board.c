@@ -33,6 +33,7 @@
 // #include "driver/imu/icm20600.h"
 #include "driver/mag/ist8310.h"
 #include "driver/mag/mmc5983ma.h"
+#include "driver/mag/qmc5883l.h"
 #include "driver/mtd/ramtron.h"
 // #include "driver/range_finder/tfmini_s.h"
 #include "driver/mtd/spi_tfcard.h"
@@ -529,6 +530,14 @@ void bsp_initialize(void)
     #ifdef USED_MMC5983MA
     if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
         console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
+    } else {
+        FMT_CHECK(register_sensor_mag("mag0", 0));
+    }
+    #endif
+
+    #ifdef USED_QMC5883L
+    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
+        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
     } else {
         FMT_CHECK(register_sensor_mag("mag0", 0));
     }

@@ -85,7 +85,7 @@
     #define USED_MMC5983MA 1
     // #define USED_QMC5883L 1
 
-    // #define USED_IST8310 1
+    #define USED_IST8310 1
 
     #define WD_DONE_GPIO   HAL_GPIO_NUM74
     #define VIDEO_LED_GPIO HAL_GPIO_NUM55

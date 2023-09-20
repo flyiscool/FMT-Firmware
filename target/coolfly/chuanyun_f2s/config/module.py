@@ -18,7 +18,7 @@ MODULES = [
     'math/*.c',
     'filter/*.c',
     'task_manager/*.c',
-    'pmu/*.c',
+    # 'pmu/*.c',
 ]
 
 MODULES += [

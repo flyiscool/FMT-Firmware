@@ -145,6 +145,27 @@ rt_err_t register_ar_rc(void)
 //                   rc_data.rc_chan_val[15]);
 // }
 
+void ptz_turn_up(void)
+{
+    HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18800, 1200);
+}
+
+void ptz_turn_down(void)
+{
+    HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18200, 1800);
+}
+
+void ptz_ctrl(void)
+{
+    if (rc_data.rc_chan_val[14] < 1300) {
+        ptz_turn_up();
+    } else if (rc_data.rc_chan_val[15] > 1700) {
+        ptz_turn_down();
+    } else {
+        HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 7000, 13000);
+    }
+}
+
 static void cf_sbus_parse(void) // just for test
 {
     uint32_t ch_sbus[16];
@@ -178,6 +199,8 @@ static void cf_sbus_parse(void) // just for test
     rc_data.timestamp_ms = (uint32_t)(sky_sbus.timestamp / 1000);
 
     rc_updated = 1;
+
+    ptz_ctrl();
 }
 
 /**

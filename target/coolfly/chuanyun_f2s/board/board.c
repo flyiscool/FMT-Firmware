@@ -430,7 +430,7 @@ void bsp_early_initialize(void)
 
 #ifdef USED_PTZ_LS
     // add ptz
-    HAL_PWM_RegisterPwmWithIntr(HAL_PWM_NUM8, 7000 , 13000);
+    HAL_PWM_RegisterPwmWithIntr(HAL_PWM_NUM8, 7000, 13000);
     HAL_PWM_Start(HAL_PWM_NUM8);
 #endif
 
@@ -510,38 +510,33 @@ void bsp_initialize(void)
     RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     #endif
 
-
-    if(drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK){
-        if(drv_spl06_init("spi3_dev2", "barometer") != RT_EOK){
-            RT_CHECK(0);    
+    if (drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK) {
+        if (drv_spl06_init("spi3_dev2", "barometer") != RT_EOK) {
+            RT_CHECK(0);
         }
     }
-    
+
     /* if no gps mag then use onboard mag */
-    #ifdef USED_IST8310
-    if (drv_ist8310_init("i2c3_dev2", "mag1") != FMT_EOK) {
-        console_println("!!!!!!drv_ist8310_init i2c3_dev2 faild~!!!!");
+
+    if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
+        console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
     } else {
-        console_println("drv_ist8310_init i2c3_dev2~");
+        console_println("drv_ist8310_init i2c2_dev1~");
+        FMT_CHECK(register_sensor_mag("mag0", 0));
+    }
+
+    // if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
+    //     console_println("!!!!!!mmc5983ma i2c2_dev3 faild~!!!!");
+    // } else {
+    //     FMT_CHECK(register_sensor_mag("mag1", 1));
+    // }
+
+    if (drv_qmc5883l_init("i2c2_dev3", "mag1") != FMT_EOK) {
+        console_println("!!!!!!qmc5883l i2c2_dev3 faild~!!!!");
+    } else {
+        console_println("drv_qmc5883l_init i2c2_dev3~");
         FMT_CHECK(register_sensor_mag("mag1", 1));
     }
-    #endif
-
-    #ifdef USED_MMC5983MA
-    if (drv_mmc5983ma_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
-    } else {
-        FMT_CHECK(register_sensor_mag("mag0", 0));
-    }
-    #endif
-
-    #ifdef USED_QMC5883L
-    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
-    } else {
-        FMT_CHECK(register_sensor_mag("mag0", 0));
-    }
-    #endif
 
     RT_CHECK(gps_ubx_init("serial1", "gps"));
 

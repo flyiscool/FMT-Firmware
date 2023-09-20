@@ -7,11 +7,13 @@ cwd = GetCurrentDir()
 src = Glob('*.c')
 src += Glob('ntc/*.c')
 src += Glob('buzzer/*.c')
+src += Glob('pmu/*.c')
 
 
 inc = [cwd]
 inc += [cwd + '/ntc']
 inc += [cwd + '/buzzer']
+inc += [cwd + '/pmu']
 
 group = DefineGroup('PeripheralDriver', src, depend = [''], CPPPATH = inc)
 

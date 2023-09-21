@@ -46,7 +46,7 @@
 #define SPI6_MISO_Pin HAL_GPIO_NUM49
 
 struct ar1002_spi_bus {
-    struct rt_spi_bus parent;
+    struct rt_spi_bus  parent;
     ENUM_SPI_COMPONENT SPI;
 };
 
@@ -56,12 +56,12 @@ struct ar1002_spi_cs {
 
 /**
  * @brief Configure spi device
- * 
+ *
  * @param device SPI device
  * @param configuration SPI device configuration
  * @return rt_err_t RT_EOK for success
  */
-static rt_err_t configure(struct rt_spi_device* device,
+static rt_err_t configure(struct rt_spi_device*        device,
                           struct rt_spi_configuration* configuration)
 {
 
@@ -69,8 +69,8 @@ static rt_err_t configure(struct rt_spi_device* device,
 
     STRU_HAL_SPI_INIT st_spiInitInfo = {
         .u32_halSpiBaudr_Hz = 10 * 1000000,
-        .e_halSpiPolarity = HAL_SPI_POLARITY_HIGH,
-        .e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
+        .e_halSpiPolarity   = HAL_SPI_POLARITY_HIGH,
+        .e_halSpiPhase      = HAL_SPI_PHASE_2EDGE,
     };
 
     if (configuration->data_width > 8) {
@@ -114,17 +114,17 @@ static rt_err_t configure(struct rt_spi_device* device,
 
 /**
  * @brief SPI transfer function
- * 
+ *
  * @param device SPI device instance
  * @param message SPI message to be transfered
  * @return rt_uint32_t bytes have been transfered
  */
 static rt_uint32_t transfer(struct rt_spi_device* device, struct rt_spi_message* message)
 {
-    struct ar1002_spi_bus* ar1002_spi_bus = (struct ar1002_spi_bus*)device->bus;
-    ENUM_SPI_COMPONENT SPI = ar1002_spi_bus->SPI;
-    struct rt_spi_configuration* config = &device->config;
-    struct ar1002_spi_cs* ar1002_spi_cs = device->parent.user_data;
+    struct ar1002_spi_bus*       ar1002_spi_bus = (struct ar1002_spi_bus*)device->bus;
+    ENUM_SPI_COMPONENT           SPI            = ar1002_spi_bus->SPI;
+    struct rt_spi_configuration* config         = &device->config;
+    struct ar1002_spi_cs*        ar1002_spi_cs  = device->parent.user_data;
 
     HAL_RET_T ret = HAL_OK;
 
@@ -152,13 +152,38 @@ static rt_uint32_t transfer(struct rt_spi_device* device, struct rt_spi_message*
         }
     } else if ((message->send_buf == NULL) && (message->recv_buf != NULL)) // read
     {
-        // console_println("only read");
-        HAL_SPI_MasterWriteRead(SPI,
-                                NULL,
-                                0,
-                                message->recv_buf,
-                                message->length,
-                                100);
+        // console_println("only read  = %d ", message->length);
+        uint32_t spi_cnt = 0;
+
+        if (message->length <= 8) {
+            HAL_SPI_MasterWriteRead(SPI,
+                                    NULL,
+                                    0,
+                                    message->recv_buf,
+                                    message->length,
+                                    100);
+        } else {
+            while (spi_cnt < message->length) {
+                if ((message->length - spi_cnt) > 8) {
+                    HAL_SPI_MasterWriteRead(SPI,
+                                            NULL,
+                                            0,
+                                            message->recv_buf + spi_cnt,
+                                            8,
+                                            100);
+                    spi_cnt += 8;
+                } else {
+                    HAL_SPI_MasterWriteRead(SPI,
+                                            NULL,
+                                            0,
+                                            message->recv_buf + spi_cnt,
+                                            message->length - spi_cnt,
+                                            100);
+                    spi_cnt = spi_cnt + (message->length - spi_cnt);
+                }
+            }
+        }
+
         if (ret != HAL_OK) {
             console_println(" SPI READ FAILED!!!");
         }
@@ -190,9 +215,9 @@ static struct rt_spi_ops ar1002_spi_ops = {
  * \return rt_err_t RT_EOK for success
  */
 
-static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
+static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT     SPI,
                                     struct ar1002_spi_bus* ar1002_spi,
-                                    const char* spi_bus_name)
+                                    const char*            spi_bus_name)
 {
     if (SPI == SPI_1) {
         ar1002_spi->SPI = SPI_1;
@@ -200,8 +225,8 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
         /* SPI1 configure */
         STRU_HAL_SPI_INIT st_spiInitInfo = {
             .u32_halSpiBaudr_Hz = 10 * 1000000, // 10MHz
-            .e_halSpiPolarity = HAL_SPI_POLARITY_LOW,
-            .e_halSpiPhase = HAL_SPI_PHASE_1EDGE,
+            .e_halSpiPolarity   = HAL_SPI_POLARITY_LOW,
+            .e_halSpiPhase      = HAL_SPI_PHASE_1EDGE,
         };
 
         HAL_SPI_MasterInit(SPI_1, &st_spiInitInfo);
@@ -212,8 +237,8 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
         /* SPI2 configure */
         STRU_HAL_SPI_INIT st_spiInitInfo = {
             .u32_halSpiBaudr_Hz = 10 * 1000000,
-            .e_halSpiPolarity = HAL_SPI_POLARITY_HIGH,
-            .e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
+            .e_halSpiPolarity   = HAL_SPI_POLARITY_HIGH,
+            .e_halSpiPhase      = HAL_SPI_PHASE_2EDGE,
         };
 
         HAL_SPI_MasterInit(SPI_2, &st_spiInitInfo);
@@ -224,8 +249,8 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
         /* SPI3 configure */
         STRU_HAL_SPI_INIT st_spiInitInfo = {
             .u32_halSpiBaudr_Hz = 9 * 1000000,
-            .e_halSpiPolarity = HAL_SPI_POLARITY_HIGH,
-            .e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
+            .e_halSpiPolarity   = HAL_SPI_POLARITY_HIGH,
+            .e_halSpiPhase      = HAL_SPI_PHASE_2EDGE,
         };
 
         HAL_SPI_MasterInit(SPI_3, &st_spiInitInfo);
@@ -237,8 +262,8 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
         /* SPI6 configure */
         STRU_HAL_SPI_INIT st_spiInitInfo = {
             .u32_halSpiBaudr_Hz = 9 * 1000000,
-            .e_halSpiPolarity = HAL_SPI_POLARITY_HIGH,
-            .e_halSpiPhase = HAL_SPI_PHASE_2EDGE,
+            .e_halSpiPolarity   = HAL_SPI_POLARITY_HIGH,
+            .e_halSpiPhase      = HAL_SPI_PHASE_2EDGE,
         };
 
         HAL_SPI_MasterInit(SPI_6, &st_spiInitInfo);
@@ -251,7 +276,7 @@ static rt_err_t ar1002_spi_register(ENUM_SPI_COMPONENT SPI,
 
 /**
  * @brief Initialize spi bus and device
- * 
+ *
  * @return rt_err_t RT_EOK for success
  */
 rt_err_t drv_spi_init(void)

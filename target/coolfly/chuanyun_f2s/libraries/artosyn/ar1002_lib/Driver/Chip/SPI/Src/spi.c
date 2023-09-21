@@ -322,6 +322,7 @@ void SPI_IntrSrvc_dbg(uint32_t u32_vectorNum)
     // uint16_t u16_data;
     uint8_t tmpLen;
 
+
     if (VIDEO_SPI_INTR_BB_VECTOR_NUM == u32_vectorNum) {
         u8_spiCh = 7;
     } else {
@@ -388,6 +389,7 @@ static int32_t SPI_SetIntData(ENUM_SPI_COMPONENT en_id,
         s_st_spiIntData[en_id].txAlrLen = 0;
         if ((ptr_wbuf != NULL) && (u32_wsize != 0)) // write
         {
+            // DLOG_Error("en_id = %d test_spi_malloc \r\n", en_id);
             if (0 != COMMON_getNewBuffer(&s_st_spiIntData[en_id].txBuf, ptr_wbuf, &s_st_spiIntData[en_id].txLenLast, u32_wsize)) {
                 DLOG_Error("fail");
             }

@@ -127,7 +127,7 @@ static void run_sys_event(void* parameter)
 
 static struct WorkItem sys_event_item = {
     .name          = "sys_event",
-    .period        = 10,
+    .period        = 2,
     .schedule_time = 0,
     .run           = run_sys_event
 };

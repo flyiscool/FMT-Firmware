@@ -521,7 +521,7 @@ void bsp_initialize(void)
     if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
         console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
     } else {
-        console_println("drv_ist8310_init i2c2_dev1~");
+        console_println("drv_ist8310_init i2c2_dev1 success ~");
         FMT_CHECK(register_sensor_mag("mag0", 0));
     }
 

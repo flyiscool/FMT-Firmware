@@ -475,8 +475,8 @@ static uint8_t notifySysEvent(uint32_t event_id, void* parameter)
     // Local CPU core process
     if (retrieveRegisteredEventNode((event_id & ~SYS_EVENT_INTER_CORE_MASK), FALSE) != NULL)
     {
-        // if(msg_malloc_cnt - msg_free_cnt > 150)
-        if(0)
+        if(msg_malloc_cnt - msg_free_cnt > 200)
+        // if(0)
         {
             printf("malloc cnt is much bigger than free cnt !!!!!!\r\n");
             SYS_EVENT_MallocFreeCntCheck();

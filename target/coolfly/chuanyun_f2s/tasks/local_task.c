@@ -127,14 +127,14 @@ static void run_sys_event(void* parameter)
 
 static struct WorkItem sys_event_item = {
     .name          = "sys_event",
-    .period        = 2,
+    .period        = 1,
     .schedule_time = 0,
     .run           = run_sys_event
 };
 
 static void sys_event_start(void)
 {
-    WorkQueue_t sysevent_wq = workqueue_find("wq:sysevent_work");
+    WorkQueue_t sysevent_wq = workqueue_find("wq:sysevent_work2");
 
     RT_ASSERT(sysevent_wq != NULL);
 

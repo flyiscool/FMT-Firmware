@@ -116,10 +116,11 @@ static int echo_sensor_mag(void* param)
         return -1;
     }
 
-    console_printf("mag:%f %f %f\n",
+    console_printf("mag:%f %f %f mod = %f \n",
                    mag_report.mag_B_gauss[0],
                    mag_report.mag_B_gauss[1],
-                   mag_report.mag_B_gauss[2]);
+                   mag_report.mag_B_gauss[2],
+                   mag_report.mag_B_gauss[0]*mag_report.mag_B_gauss[0]+mag_report.mag_B_gauss[1]*mag_report.mag_B_gauss[1]+mag_report.mag_B_gauss[2]*mag_report.mag_B_gauss[2]);
 
     return 0;
 }

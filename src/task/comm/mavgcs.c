@@ -431,6 +431,10 @@ fmt_err_t mavgcs_init(void)
     FMT_TRY(mavproxy_register_period_msg(MAVPROXY_GCS_CHAN, MAVLINK_MSG_ID_GPS_RAW_INT, 10, mavlink_msg_gps_raw_int_pack_func, true));
 
     FMT_TRY(mavproxy_register_period_msg(MAVPROXY_GCS_CHAN, MAVLINK_MSG_ID_RC_CHANNELS, 10, mavlink_msg_rc_channels_pack_func, true));
+    
+    FMT_TRY(mavproxy_register_period_msg(MAVPROXY_GCS_CHAN, MAVLINK_MSG_ID_BATTERY_STATUS, 1, mavlink_msg_battery_status_pack_func, true));
+
+    FMT_TRY(mavproxy_register_period_msg(MAVPROXY_GCS_CHAN, MAVLINK_MSG_ID_RADIO_STATUS, 1, mavlink_msg_radio_status_pack_func, true));
 
 #ifdef FMT_USING_SIH
     FMT_TRY(mavproxy_register_period_msg(MAVPROXY_GCS_CHAN, MAVLINK_MSG_ID_HIL_STATE, 60, mavlink_msg_hil_state_pack_func, true));

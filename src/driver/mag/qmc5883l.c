@@ -42,20 +42,22 @@ RT_WEAK void qmc5883l_rotate_to_frd(float* data)
 static rt_err_t mag_raw_measure(float* raw)
 {
     uint8_t  data_reg[6]  = { 0 };
-    uint32_t data18bit[3] = { 0 };
+    int16_t dataraw[3] = { 0 };
 
     /* Read register data */
     RT_TRY(i2c_read_regs(i2c_dev, 0x00, data_reg, sizeof(data_reg)));
 
-    /* Get 18bits data, raw data unit is "count or LSB" */
-    data18bit[0] = (uint32_t)(data_reg[1] << 8 | data_reg[0]);
-    data18bit[1] = (uint32_t)(data_reg[3] << 8 | data_reg[2]);
-    data18bit[2] = (uint32_t)(data_reg[5] << 8 | data_reg[4]);
+    /* Get 16bits data, raw data unit is "count or LSB" */
+    dataraw[0] = (int16_t)(data_reg[1] << 8 | data_reg[0]);
+    dataraw[1] = (int16_t)(data_reg[3] << 8 | data_reg[2]);
+    dataraw[2] = (int16_t)(data_reg[5] << 8 | data_reg[4]);
 
     /* Magnetic field output, unit is Gauss */
-    raw[0] = ((float)data18bit[0] - QMC5883_16BIT_OFFSET) / QMC5883_16BIT_SENSITIVITY;
-    raw[1] = ((float)data18bit[1] - QMC5883_16BIT_OFFSET) / QMC5883_16BIT_SENSITIVITY;
-    raw[2] = ((float)data18bit[2] - QMC5883_16BIT_OFFSET) / QMC5883_16BIT_SENSITIVITY;
+    raw[0] = (float)dataraw[0] / 12000.0f;
+    raw[1] = (float)dataraw[1] / 12000.0f;
+    raw[2] = (float)dataraw[2] / 12000.0f;
+
+    // printf("raw = %d %d %d float = %f %f %f \r\n ", dataraw[0],dataraw[1],dataraw[2],raw[0], raw[1],raw[2]);
 
     return RT_EOK;
 }
@@ -68,8 +70,6 @@ static rt_err_t mag_measure(float* mag)
     RT_TRY(mag_raw_measure(mag_raw));
 
     // correct coordinate according to datasheet
-    mag_raw[2] = -mag_raw[2];
-
     mag[0] = mag_raw[0];
     mag[1] = mag_raw[1];
     mag[2] = mag_raw[2];
@@ -114,14 +114,15 @@ static rt_err_t qmc5883l_init(void)
     RT_CHECK(i2c_write_reg(i2c_dev, 0x0B, 0x01));
     RT_CHECK(i2c_write_reg(i2c_dev, 0x20, 0x40));
     RT_CHECK(i2c_write_reg(i2c_dev, 0x21, 0x01));
-    RT_CHECK(i2c_write_reg(i2c_dev, 0x09, 0x0D));
+    // RT_CHECK(i2c_write_reg(i2c_dev, 0x09, 0x0D));
+    RT_CHECK(i2c_write_reg(i2c_dev, 0x09, 0x09));
 
     uint8_t value = 0;
     do {
         sys_msleep(20);
         i2c_read_reg(i2c_dev, 0x09, &value);
         console_printf("QMC5883 Init ing...\r\n");
-    } while (value != 0x0D);
+    } while (value != 0x09);
 
     console_printf("QMC5883 Init success !!!\r\n");
     return RT_EOK;

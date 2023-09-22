@@ -330,6 +330,9 @@ fmt_err_t chuanyun_workqueue_manager_init(void)
     wq_list[2] = workqueue_create("wq:sysevent_work", 20, 4096, 1);
     RT_ASSERT(wq_list[2] != NULL);
 
+    wq_list[3] = workqueue_create("wq:sysevent_work2", 5, 4096, 1);
+    RT_ASSERT(wq_list[3] != NULL);
+
     return FMT_EOK;
 }
 
@@ -518,12 +521,19 @@ void bsp_initialize(void)
 
     /* if no gps mag then use onboard mag */
 
-    if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
-        console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
+    if (drv_qmc5883l_init("i2c2_dev3", "mag0") != FMT_EOK) {
+        console_println("!!!!!!qmc5883l i2c2_dev3 faild~!!!!");
     } else {
-        console_println("drv_ist8310_init i2c2_dev1 success ~");
+        console_println("drv_qmc5883l_init i2c2_dev3~");
         FMT_CHECK(register_sensor_mag("mag0", 0));
     }
+
+    // if (drv_ist8310_init("i2c2_dev1", "mag1") != FMT_EOK) {
+    //     console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
+    // } else {
+    //     console_println("drv_ist8310_init i2c2_dev1 success ~");
+    //     FMT_CHECK(register_sensor_mag("mag1", 1));
+    // }
 
     // if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
     //     console_println("!!!!!!mmc5983ma i2c2_dev3 faild~!!!!");
@@ -531,12 +541,7 @@ void bsp_initialize(void)
     //     FMT_CHECK(register_sensor_mag("mag1", 1));
     // }
 
-    if (drv_qmc5883l_init("i2c2_dev3", "mag1") != FMT_EOK) {
-        console_println("!!!!!!qmc5883l i2c2_dev3 faild~!!!!");
-    } else {
-        console_println("drv_qmc5883l_init i2c2_dev3~");
-        FMT_CHECK(register_sensor_mag("mag1", 1));
-    }
+
 
     RT_CHECK(gps_ubx_init("serial1", "gps"));
 
@@ -673,4 +678,10 @@ void bmi088_rotate_to_frd(float val[3])
     float* y = val + 1;
     *x       = -*x;
     *y       = -*y;
+}
+
+
+void ist8310_rotate_to_frd(float* data)
+{
+    *data=  -*data;
 }

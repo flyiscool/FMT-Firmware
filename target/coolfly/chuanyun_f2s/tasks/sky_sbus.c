@@ -157,14 +157,17 @@ void ptz_turn_down(void)
 
 void ptz_ctrl(void)
 {
-    if (rc_data.rc_chan_val[14] < 1300) {
+    if (rc_data.rc_chan_val[8] > 1500) {
         ptz_turn_up();
-    } else if (rc_data.rc_chan_val[14] > 1700) {
+    } else if (rc_data.rc_chan_val[9] > 1500) {
         ptz_turn_down();
     } else {
         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 7000, 13000);
     }
 }
+
+
+
 
 static void cf_sbus_parse(void) // just for test
 {

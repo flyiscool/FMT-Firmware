@@ -38,11 +38,11 @@ target = "CHUANYUN_F2S"\n
 	sample-time = 0.05\n
 	range = [1000,2000]\n
 	[[pilot-cmd.mode]]\n
-	mode = 5\n
+	mode = 6\n
 	channel = 6\n
 	range = [1000,1200]\n
 	[[pilot-cmd.mode]]\n
-	mode = 4\n
+	mode = 5\n
 	channel = 6\n
 	range = [1400,1600]\n
 	[[pilot-cmd.mode]]\n
@@ -87,5 +87,5 @@ target = "CHUANYUN_F2S"\n
     [[actuator.mappings]]\n
     from = "rc_channels"\n
     to = "main_out"\n
-    chan-map = [[5,7,8,9],[5,6,7,8]]\n
+    chan-map = [[5,7,8],[5,6,7]]\n
 );

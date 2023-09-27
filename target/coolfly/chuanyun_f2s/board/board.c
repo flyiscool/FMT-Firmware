@@ -513,11 +513,11 @@ void bsp_initialize(void)
     RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     #endif
 
-    if (drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK) {
-        if (drv_spl06_init("spi3_dev2", "barometer") != RT_EOK) {
+    // if (drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK) {
+    if (drv_spl06_init("spi3_dev2", "barometer") != RT_EOK) {
             RT_CHECK(0);
-        }
     }
+    // }
 
     /* if no gps mag then use onboard mag */
 

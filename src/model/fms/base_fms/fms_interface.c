@@ -37,10 +37,10 @@ MCN_DEFINE(fms_output, sizeof(FMS_Out_Bus));
 /* define parameters */
 static param_t __param_list[] = {
     /* Stick Dead Zone */
-    PARAM_FLOAT(THROTTLE_DZ, 0.15, false),
-    PARAM_FLOAT(YAW_DZ, 0.15, false),
-    PARAM_FLOAT(ROLL_DZ, 0.1, false),
-    PARAM_FLOAT(PITCH_DZ, 0.1, false),
+    PARAM_FLOAT(THROTTLE_DZ, 0.01, false),
+    PARAM_FLOAT(YAW_DZ, 0.01, false),
+    PARAM_FLOAT(ROLL_DZ, 0.01, false),
+    PARAM_FLOAT(PITCH_DZ, 0.01, false),
     PARAM_FLOAT(XY_P, 1.2, false),
     PARAM_FLOAT(Z_P, 1.5, false),
     PARAM_FLOAT(VEL_XY_LIM, 5.0, false),

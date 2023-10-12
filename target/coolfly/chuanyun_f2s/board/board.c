@@ -523,6 +523,13 @@ void bsp_initialize(void)
 
     if (drv_qmc5883l_init("i2c2_dev3", "mag0") != FMT_EOK) {
         console_println("!!!!!!qmc5883l i2c2_dev3 faild~!!!!");
+
+        if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
+            console_println("!!!!!!mmc5983ma i2c2_dev3 faild~!!!!");
+        } else {
+            FMT_CHECK(register_sensor_mag("mag1", 1));
+        }
+
     } else {
         console_println("drv_qmc5883l_init i2c2_dev3~");
         FMT_CHECK(register_sensor_mag("mag0", 0));
@@ -535,11 +542,7 @@ void bsp_initialize(void)
     //     FMT_CHECK(register_sensor_mag("mag1", 1));
     // }
 
-    // if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
-    //     console_println("!!!!!!mmc5983ma i2c2_dev3 faild~!!!!");
-    // } else {
-    //     FMT_CHECK(register_sensor_mag("mag1", 1));
-    // }
+
 
 
 

@@ -267,18 +267,18 @@ unsigned int DLOG_Output(unsigned int byte_num)
             head = DEBUG_LOG_OUTPUT_BUF_HEAD_0;
             tail = DEBUG_LOG_OUTPUT_BUF_TAIL_0;
             break;
-        case 1:
-            p_src  = &DEBUG_LOG_OUTPUT_BUF_RD_POS_1;
-            write_pos = (char*)DEBUG_LOG_OUTPUT_BUF_WR_POS_1;
-            head = DEBUG_LOG_OUTPUT_BUF_HEAD_1;
-            tail = DEBUG_LOG_OUTPUT_BUF_TAIL_1;
-            break;
-        case 2:
-            p_src  = &DEBUG_LOG_OUTPUT_BUF_RD_POS_2;
-            write_pos = (char*)DEBUG_LOG_OUTPUT_BUF_WR_POS_2;
-            head = DEBUG_LOG_OUTPUT_BUF_HEAD_2;
-            tail = DEBUG_LOG_OUTPUT_BUF_TAIL_2;
-            break;
+        // case 1:
+        //     p_src  = &DEBUG_LOG_OUTPUT_BUF_RD_POS_1;
+        //     write_pos = (char*)DEBUG_LOG_OUTPUT_BUF_WR_POS_1;
+        //     head = DEBUG_LOG_OUTPUT_BUF_HEAD_1;
+        //     tail = DEBUG_LOG_OUTPUT_BUF_TAIL_1;
+        //     break;
+        // case 2:
+        //     p_src  = &DEBUG_LOG_OUTPUT_BUF_RD_POS_2;
+        //     write_pos = (char*)DEBUG_LOG_OUTPUT_BUF_WR_POS_2;
+        //     head = DEBUG_LOG_OUTPUT_BUF_HEAD_2;
+        //     tail = DEBUG_LOG_OUTPUT_BUF_TAIL_2;
+        //     break;
         default:
             return 0;
         }

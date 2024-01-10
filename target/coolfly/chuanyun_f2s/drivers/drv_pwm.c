@@ -17,6 +17,7 @@
 
 #include "ar1002_hal.h"
 #include "hal/actuator/actuator.h"
+#include "board_device.h"
 
 // #define DRV_DBG(...) console_println(__VA_ARGS__)
 #define DRV_DBG(...)
@@ -34,7 +35,15 @@ uint32_t g_pwm_high_level[MAX_PWM_OUT_CHAN]; // high level of the pwm wave
 uint32_t g_pwm_freq[MAX_PWM_OUT_CHAN];       // high level of the pwm wave
 // ENUM_HAL_PWM_NUM g_pwm_map[MAX_PWM_OUT_CHAN] = {    HAL_PWM_NUM0, HAL_PWM_NUM1, HAL_PWM_NUM2, HAL_PWM_NUM3, HAL_PWM_NUM4,
 //                                                     HAL_PWM_NUM5, HAL_PWM_NUM6, HAL_PWM_NUM7, HAL_PWM_NUM8, HAL_PWM_NUM9 };
+
+#ifdef BOARD_LT_V1
 ENUM_HAL_PWM_NUM g_pwm_map[MAX_PWM_OUT_CHAN] = { HAL_PWM_NUM0, HAL_PWM_NUM1, HAL_PWM_NUM2, HAL_PWM_NUM3, HAL_PWM_NUM4, HAL_PWM_NUM5, HAL_PWM_NUM6, HAL_PWM_NUM7 };
+#endif
+
+#ifdef BOARD_CY450_V1
+ENUM_HAL_PWM_NUM g_pwm_map[MAX_PWM_OUT_CHAN] = { HAL_PWM_NUM0, HAL_PWM_NUM2, HAL_PWM_NUM1, HAL_PWM_NUM3, HAL_PWM_NUM4, HAL_PWM_NUM5, HAL_PWM_NUM6, HAL_PWM_NUM7 };
+#endif
+
 
 void pwm_gpio_init(void)
 {

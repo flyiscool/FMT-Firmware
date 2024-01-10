@@ -502,15 +502,13 @@ void bsp_initialize(void)
     // RT_CHECK(drv_icm20600_init("spi2_dev1", "gyro0", "accel0"));
     // RT_CHECK(drv_icm20689_init("spi1_dev1", "gyro0", "accel0"));
 
-    // #ifdef USED_BMI055
-    // RT_CHECK(drv_bmi055_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
-    // #endif
-
+    #ifdef USED_BMI055
     RT_CHECK(drv_bmi055_init("spi2_dev2", "gyro0", "accel0"));
+    #endif
 
-    // #ifdef USED_BMI088
-    // RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
-    // #endif
+    #ifdef USED_BMI088
+    RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
+    #endif
 
     if (drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK) {
         if (drv_spl06_init("spi3_dev2", "barometer") != RT_EOK) {
@@ -675,6 +673,21 @@ void icm20600_rotate_to_frd(float* val)
     /* do nothing */
 }
 
+#ifdef BOARD_LT_V1
+/* Re-implement this function to define customized rotation */
+void bmi088_rotate_to_frd(float val[3])
+{
+    /* do nothing */
+    float* x = val;
+    float* y = val + 1;
+    *x       = -*x;
+    *y       = -*y;
+}
+
+#endif
+
+#ifdef BOARD_CY450_V1
+
 /* Re-implement this function to define customized rotation */
 void bmi088_rotate_to_frd(float val[3])
 {
@@ -686,7 +699,6 @@ void bmi088_rotate_to_frd(float val[3])
     *z       = -*z;
 }
 
-
 void bmi055_rotate_to_frd(float val[3])
 {
     /* do nothing */
@@ -696,3 +708,5 @@ void bmi055_rotate_to_frd(float val[3])
     *x       = -*x;
     *z       = -*z;
 }
+
+#endif

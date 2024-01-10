@@ -29,7 +29,7 @@ target = "CHUANYUN_F2S"\n
 	name = "mav_console"\n
 	auto-switch = true\n
 [pilot-cmd]\n
-    stick-channel = [4,3,2,1]\n
+    stick-channel = [4,3,1,2]\n
 	[pilot-cmd.device]\n
 	type = "rc"\n
 	name = "rc"\n
@@ -83,7 +83,7 @@ target = "CHUANYUN_F2S"\n
     [[actuator.mappings]]\n
     from = "control_out"\n
     to = "main_out"\n
-    chan-map = [[1,2,3,4],[1,3,2,4]]\n
+    chan-map = [[1,2,3,4],[1,2,3,4]]\n
     [[actuator.mappings]]\n
     from = "rc_channels"\n
     to = "main_out"\n

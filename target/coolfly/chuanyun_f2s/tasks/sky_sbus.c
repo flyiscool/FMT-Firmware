@@ -145,6 +145,7 @@ rt_err_t register_ar_rc(void)
 //                   rc_data.rc_chan_val[15]);
 // }
 
+
 void ptz_turn_up(void)
 {
     HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18800, 1200);
@@ -200,7 +201,10 @@ static void cf_sbus_parse(void) // just for test
 
     rc_updated = 1;
 
+#ifdef USED_PTZ_LS
     ptz_ctrl();
+#endif
+
 }
 
 /**

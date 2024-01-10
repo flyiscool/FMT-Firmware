@@ -83,7 +83,7 @@ target = "CHUANYUN_F2S"\n
     [[actuator.mappings]]\n
     from = "control_out"\n
     to = "main_out"\n
-    chan-map = [[1,2,3,4],[1,2,3,4]]\n
+    chan-map = [[1,2,3,4],[1,3,2,4]]\n
     [[actuator.mappings]]\n
     from = "rc_channels"\n
     to = "main_out"\n

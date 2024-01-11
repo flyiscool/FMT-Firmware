@@ -37,6 +37,7 @@
 #include "driver/mtd/ramtron.h"
 // #include "driver/range_finder/tfmini_s.h"
 #include "driver/mtd/spi_tfcard.h"
+#include "driver/mtd/w25qxx.h"
 #include "driver/rgb_led/aw2023.h"
 // #include "driver/rgb_led/ncp5623c.h"
 // #include "driver/vision_flow/lc307.h"
@@ -100,7 +101,7 @@
 
 static const struct dfs_mount_tbl mnt_table[] = {
 
-#ifdef USED_RAMTRON
+#if defined (USED_RAMTRON) || defined (USED_NORFLASH) 
     { "mtdblk0", "/", "elm", 0, NULL },
 #else
     { "tfcard", "/", "elm", 0, NULL },
@@ -465,6 +466,12 @@ void bsp_initialize(void)
 #ifdef USED_RAMTRON
     if (FMT_EOK != drv_ramtron_init("spi6_dev1")) {
         console_println("=================> can't find the ramtron on spi6_dev1");
+    }
+#endif
+
+#ifdef USED_NORFLASH
+    if (FMT_EOK != drv_w25qxx_init("spi6_dev1", "mtdblk0")) {
+        console_println("=================> can't find the norflash on spi6_dev1");
     }
 #endif
 

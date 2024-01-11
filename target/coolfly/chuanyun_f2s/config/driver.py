@@ -14,9 +14,11 @@ DRIVERS = [
     # 'rgb_led/ncp5623c.c',
     'rgb_led/aw2023.c',
     'mtd/ramtron.c',
+    'mtd/w25qxx.c',
+    'mtd/spi_tfcard.c',
     'vision_flow/pmw3901_fl04.c',
     'airspeed/ms4525.c',
-    'mtd/spi_tfcard.c',
+    
     
 ]
 

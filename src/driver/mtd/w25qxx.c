@@ -61,7 +61,8 @@ static rt_err_t probe(mtd_dev_t mtd_dev)
     }
 
     /* manufacture id should be 0xEF */
-    if (id[0] != 0xEF) {
+    if ((id[0] != 0xEF) && (id[0] != 0xD8)) {
+        printf("id[0] = %02x  id[1] = %02x\r\n ", id[0], id[1]);
         return RT_ERROR;
     }
 
@@ -259,6 +260,7 @@ static rt_err_t page_write(uint32_t addr, const uint8_t* buffer, uint32_t len)
 
 static rt_err_t sector_erase(uint32_t addr)
 {
+
     uint8_t cmd[4];
     rt_size_t cnt;
     LOAD_CMD(cmd, W25QXX_CMD_SECTOR_ERASE, addr);

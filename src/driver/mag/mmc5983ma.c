@@ -141,7 +141,7 @@ static rt_err_t mag_measure(float* mag)
 
 static rt_err_t probe(void)
 {
-    uint8_t tries = 5;
+    uint8_t tries = 50;
     uint8_t value;
 
     while (tries) {
@@ -150,8 +150,9 @@ static rt_err_t probe(void)
         /* Check OTP Read status */
 
         if ((value & MMC5983_OTP_READ_DONE) != MMC5983_OTP_READ_DONE) {
-            console_printf("MMC5983 no done!!!");
+            console_printf("MMC5983 no done!!!\r\n");
             sys_msleep(10);
+            tries--;    
             continue;
         }
 

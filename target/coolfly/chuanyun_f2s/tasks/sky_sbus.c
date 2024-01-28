@@ -146,25 +146,27 @@ rt_err_t register_ar_rc(void)
 // }
 
 
-void ptz_turn_up(void)
-{
-    HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18800, 1200);
-}
-
-void ptz_turn_down(void)
-{
-    HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18200, 1800);
-}
+// speed control
 
 void ptz_ctrl(void)
 {
-    if (rc_data.rc_chan_val[14] < 1300) {
-        ptz_turn_up();
-    } else if (rc_data.rc_chan_val[14] > 1700) {
-        ptz_turn_down();
-    } else {
-        HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 7000, 13000);
+    int32_t speed = rc_data.rc_chan_val[14] - 1500;
+
+    
+
+    if(speed != 0)
+    {
+         uint32_t t_high = (6500 + speed * 3.5 * 1000 /450);
+         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 35000 - t_high, t_high);
+
+         DLOG_Critical(" speed = %d  t_high = %d \r\n", speed, t_high);
     }
+    else
+    {
+        HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18000, 17000);
+        DLOG_Critical(" speed = %d \r\n", speed);
+    }
+
 }
 
 static void cf_sbus_parse(void) // just for test
@@ -194,9 +196,9 @@ static void cf_sbus_parse(void) // just for test
     ch_sbus[15] = ((uint32_t)sky_sbus.sbus_buff[21] >> 5 | ((uint32_t)sky_sbus.sbus_buff[22] << 3)) & 0x07FF;
 
     for (int i = 0; i < 16; i++) {
-        rc_data.rc_chan_val[i] = (uint16_t)(ch_sbus[i] * 1000 / 2048 + 1000);
+        rc_data.rc_chan_val[i] =  (ch_sbus[i] - 200) * 1000 / 1600 + 1000;
     }
-
+    
     rc_data.timestamp_ms = (uint32_t)(sky_sbus.timestamp / 1000);
 
     rc_updated = 1;

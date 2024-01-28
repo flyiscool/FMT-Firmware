@@ -43,6 +43,7 @@
 // #include "driver/vision_flow/lc307.h"
 
 #include "driver/vision_flow/pmw3901_fl04.h"
+#include "driver/vision_flow/tf0850.h"
 #include "ntc.h"
 
 #include "drv_adc.h"
@@ -101,7 +102,7 @@
 
 static const struct dfs_mount_tbl mnt_table[] = {
 
-#if defined (USED_RAMTRON) || defined (USED_NORFLASH) 
+#if defined(USED_RAMTRON) || defined(USED_NORFLASH)
     { "mtdblk0", "/", "elm", 0, NULL },
 #else
     { "tfcard", "/", "elm", 0, NULL },
@@ -579,6 +580,8 @@ void bsp_initialize(void)
     //     FMT_CHECK(advertise_sensor_optflow(0));
     // }
 
+
+#ifdef USED_FLO4  
     if (pmw3901_fl04_drv_init("serial5") != FMT_EOK) {
         console_println("!!!!!!pmw3901_fl04 serial5 faild~!!!!");
     } else {
@@ -586,6 +589,18 @@ void bsp_initialize(void)
         FMT_CHECK(advertise_sensor_rangefinder(0));
         FMT_CHECK(advertise_sensor_optflow(0));
     }
+#endif
+    
+
+#ifdef USED_TF0850
+    if (tf0850_drv_init("serial5") != FMT_EOK) {
+        console_println("!!!!!!tf0850 serial5 faild~!!!!");
+    } else {
+        // console_println("======> pmw3901_xx serial4 success !!!!");
+        FMT_CHECK(advertise_sensor_rangefinder(0));
+        FMT_CHECK(advertise_sensor_optflow(0));
+    }
+#endif
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));

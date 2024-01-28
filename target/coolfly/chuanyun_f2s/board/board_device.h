@@ -122,15 +122,20 @@
     // #define USED_MMC5983MA 1
     #define USED_QMC5883L 1
 
+    // #define USED_FLO4       1
+    #define USED_TF0850     1
+
     // #define USED_IST8310 1
 
     #define WD_DONE_GPIO   HAL_GPIO_NUM74
     #define VIDEO_LED_GPIO HAL_GPIO_NUM55
     #define LINK_LED_GPIO  HAL_GPIO_NUM54
 
+    
     // #define FUM_CTRL_GPIO  HAL_GPIO_NUM88
 
     // #define USED_PTZ_LS     1
+
 
     // #define RGB_R_GPIO HAL_GPIO_NUM66
     // #define RGB_G_GPIO HAL_GPIO_NUM62

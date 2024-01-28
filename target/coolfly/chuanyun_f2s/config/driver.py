@@ -17,6 +17,7 @@ DRIVERS = [
     'mtd/w25qxx.c',
     'mtd/spi_tfcard.c',
     'vision_flow/pmw3901_fl04.c',
+    'vision_flow/tf0850.c',
     'airspeed/ms4525.c',
     
     

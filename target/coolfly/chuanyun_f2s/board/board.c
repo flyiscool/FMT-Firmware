@@ -533,24 +533,21 @@ void bsp_initialize(void)
         FMT_CHECK(register_sensor_mag("mag0", 0));
     }
 
-    // if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
-    //     console_println("!!!!!!mmc5983ma i2c2_dev3 faild~!!!!");
-    // } else {
-    //     FMT_CHECK(register_sensor_mag("mag1", 1));
-    // }
+    #ifdef USED_MMC5983MA
+    if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
+        console_println("!!!!!!mmc5983ma i2c2_dev2 faild~!!!!");
+    } else {
+        console_println("drv_mmc5983ma_init i2c2_dev2~");
+        FMT_CHECK(register_sensor_mag("mag1", 1));
+    }
+    #endif
 
+    #ifdef USED_QMC5883L
     if (drv_qmc5883l_init("i2c2_dev3", "mag1") != FMT_EOK) {
         console_println("!!!!!!qmc5883l i2c2_dev3 faild~!!!!");
     } else {
         console_println("drv_qmc5883l_init i2c2_dev3~");
         FMT_CHECK(register_sensor_mag("mag1", 1));
-    }
-
-    #ifdef USED_QMC5883L
-    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
-    } else {
-        FMT_CHECK(register_sensor_mag("mag0", 0));
     }
     #endif
 
@@ -580,8 +577,7 @@ void bsp_initialize(void)
     //     FMT_CHECK(advertise_sensor_optflow(0));
     // }
 
-
-#ifdef USED_FLO4  
+    #ifdef USED_FLO4
     if (pmw3901_fl04_drv_init("serial5") != FMT_EOK) {
         console_println("!!!!!!pmw3901_fl04 serial5 faild~!!!!");
     } else {
@@ -589,10 +585,9 @@ void bsp_initialize(void)
         FMT_CHECK(advertise_sensor_rangefinder(0));
         FMT_CHECK(advertise_sensor_optflow(0));
     }
-#endif
-    
+    #endif
 
-#ifdef USED_TF0850
+    #ifdef USED_TF0850
     if (tf0850_drv_init("serial5") != FMT_EOK) {
         console_println("!!!!!!tf0850 serial5 faild~!!!!");
     } else {
@@ -600,7 +595,7 @@ void bsp_initialize(void)
         FMT_CHECK(advertise_sensor_rangefinder(0));
         FMT_CHECK(advertise_sensor_optflow(0));
     }
-#endif
+    #endif
 
     /* register sensor to sensor hub */
     FMT_CHECK(register_sensor_imu("gyro0", "accel0", 0));

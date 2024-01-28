@@ -171,26 +171,29 @@ static void thread_entry(void* args)
                     rf_report.timestamp_ms      = time_now;
                     optflow_report.timestamp_ms = time_now;
 
+                    // printf("data.tof_strength\r\n");
                     if (data.tof_strength > 40) {
                         /* tof_status == 1 means tof valid */
                         rf_report.distance_m = data.tof_distance * 0.001f;
+
+                        /* actual optical flow velocity = raw_vel * distance, we just publish raw data,
+                            leave it to upper layer to handle it. */
+
+                        if (data.valid == 0xF5) {
+                            optflow_report.vx_mPs  = data.vx * 100.0f / data.time_interval ;
+                            optflow_report.vy_mPs  = data.vy * 100.0f / data.time_interval ;
+                            optflow_report.quality = 200;
+                        } else {
+                            optflow_report.vx_mPs  = 0;
+                            optflow_report.vy_mPs  = 0;
+                            optflow_report.quality = 0;
+                        }
+
                     } else {
                         /* negative value indicate range finder invalid */
                         rf_report.distance_m = -1;
                     }
 
-                    /* actual optical flow velocity = raw_vel * distance, we just publish raw data,
-                           leave it to upper layer to handle it. */
-
-                    if (data.valid == 0xF5) {
-                        optflow_report.vx_mPs  = data.vx * 0.01f;
-                        optflow_report.vy_mPs  = -data.vy * 0.01f;
-                        optflow_report.quality = 200;
-                    } else {
-                        optflow_report.vx_mPs  = data.vx * 0.01f;
-                        optflow_report.vy_mPs  = -data.vy * 0.01f;
-                        optflow_report.quality = 0;
-                    }
 
                     /* publish TF0850 data */
                     mcn_publish(MCN_HUB(sensor_optflow), &optflow_report);

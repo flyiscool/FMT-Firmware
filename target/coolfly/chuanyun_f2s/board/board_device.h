@@ -22,6 +22,7 @@
 #define BOARD_LT_V1 1
 // #define BOARD_HK_HELI     1
 // #define BOARD_CY450_V1 1
+#define BOARD_BH_2XY    1
 
 #ifdef BOARD_JM_250
     // #define USED_RAMTRON   1
@@ -171,4 +172,41 @@
 
     #define SPI1_SPEED_HZ  9000000
 #endif
+
+
+
+#ifdef BOARD_BH_2XY    1
+    #define USED_RAMTRON   1
+    // #define USED_NORFLASH   1
+    // #define USED_TFCARD   1
+
+    // #define USED_BMI055    1
+    #define USED_BMI088    1
+
+    #define USED_SPL06     1
+    // #define USED_MS5611    1
+    #define USED_RGB       1
+
+    #define USED_MMC5983MA 1
+    // #define USED_QMC5883L 1
+
+    // #define USED_FLO4       1
+    #define USED_TF0850    1
+
+    // #define USED_IST8310 1
+
+    #define WD_DONE_GPIO   HAL_GPIO_NUM74
+    #define VIDEO_LED_GPIO HAL_GPIO_NUM55
+    #define LINK_LED_GPIO  HAL_GPIO_NUM54
+
+    // #define FUM_CTRL_GPIO  HAL_GPIO_NUM88
+
+    // #define USED_PTZ_LS     1
+
+    // #define SENSOR_POWER_GPIO HAL_GPIO_NUM70
+
+    #define SPI1_SPEED_HZ  9000000
+
+#endif
+
 #endif

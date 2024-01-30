@@ -79,8 +79,8 @@
     // #define USED_BMI055   1
     #define USED_BMI088    1
 
-    // #define USED_SPL06 1
-    #define USED_MS5611    1
+    #define USED_SPL06     1
+    // #define USED_MS5611    1
     #define USED_RGB       1
 
     #define USED_MMC5983MA 1

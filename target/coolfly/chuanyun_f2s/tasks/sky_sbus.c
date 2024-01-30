@@ -155,10 +155,10 @@ void ptz_ctrl(void)
         uint32_t t_high = (6500 + speed * 3.5 * 1000 / 450);
         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 35000 - t_high, t_high);
 
-        DLOG_Critical(" speed = %d  t_high = %d \r\n", speed, t_high);
+        // DLOG_Critical(" speed = %d  t_high = %d \r\n", speed, t_high);
     } else {
         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18000, 17000);
-        DLOG_Critical(" speed = %d \r\n", speed);
+        // DLOG_Critical(" speed = %d \r\n", speed);
     }
 }
 

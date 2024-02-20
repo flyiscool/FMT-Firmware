@@ -97,8 +97,8 @@ struct ar_uart {
     {                                             \
         BAUD_RATE_115200,    /* 57600 bits/s */   \
             DATA_BITS_8,     /* 8 databits */     \
-            STOP_BITS_1,     /* 1 stopbit */      \
-            PARITY_NONE,     /* No parity  */     \
+            STOP_BITS_2,     /* 1 stopbit */      \
+            PARITY_EVEN,     /* No parity  */     \
             BIT_ORDER_LSB,   /* LSB first sent */ \
             NRZ_NORMAL,      /* Normal mode */    \
             SERIAL_RB_BUFSZ, /* Buffer size */    \
@@ -312,7 +312,16 @@ static int up_setup(struct up_dev_s* dev)
     up_serialout(priv, AR_UART_LCR_OFFSET, (lcr | UART_LCR_DLAB));
 
     /* Set the BAUD divisor */
-    dl = 100000000 / (16 * priv->baud);
+
+    if (priv->uartbase == AR_UART4_BASE) {
+#ifndef USED_UART4_SBUS
+        dl = 100000000 / (16 * priv->baud);
+#else
+        dl = 100000000 / (16 * 100000);
+#endif
+    } else {
+        dl = 100000000 / (16 * priv->baud);
+    }
 
     up_serialout(priv, AR_UART_DLH_OFFSET, dl >> 8);
     up_serialout(priv, AR_UART_DLL_OFFSET, dl & 0xff);

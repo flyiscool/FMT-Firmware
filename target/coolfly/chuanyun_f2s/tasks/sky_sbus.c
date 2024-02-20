@@ -35,6 +35,10 @@ static rt_err_t    ar_rc_configure(rc_dev_t rc, struct rc_configure* cfg);
 static rt_err_t    ar_rc_control(rc_dev_t rc, int cmd, void* arg);
 static rt_uint16_t ar_rc_read(rc_dev_t rc, rt_uint16_t chan_mask, rt_uint16_t* chan_val);
 
+////////////////////////////////////////////////
+
+static rt_device_t dev;
+
 /* default config for rc device */
 #define AR_RC_CONFIG_DEFAULT            \
     {                                   \
@@ -95,6 +99,8 @@ static rt_uint16_t ar_rc_read(rc_dev_t rc, rt_uint16_t chan_mask, rt_uint16_t* c
             *(index++) = rc_data.rc_chan_val[i];
         }
     }
+
+    rt_device_write(dev, 0, sky_sbus.sbus_buff, 25);
 
     rc_updated = 0;
 
@@ -243,6 +249,11 @@ void sky_bb_spi_irq_handler(void* p)
     }
 }
 
+static uint32_t todo_nothing(uint8_t* pu8_rxBuf, uint8_t u8_len)
+{
+    return 0;
+}
+
 static void run_sbus_init(void* parameter)
 {
     HAL_RET_T ret;
@@ -263,6 +274,14 @@ static void run_sbus_init(void* parameter)
     if (ret != HAL_OK) {
         DLOG_Error("BB ComRegister failed");
     }
+
+    ///////////////////////////////////////////////
+    dev = rt_device_find("serial4");
+
+    RT_ASSERT(dev != NULL);
+
+    /* open serial device */
+    RT_CHECK(rt_device_open(dev, RT_DEVICE_OFLAG_RDWR));
 }
 
 static struct WorkItem sbus_init_item = {

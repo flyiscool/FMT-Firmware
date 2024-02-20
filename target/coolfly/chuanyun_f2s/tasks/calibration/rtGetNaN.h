@@ -11,7 +11,7 @@
     #include "rtwtypes.h"
     #include <stddef.h>
 
-extern real_T   rtGetNaN_(void);
+extern real_T rtGetNaN_(void);
 extern real32_T rtGetNaNF_(void);
 
 #endif

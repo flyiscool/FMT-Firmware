@@ -18,7 +18,7 @@
  */
 real_T rtGetNaN_(void)
 {
-    real_T   nan = 0.0;
+    real_T nan = 0.0;
     uint16_T one = 1U;
     enum {
         LittleEndian,
@@ -30,24 +30,24 @@ real_T rtGetNaN_(void)
     case LittleEndian: {
         union {
             LittleEndianIEEEDouble bitVal;
-            real_T                 fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0xFFF80000U;
         tmpVal.bitVal.words.wordL = 0x00000000U;
-        nan                       = tmpVal.fltVal;
+        nan = tmpVal.fltVal;
         break;
     }
 
     case BigEndian: {
         union {
             BigEndianIEEEDouble bitVal;
-            real_T              fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0x7FFFFFFFU;
         tmpVal.bitVal.words.wordL = 0xFFFFFFFFU;
-        nan                       = tmpVal.fltVal;
+        nan = tmpVal.fltVal;
         break;
     }
     }

@@ -14,9 +14,9 @@
 #include "rtGetInf.h"
 #include "rtGetNaN.h"
 
-real_T   rtInf;
-real_T   rtMinusInf;
-real_T   rtNaN;
+real_T rtInf;
+real_T rtMinusInf;
+real_T rtNaN;
 real32_T rtInfF;
 real32_T rtMinusInfF;
 real32_T rtNaNF;
@@ -29,11 +29,11 @@ real32_T rtNaNF;
 void rt_InitInfAndNaN_(size_t realSize)
 {
     (void)realSize;
-    rtNaN       = rtGetNaN_();
-    rtNaNF      = rtGetNaNF_();
-    rtInf       = rtGetInf_();
-    rtInfF      = rtGetInfF_();
-    rtMinusInf  = rtGetMinusInf_();
+    rtNaN = rtGetNaN_();
+    rtNaNF = rtGetNaNF_();
+    rtInf = rtGetInf_();
+    rtInfF = rtGetInfF_();
+    rtMinusInf = rtGetMinusInf_();
     rtMinusInfF = rtGetMinusInfF_();
 }
 

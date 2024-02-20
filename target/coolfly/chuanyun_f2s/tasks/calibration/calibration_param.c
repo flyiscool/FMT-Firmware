@@ -26,9 +26,9 @@ static param_t __param_list[] = {
     PARAM_FLOAT(GYRO0_YOFF, 0.0, false),
     PARAM_FLOAT(GYRO0_ZOFF, 0.0, false),
     /* ACC_CAL = ROT_M * (ACC-OFFSET)
-                   |  XX  XY  XZ |
-           ROT_M = |  XY  YY  YZ |
-                   |  XZ  YZ  ZZ |   */
+	           |  XX  XY  XZ |
+	   ROT_M = |  XY  YY  YZ |
+	           |  XZ  YZ  ZZ |   */
     PARAM_FLOAT(ACC0_XOFF, 0.0, false),
     PARAM_FLOAT(ACC0_YOFF, 0.0, false),
     PARAM_FLOAT(ACC0_ZOFF, 0.0, false),
@@ -39,9 +39,9 @@ static param_t __param_list[] = {
     PARAM_FLOAT(ACC0_XZSCALE, 0.0, false),
     PARAM_FLOAT(ACC0_YZSCALE, 0.0, false),
     /* MAG_CAL = ROT_M * (MAG-OFFSET)
-                   |  XX  XY  XZ |
-           ROT_M = |  XY  YY  YZ |
-                   |  XZ  YZ  ZZ |   */
+	           |  XX  XY  XZ |
+	   ROT_M = |  XY  YY  YZ |
+	           |  XZ  YZ  ZZ |   */
     PARAM_FLOAT(MAG0_XOFF, 0.0, false),
     PARAM_FLOAT(MAG0_YOFF, 0.0, false),
     PARAM_FLOAT(MAG0_ZOFF, 0.0, false),

@@ -25,31 +25,31 @@
  *   uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
  *   real32_T, real64_T           - 32 and 64 bit floating point numbers *
  *=======================================================================*/
-typedef signed char    int8_T;
-typedef unsigned char  uint8_T;
-typedef short          int16_T;
+typedef signed char int8_T;
+typedef unsigned char uint8_T;
+typedef short int16_T;
 typedef unsigned short uint16_T;
-typedef int            int32_T;
-typedef unsigned int   uint32_T;
-typedef float          real32_T;
-typedef double         real64_T;
+typedef int int32_T;
+typedef unsigned int uint32_T;
+typedef float real32_T;
+typedef double real64_T;
 
 /*===========================================================================*
  * Generic type definitions: real_T, time_T, boolean_T, int_T, uint_T,       *
  *                           ulong_T, char_T and byte_T.                     *
  *===========================================================================*/
-typedef double        real_T;
-typedef double        time_T;
+typedef double real_T;
+typedef double time_T;
 typedef unsigned char boolean_T;
-typedef int           int_T;
-typedef unsigned int  uint_T;
+typedef int int_T;
+typedef unsigned int uint_T;
 typedef unsigned long ulong_T;
-typedef char          char_T;
-typedef char_T        byte_T;
+typedef char char_T;
+typedef char_T byte_T;
 
     /*===========================================================================*
-     * Complex number type definitions                                           *
-     *===========================================================================*/
+ * Complex number type definitions                                           *
+ *===========================================================================*/
     #define CREAL_T
 
 typedef struct {
@@ -98,10 +98,10 @@ typedef struct {
 } cuint32_T;
 
     /*=======================================================================*
-     * Min and Max:                                                          *
-     *   int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
-     *   uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
-     *=======================================================================*/
+ * Min and Max:                                                          *
+ *   int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
+ *   uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
+ *=======================================================================*/
     #define MAX_int8_T   ((int8_T)(127))
     #define MIN_int8_T   ((int8_T)(-128))
     #define MAX_uint8_T  ((uint8_T)(255))
@@ -127,10 +127,10 @@ typedef struct {
     #endif
 
     /*
-     * Maximum length of a MATLAB identifier (function/variable)
-     * including the null-termination character. Referenced by
-     * rt_logging.c and rt_matrx.c.
-     */
+ * Maximum length of a MATLAB identifier (function/variable)
+ * including the null-termination character. Referenced by
+ * rt_logging.c and rt_matrx.c.
+ */
     #define TMW_NAME_LENGTH_MAX 64
 #endif
 

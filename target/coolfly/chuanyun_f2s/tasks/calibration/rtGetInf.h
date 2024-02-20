@@ -11,9 +11,9 @@
     #include "rtwtypes.h"
     #include <stddef.h>
 
-extern real_T   rtGetInf_(void);
+extern real_T rtGetInf_(void);
 extern real32_T rtGetInfF_(void);
-extern real_T   rtGetMinusInf_(void);
+extern real_T rtGetMinusInf_(void);
 extern real32_T rtGetMinusInfF_(void);
 
 #endif

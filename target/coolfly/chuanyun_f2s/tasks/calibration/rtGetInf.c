@@ -17,7 +17,7 @@
  */
 real_T rtGetInf_(void)
 {
-    real_T   inf = 0.0;
+    real_T inf = 0.0;
     uint16_T one = 1U;
     enum {
         LittleEndian,
@@ -29,24 +29,24 @@ real_T rtGetInf_(void)
     case LittleEndian: {
         union {
             LittleEndianIEEEDouble bitVal;
-            real_T                 fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0x7FF00000U;
         tmpVal.bitVal.words.wordL = 0x00000000U;
-        inf                       = tmpVal.fltVal;
+        inf = tmpVal.fltVal;
         break;
     }
 
     case BigEndian: {
         union {
             BigEndianIEEEDouble bitVal;
-            real_T              fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0x7FF00000U;
         tmpVal.bitVal.words.wordL = 0x00000000U;
-        inf                       = tmpVal.fltVal;
+        inf = tmpVal.fltVal;
         break;
     }
     }
@@ -71,8 +71,8 @@ real32_T rtGetInfF_(void)
  */
 real_T rtGetMinusInf_(void)
 {
-    real_T   minf = 0.0;
-    uint16_T one  = 1U;
+    real_T minf = 0.0;
+    uint16_T one = 1U;
     enum {
         LittleEndian,
         BigEndian
@@ -83,24 +83,24 @@ real_T rtGetMinusInf_(void)
     case LittleEndian: {
         union {
             LittleEndianIEEEDouble bitVal;
-            real_T                 fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0xFFF00000U;
         tmpVal.bitVal.words.wordL = 0x00000000U;
-        minf                      = tmpVal.fltVal;
+        minf = tmpVal.fltVal;
         break;
     }
 
     case BigEndian: {
         union {
             BigEndianIEEEDouble bitVal;
-            real_T              fltVal;
+            real_T fltVal;
         } tmpVal;
 
         tmpVal.bitVal.words.wordH = 0xFFF00000U;
         tmpVal.bitVal.words.wordL = 0x00000000U;
-        minf                      = tmpVal.fltVal;
+        minf = tmpVal.fltVal;
         break;
     }
     }

@@ -25,6 +25,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // reboot
+_EXT_ITCM1
 static int handle_reboot_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
     printf("rebooting...\n");
@@ -44,6 +45,7 @@ static int handle_reboot_cmd(int argc, char** argv, int optc, optv_t* optv)
     return 0;
 }
 
+_EXT_ITCM1
 int cmd_reboot(int argc, char** argv)
 {
     return syscmd_process(argc, argv, handle_reboot_cmd);
@@ -52,6 +54,7 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_reboot, __cmd_reboot, reboot the system);
 
 ////////////////////////////////////////////////////////////////////////////
 // reset_fct
+_EXT_ITCM1
 static int handle_reset_fct(int argc, char** argv, int optc, optv_t* optv)
 {
     FCT_Reset();
@@ -61,6 +64,7 @@ static int handle_reset_fct(int argc, char** argv, int optc, optv_t* optv)
     return 0;
 }
 
+_EXT_ITCM1
 int cmd_reset_fct(int argc, char** argv)
 {
     return syscmd_process(argc, argv, handle_reset_fct);
@@ -68,6 +72,7 @@ int cmd_reset_fct(int argc, char** argv)
 FINSH_FUNCTION_EXPORT_ALIAS(cmd_reset_fct, __cmd_reset_fct, reset the RF factory setting);
 
 // set_bb_id
+_EXT_ITCM1
 static int handle_set_bb_id(int argc, char** argv, int optc, optv_t* optv)
 {
 
@@ -90,6 +95,7 @@ static int handle_set_bb_id(int argc, char** argv, int optc, optv_t* optv)
     return 0;
 }
 
+_EXT_ITCM1
 int cmd_set_bb_id(int argc, char** argv)
 {
     return syscmd_process(argc, argv, handle_set_bb_id);
@@ -98,6 +104,7 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_set_bb_id, __cmd_set_bb_id, set basebase rc id<r
 
 ////////////////////////////////////////////////////////////////////////////
 // set_chip_id
+_EXT_ITCM1
 static int handle_set_chip_id(int argc, char** argv, int optc, optv_t* optv)
 {
     uint8_t idArr[5];
@@ -115,6 +122,7 @@ static int handle_set_chip_id(int argc, char** argv, int optc, optv_t* optv)
     return 0;
 }
 
+_EXT_ITCM1
 int cmd_set_chip_id(int argc, char** argv)
 {
     return syscmd_process(argc, argv, handle_set_chip_id);
@@ -123,6 +131,7 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_set_chip_id, __cmd_set_chip_id, set<chip id1 ~5>
 
 ////////////////////////////////////////////////////////////////////////////
 // testlog
+_EXT_ITCM1
 static int handle_testlog_cmd(int argc, char** argv, int optc, optv_t* optv)
 {
 
@@ -132,6 +141,7 @@ static int handle_testlog_cmd(int argc, char** argv, int optc, optv_t* optv)
     return 0;
 }
 
+_EXT_ITCM1
 int cmd_testlog(int argc, char** argv)
 {
     return syscmd_process(argc, argv, handle_testlog_cmd);

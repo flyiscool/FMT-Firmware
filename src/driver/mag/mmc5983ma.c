@@ -150,7 +150,7 @@ static rt_err_t probe(void)
         /* Check OTP Read status */
 
         if ((value & MMC5983_OTP_READ_DONE) != MMC5983_OTP_READ_DONE) {
-            console_printf("MMC5983 no done!!!\r\n");
+            
             sys_msleep(10);
             tries--;    
             continue;
@@ -167,6 +167,7 @@ static rt_err_t probe(void)
         tries--;
     }
 
+    console_printf("MMC5983 no done!!!\r\n");
     return RT_ERROR;
 }
 

@@ -504,7 +504,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
       // if (Check_USB_Is_Apple_Device(hpcd->Instance))
       {
         argc_value = (uint32_t)USBx;
-        DLOG_Critical("USBx (temp_value) is: %08x, INTSTS: %08x, GOTGINT: %08x", argc_value, hpcd->Instance->GINTSTS, hpcd->Instance->GOTGINT);
+        // DLOG_Critical("USBx (temp_value) is: %08x, INTSTS: %08x, GOTGINT: %08x", argc_value, hpcd->Instance->GINTSTS, hpcd->Instance->GOTGINT);
         SYS_EVENT_Notify_From_ISR(SYS_EVENT_ID_USB_DEVICE_TYPE,
                               (void *)&argc_value);
       }

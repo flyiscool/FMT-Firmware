@@ -410,7 +410,7 @@ void tone_alarm_entry(void* parameter)
                 case 'T': { // change tempo
                     unsigned nt = next_number();
 
-                    DLOG_Info("set T = %D", nt);
+                    // DLOG_Info("set T = %D", nt);
 
                     if ((nt >= 32) && (nt <= 255)) {
                         g_tempo = nt;

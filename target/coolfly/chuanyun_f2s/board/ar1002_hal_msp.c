@@ -61,6 +61,7 @@
 /**
   * Initializes the Global MSP.
   */
+_EXT_ITCM1
 void HAL_MspInit(void)
 {
   /* USER CODE BEGIN MspInit 0 */

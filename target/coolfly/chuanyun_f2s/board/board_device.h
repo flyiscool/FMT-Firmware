@@ -96,7 +96,8 @@
 
     #define USED_PTZ_LS     1
 
-    #define USED_FLO4       1
+    // #define USED_FLO4       1
+    #define USED_TF0850    1
 
     // #define RGB_R_GPIO HAL_GPIO_NUM66
     // #define RGB_G_GPIO HAL_GPIO_NUM62

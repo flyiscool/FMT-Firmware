@@ -19,12 +19,14 @@
 #include "driver/rgb_led/aw2023.h"
 #include "led.h"
 #include "module/workqueue/workqueue_manager.h"
+#include "board.h"
 
 static rt_device_t pin_dev;
 static rt_device_t rgb_led_dev;
 
 static uint16_t gpio_status[128];
 
+_EXT_ITCM1
 static void run_led(void* parameter)
 {
     LED_TOGGLE(FMU_LED_BLUE_PIN);
@@ -61,6 +63,7 @@ static void run_led(void* parameter)
 //     }
 // }
 
+_EXT_ITCM1
 void vehicle_status_change_cb(uint8_t status)
 {
     switch (status) {
@@ -79,6 +82,7 @@ void vehicle_status_change_cb(uint8_t status)
     }
 }
 
+_EXT_ITCM1
 void vehicle_state_change_cb(uint8_t mode)
 {
     if (mode == VehicleState_None) {
@@ -87,6 +91,7 @@ void vehicle_state_change_cb(uint8_t mode)
     }
 }
 
+_EXT_ITCM1
 fmt_err_t led_set(struct device_pin_status pin_sta)
 {
     gpio_status[pin_sta.pin] = pin_sta.status;
@@ -97,6 +102,7 @@ fmt_err_t led_set(struct device_pin_status pin_sta)
     return FMT_EOK;
 }
 
+_EXT_ITCM1
 fmt_err_t led_toggle(uint32_t pin)
 {
     struct device_pin_status pin_sta = { .pin = pin };
@@ -117,6 +123,7 @@ fmt_err_t led_toggle(uint32_t pin)
     return FMT_EOK;
 }
 
+_EXT_ITCM1
 fmt_err_t led_init(struct device_pin_mode pin_mode)
 {
     gpio_status[pin_mode.pin] = 0;
@@ -128,6 +135,7 @@ fmt_err_t led_init(struct device_pin_mode pin_mode)
     return FMT_EOK;
 }
 
+_EXT_ITCM1
 fmt_err_t rgb_led_set_color(uint32_t color)
 {
     if (rgb_led_dev == NULL) {
@@ -141,6 +149,7 @@ fmt_err_t rgb_led_set_color(uint32_t color)
     return FMT_EOK;
 }
 
+_EXT_ITCM1
 fmt_err_t rgb_led_set_bright(uint32_t bright)
 {
     if (rgb_led_dev == NULL) {
@@ -154,6 +163,7 @@ fmt_err_t rgb_led_set_bright(uint32_t bright)
     return FMT_EOK;
 }
 
+_EXT_ITCM1
 fmt_err_t rgb_led_set_mode(uint8_t mode)
 {
     if (rgb_led_dev == NULL) {
@@ -189,6 +199,7 @@ fmt_err_t rgb_led_set_mode(uint8_t mode)
 //     .run = run_rgb_led
 // };
 
+_EXT_ITCM1
 fmt_err_t led_control_init(void)
 {
     struct device_pin_mode r_pin_mode = { FMU_LED_RED_PIN, PIN_MODE_OUTPUT, PIN_OUT_TYPE_PP };

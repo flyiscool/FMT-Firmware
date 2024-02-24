@@ -112,6 +112,7 @@ static const struct dfs_mount_tbl mnt_table[] = {
 
 static toml_table_t* __toml_root_tab = NULL;
 
+_EXT_ITCM1
 static void banner_item(const char* name, const char* content, char pad, uint32_t len)
 {
     int pad_len;
@@ -135,6 +136,7 @@ static void banner_item(const char* name, const char* content, char pad, uint32_
 }
 
 #define BANNER_ITEM_LEN 42
+_EXT_ITCM1
 static void bsp_show_information(void)
 {
     char buffer[50];
@@ -184,6 +186,7 @@ static void bsp_show_information(void)
     }
 }
 
+_EXT_ITCM1
 static fmt_err_t bsp_parse_toml_sysconfig(toml_table_t* root_tab)
 {
     fmt_err_t     err = FMT_EOK;
@@ -247,6 +250,7 @@ static fmt_err_t bsp_parse_toml_sysconfig(toml_table_t* root_tab)
  * @brief Enable on-board device power supply
  *
  */
+_EXT_ITCM1
 static void EnablePower(void)
 {
     /* Wait some time for power becoming stable */
@@ -270,6 +274,7 @@ static void EnablePower(void)
  * @param  None
  * @retval None
  */
+_EXT_ITCM1
 static void CPU_CACHE_Enable(void)
 {
     /* Enable I-Cache */
@@ -283,6 +288,7 @@ static void CPU_CACHE_Enable(void)
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
+_EXT_ITCM1
 void Error_Handler(void)
 {
     console_printf("Enter Error_Handler\n");
@@ -298,10 +304,12 @@ void Error_Handler(void)
  * @brief System Clock Configuration
  * @retval None
  */
+_EXT_ITCM1
 void SystemClock_Config(void)
 {
 }
 
+_EXT_ITCM1
 void cf_delay_ms(uint32_t num)
 {
     volatile uint32_t i;
@@ -327,6 +335,7 @@ void cf_delay_ms(uint32_t num)
 #define MAX_WQ_SIZE 10
 extern WorkQueue_t wq_list[MAX_WQ_SIZE];
 
+_EXT_ITCM1
 fmt_err_t chuanyun_workqueue_manager_init(void)
 {
     wq_list[2] = workqueue_create("wq:sysevent_work", 20, 4096, 1);
@@ -336,6 +345,7 @@ fmt_err_t chuanyun_workqueue_manager_init(void)
 }
 
 /* this function will be called before rtos start, which is not in the thread context */
+_EXT_ITCM1
 void bsp_early_initialize(void)
 {
     // /* Enable CPU L1-cache */
@@ -444,6 +454,7 @@ void bsp_early_initialize(void)
 }
 
 /* this function will be called after rtos start, which is in thread context */
+_EXT_ITCM1
 void bsp_initialize(void)
 {
     /* enable on-board power supply */
@@ -518,20 +529,17 @@ void bsp_initialize(void)
     RT_CHECK(drv_bmi088_init("spi2_dev2", "spi2_dev3", "gyro0", "accel0", 0));
     #endif
 
-    if (drv_ms5611_init("spi3_dev1", "barometer") != RT_EOK) {
-        if (drv_spl06_init("spi3_dev2", "barometer") != RT_EOK) {
-            RT_CHECK(0);
-        }
-    }
 
+    RT_CHECK(drv_spl06_init("spi3_dev2", "barometer"));
+    
     /* if no gps mag then use onboard mag */
 
-    if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
-        console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
-    } else {
-        console_println("drv_ist8310_init i2c2_dev1 success ~");
-        FMT_CHECK(register_sensor_mag("mag0", 0));
-    }
+    // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
+    //     console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
+    // } else {
+    //     console_println("drv_ist8310_init i2c2_dev1 success ~");
+    //     FMT_CHECK(register_sensor_mag("mag0", 0));
+    // }
 
     #ifdef USED_MMC5983MA
     if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
@@ -638,6 +646,7 @@ void bsp_initialize(void)
 #endif
 }
 
+_EXT_ITCM1
 void bsp_post_initialize(void)
 {
     /* toml system configure */
@@ -686,12 +695,14 @@ void bsp_post_initialize(void)
 /**
  * This function will initial STM32 board.
  */
+_EXT_ITCM1
 void rt_hw_board_init()
 {
     bsp_early_initialize();
 }
 
 /* Re-implement this function to define customized rotation */
+_EXT_ITCM1
 void icm20600_rotate_to_frd(float* val)
 {
     float  tmp;
@@ -708,6 +719,7 @@ void icm20600_rotate_to_frd(float* val)
 
 #ifdef BOARD_LT_V1
 /* Re-implement this function to define customized rotation */
+_EXT_ITCM1
 void bmi088_rotate_to_frd(float val[3])
 {
     /* do nothing */
@@ -722,6 +734,7 @@ void bmi088_rotate_to_frd(float val[3])
 #ifdef BOARD_CY450_V1
 
 /* Re-implement this function to define customized rotation */
+_EXT_ITCM1
 void bmi088_rotate_to_frd(float val[3])
 {
     /* do nothing */
@@ -732,6 +745,7 @@ void bmi088_rotate_to_frd(float val[3])
     *z       = -*z;
 }
 
+_EXT_ITCM1
 void bmi055_rotate_to_frd(float val[3])
 {
     /* do nothing */

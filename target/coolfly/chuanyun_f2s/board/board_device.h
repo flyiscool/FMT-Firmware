@@ -19,7 +19,7 @@
 
 // #define BOARD_JM_250
 // #define BOARD_F2S 1
-#define BOARD_LT_V1 1
+// #define BOARD_LT_V1 1
 // #define BOARD_HK_HELI     1
 // #define BOARD_CY450_V1 1
 #define BOARD_BH_2XY    1
@@ -175,7 +175,7 @@
 
 
 
-#ifdef BOARD_BH_2XY    1
+#ifdef BOARD_BH_2XY   
     #define USED_RAMTRON   1
     // #define USED_NORFLASH   1
     // #define USED_TFCARD   1
@@ -187,11 +187,11 @@
     // #define USED_MS5611    1
     #define USED_RGB       1
 
-    #define USED_MMC5983MA 1
+    // #define USED_MMC5983MA 1
     // #define USED_QMC5883L 1
 
     // #define USED_FLO4       1
-    #define USED_TF0850    1
+    // #define USED_TF0850    1
 
     // #define USED_IST8310 1
 

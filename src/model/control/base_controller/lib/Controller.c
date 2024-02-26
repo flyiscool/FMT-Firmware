@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'Controller'.
  *
- * Model version                  : 1.968
+ * Model version                  : 1.983
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Nov 29 09:57:55 2023
+ * C/C++ source code generated on : Mon Feb 26 20:50:51 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -2504,33 +2504,61 @@ void Controller_step(void)
   /* Output and update for atomic system: '<S4>/Quadcopter_x' */
   {
     uint16_T rtb_throttle_cmd_c;
-    uint16_T rtb_MultiportSwitch_is[4];
     int32_T i_e;
-    real32_T tmp_e;
-    real32_T tmp_o;
-    real32_T tmp_h;
+    uint16_T tmp_e[4];
+    real32_T rtb_Saturation1_bf_idx_0_e;
+    real32_T rtb_Saturation1_bf_idx_1_e;
+    real32_T rtb_Saturation1_bf_idx_2_e;
     real32_T u0_e;
-    uint16_T u0_o;
 
     /* MultiPortSwitch: '<S58>/Multiport Switch' incorporates:
      *  Inport: '<Root>/FMS_Out'
      */
     switch (Controller_U.FMS_Out.status) {
      case 1:
-      rtb_MultiportSwitch_is[0] = 1000U;
-      rtb_MultiportSwitch_is[1] = 1000U;
-      rtb_MultiportSwitch_is[2] = 1000U;
-      rtb_MultiportSwitch_is[3] = 1000U;
+      /* Reshape: '<S58>/Reshape' */
+      rtb_VariantMergeForOutportactua[0] = 1000U;
+      rtb_VariantMergeForOutportactua[1] = 1000U;
+      rtb_VariantMergeForOutportactua[2] = 1500U;
+      rtb_VariantMergeForOutportactua[3] = 1500U;
       break;
 
      case 2:
-      rtb_MultiportSwitch_is[0] = 1150U;
-      rtb_MultiportSwitch_is[1] = 1150U;
-      rtb_MultiportSwitch_is[2] = 1150U;
-      rtb_MultiportSwitch_is[3] = 1150U;
+      /* Reshape: '<S58>/Reshape' */
+      rtb_VariantMergeForOutportactua[0] = 1150U;
+      rtb_VariantMergeForOutportactua[1] = 1150U;
+      rtb_VariantMergeForOutportactua[2] = 1500U;
+      rtb_VariantMergeForOutportactua[3] = 1500U;
       break;
 
      case 3:
+      /* Saturate: '<S14>/Saturation1' */
+      if (rtb_Add_g[0] > 1.0F) {
+        rtb_Saturation1_bf_idx_0_e = 1.0F;
+      } else if (rtb_Add_g[0] < -1.0F) {
+        rtb_Saturation1_bf_idx_0_e = -1.0F;
+      } else {
+        rtb_Saturation1_bf_idx_0_e = rtb_Add_g[0];
+      }
+
+      if (rtb_Add_g[1] > 1.0F) {
+        rtb_Saturation1_bf_idx_1_e = 1.0F;
+      } else if (rtb_Add_g[1] < -1.0F) {
+        rtb_Saturation1_bf_idx_1_e = -1.0F;
+      } else {
+        rtb_Saturation1_bf_idx_1_e = rtb_Add_g[1];
+      }
+
+      if (rtb_Add_g[2] > 1.0F) {
+        rtb_Saturation1_bf_idx_2_e = 1.0F;
+      } else if (rtb_Add_g[2] < -1.0F) {
+        rtb_Saturation1_bf_idx_2_e = -1.0F;
+      } else {
+        rtb_Saturation1_bf_idx_2_e = rtb_Add_g[2];
+      }
+
+      /* End of Saturate: '<S14>/Saturation1' */
+
       /* Switch: '<S57>/Switch' incorporates:
        *  Constant: '<S61>/Constant'
        *  Logic: '<S57>/Logical Operator'
@@ -2625,84 +2653,106 @@ void Controller_step(void)
       }
 
       /* End of Switch: '<S57>/Switch' */
-
-      /* Saturate: '<S14>/Saturation1' */
-      if (rtb_Add_g[0] > 1.0F) {
-        tmp_e = 1.0F;
-      } else if (rtb_Add_g[0] < -1.0F) {
-        tmp_e = -1.0F;
-      } else {
-        tmp_e = rtb_Add_g[0];
-      }
-
-      if (rtb_Add_g[1] > 1.0F) {
-        tmp_o = 1.0F;
-      } else if (rtb_Add_g[1] < -1.0F) {
-        tmp_o = -1.0F;
-      } else {
-        tmp_o = rtb_Add_g[1];
-      }
-
-      if (rtb_Add_g[2] > 1.0F) {
-        tmp_h = 1.0F;
-      } else if (rtb_Add_g[2] < -1.0F) {
-        tmp_h = -1.0F;
-      } else {
-        tmp_h = rtb_Add_g[2];
-      }
-
-      /* End of Saturate: '<S14>/Saturation1' */
-
-      /* Product: '<S14>/Multiply' */
-      for (i_e = 0; i_e < 4; i_e++) {
+      for (i_e = 0; i_e < 2; i_e++) {
         /* Saturate: '<S14>/Saturation' incorporates:
          *  Constant: '<S14>/Effective_Matrix'
          *  Gain: '<S14>/Gain'
+         *  Product: '<S14>/Multiply'
          *  Sum: '<S14>/Add'
          */
         u0_e = fmodf(floorf(1000.0F *
-                            (Controller_ConstP.Effective_Matrix_Value_h[i_e + 8]
-                             * tmp_h +
-                             (Controller_ConstP.Effective_Matrix_Value_h[i_e + 4]
-                              * tmp_o +
+                            (Controller_ConstP.Effective_Matrix_Value_h[i_e + 4]
+                             * rtb_Saturation1_bf_idx_2_e +
+                             (Controller_ConstP.Effective_Matrix_Value_h[i_e + 2]
+                              * rtb_Saturation1_bf_idx_1_e +
                               Controller_ConstP.Effective_Matrix_Value_h[i_e] *
-                              tmp_e)) + (real32_T)rtb_throttle_cmd_c), 65536.0F);
-        u0_o = (uint16_T)(u0_e < 0.0F ? (int32_T)(uint16_T)-(int16_T)(uint16_T)
-                          -u0_e : (int32_T)(uint16_T)u0_e);
-        if (u0_o > 1900) {
-          rtb_MultiportSwitch_is[i_e] = 1900U;
-        } else if (u0_o < 1100) {
-          rtb_MultiportSwitch_is[i_e] = 1100U;
-        } else {
-          rtb_MultiportSwitch_is[i_e] = u0_o;
-        }
+                              rtb_Saturation1_bf_idx_0_e)) + (real32_T)
+                            rtb_throttle_cmd_c), 65536.0F);
+        tmp_e[i_e] = (uint16_T)(u0_e < 0.0F ? (int32_T)(uint16_T)-(int16_T)
+          (uint16_T)-u0_e : (int32_T)(uint16_T)u0_e);
 
-        /* End of Saturate: '<S14>/Saturation' */
+        /* Sum: '<S14>/Add1' incorporates:
+         *  Constant: '<S14>/Effective_Matrix1 '
+         *  Gain: '<S14>/Gain1'
+         *  Product: '<S14>/Multiply'
+         *  Product: '<S14>/Multiply3'
+         */
+        u0_e = fmodf(floorf(500.0F *
+                            (Controller_ConstP.Effective_Matrix1_Value[i_e + 4] *
+                             rtb_Saturation1_bf_idx_2_e +
+                             (Controller_ConstP.Effective_Matrix1_Value[i_e + 2]
+                              * rtb_Saturation1_bf_idx_1_e +
+                              Controller_ConstP.Effective_Matrix1_Value[i_e] *
+                              rtb_Saturation1_bf_idx_0_e)) + 1500.0F), 65536.0F);
+
+        /* Saturate: '<S14>/Saturation' incorporates:
+         *  Sum: '<S14>/Add1'
+         */
+        tmp_e[i_e + 2] = (uint16_T)(u0_e < 0.0F ? (int32_T)(uint16_T)-(int16_T)
+          (uint16_T)-u0_e : (int32_T)(uint16_T)u0_e);
       }
 
-      /* End of Product: '<S14>/Multiply' */
+      /* Saturate: '<S14>/Saturation' */
+      if (tmp_e[0] > 1900) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[0] = 1900U;
+      } else if (tmp_e[0] < 1100) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[0] = 1100U;
+      } else {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[0] = tmp_e[0];
+      }
+
+      if (tmp_e[1] > 1900) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[1] = 1900U;
+      } else if (tmp_e[1] < 1100) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[1] = 1100U;
+      } else {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[1] = tmp_e[1];
+      }
+
+      if (tmp_e[2] > 1900) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[2] = 1900U;
+      } else if (tmp_e[2] < 1100) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[2] = 1100U;
+      } else {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[2] = tmp_e[2];
+      }
+
+      if (tmp_e[3] > 1900) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[3] = 1900U;
+      } else if (tmp_e[3] < 1100) {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[3] = 1100U;
+      } else {
+        /* Reshape: '<S58>/Reshape' */
+        rtb_VariantMergeForOutportactua[3] = tmp_e[3];
+      }
       break;
 
      default:
-      rtb_MultiportSwitch_is[0] = 1000U;
-      rtb_MultiportSwitch_is[1] = 1000U;
-      rtb_MultiportSwitch_is[2] = 1000U;
-      rtb_MultiportSwitch_is[3] = 1000U;
+      /* Reshape: '<S58>/Reshape' */
+      rtb_VariantMergeForOutportactua[0] = 1000U;
+      rtb_VariantMergeForOutportactua[1] = 1000U;
+      rtb_VariantMergeForOutportactua[2] = 1500U;
+      rtb_VariantMergeForOutportactua[3] = 1500U;
       break;
     }
 
     /* End of MultiPortSwitch: '<S58>/Multiport Switch' */
 
     /* Reshape: '<S58>/Reshape' */
-    rtb_VariantMergeForOutportactua[0] = rtb_MultiportSwitch_is[0];
-    rtb_VariantMergeForOutportactua[1] = rtb_MultiportSwitch_is[1];
-    rtb_VariantMergeForOutportactua[2] = rtb_MultiportSwitch_is[2];
-    rtb_VariantMergeForOutportactua[3] = rtb_MultiportSwitch_is[3];
     for (i_e = 0; i_e < 12; i_e++) {
       rtb_VariantMergeForOutportactua[i_e + 4] = 0U;
     }
-
-    /* End of Reshape: '<S58>/Reshape' */
   }
 
 #endif

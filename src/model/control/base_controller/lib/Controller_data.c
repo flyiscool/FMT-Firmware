@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'Controller'.
  *
- * Model version                  : 1.968
+ * Model version                  : 1.983
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Nov 29 09:57:55 2023
+ * C/C++ source code generated on : Mon Feb 26 20:50:51 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -118,8 +118,16 @@ const ConstP_Controller_T Controller_ConstP = {
   /* Computed Parameter: Effective_Matrix_Value_h
    * Referenced by: '<S14>/Effective_Matrix'
    */
-  { -1.41421354F, 1.41421354F, 1.41421354F, -1.41421354F, 1.41421354F,
-    -1.41421354F, 1.41421354F, -1.41421354F, 1.0F, 1.0F, -1.0F, -1.0F },
+  { 0.0F, 0.0F, 2.0F, -2.0F, 0.0F, 0.0F },
+
+#endif
+
+#if AIRFRAME == 1
+
+  /* Computed Parameter: Effective_Matrix1_Value
+   * Referenced by: '<S14>/Effective_Matrix1 '
+   */
+  { 1.0F, -1.0F, 0.0F, 0.0F, 1.0F, 1.0F },
 
 #endif
 

@@ -187,6 +187,12 @@ rt_err_t drv_pwm_init(void)
         g_pwm_freq[i]       = PWM_DEFAULT_FREQUENCY;
     }
 
+#ifdef BOARD_BH_2XY
+        g_pwm_high_level[2] = 1500;
+        g_pwm_high_level[3] = 1500;
+#endif
+
+
     /* init pwm gpio pin */
     pwm_gpio_init();
 

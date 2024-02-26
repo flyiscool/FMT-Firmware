@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'Controller'.
  *
- * Model version                  : 1.968
+ * Model version                  : 1.983
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Nov 29 09:57:55 2023
+ * C/C++ source code generated on : Mon Feb 26 20:50:51 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -153,7 +153,17 @@ typedef struct {
   /* Computed Parameter: Effective_Matrix_Value_h
    * Referenced by: '<S14>/Effective_Matrix'
    */
-  real32_T Effective_Matrix_Value_h[12];
+  real32_T Effective_Matrix_Value_h[6];
+
+#define CONSTP_CONTROLLER_T_VARIANT_EXISTS
+#endif
+
+#if AIRFRAME == 1
+
+  /* Computed Parameter: Effective_Matrix1_Value
+   * Referenced by: '<S14>/Effective_Matrix1 '
+   */
+  real32_T Effective_Matrix1_Value[6];
 
 #define CONSTP_CONTROLLER_T_VARIANT_EXISTS
 #endif
@@ -262,6 +272,7 @@ extern RT_MODEL_Controller_T *const Controller_M;
  * Block '<S88>/Data Type Duplicate' : Unused code path elimination
  * Block '<S88>/Data Type Propagation' : Unused code path elimination
  * Block '<S3>/Data Type Conversion' : Eliminate redundant data type conversion
+ * Block '<S14>/Reshape' : Reshape block reduction
  * Block '<S73>/Data Type Conversion' : Eliminate redundant data type conversion
  * Block '<S111>/Signal Copy1' : Eliminate redundant signal conversion block
  */

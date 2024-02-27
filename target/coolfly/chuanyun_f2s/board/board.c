@@ -487,10 +487,11 @@ void bsp_initialize(void)
     }
 #endif
 
+#ifdef USED_TFCARD
     if (FMT_EOK != drv_spi_tfcard_init("spi1_dev1", "tfcard")) {
         console_println("tfcard init failed!");
     }
-
+#endif
     /* init file system */
     if (FMT_EOK != file_manager_init(mnt_table)) {
         console_println("=================> mtd first used => pleaserun:  mkfs mtdblk0 ");

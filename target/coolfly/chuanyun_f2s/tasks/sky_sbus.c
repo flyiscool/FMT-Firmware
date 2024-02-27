@@ -153,20 +153,31 @@ rt_err_t register_ar_rc(void)
 
 // speed control
 
-void ptz_ctrl(void)
+// void ptz_ctrl(void)
+// {
+//     int32_t speed = rc_data.rc_chan_val[14] - 1500;
+
+//     if (speed != 0) {
+//         uint32_t t_high = (6500 + speed * 3.5 * 1000 / 450);
+//         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 35000 - t_high, t_high);
+
+//         // DLOG_Critical(" speed = %d  t_high = %d \r\n", speed, t_high);
+//     } else {
+//         HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18000, 17000);
+//         // DLOG_Critical(" speed = %d \r\n", speed);
+//     }
+// }
+
+
+void ptz_ctrl_pos(void)
 {
     int32_t speed = rc_data.rc_chan_val[14] - 1500;
 
-    if (speed != 0) {
-        uint32_t t_high = (6500 + speed * 3.5 * 1000 / 450);
-        HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 35000 - t_high, t_high);
-
-        // DLOG_Critical(" speed = %d  t_high = %d \r\n", speed, t_high);
-    } else {
-        HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 18000, 17000);
-        // DLOG_Critical(" speed = %d \r\n", speed);
-    }
+    uint32_t t_high = (29000 + speed * 5 * 1000 / 450);
+    HAL_PWM_DynamicModifyPwmDutyCycle(HAL_PWM_NUM8, 35000 - t_high, t_high);
+    
 }
+
 
 static void cf_sbus_parse(void) // just for test
 {
@@ -203,7 +214,8 @@ static void cf_sbus_parse(void) // just for test
     rc_updated = 1;
 
 #ifdef USED_PTZ_LS
-    ptz_ctrl();
+    // ptz_ctrl();
+    ptz_ctrl_pos();
 #endif
 }
 

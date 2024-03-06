@@ -76,6 +76,8 @@
 #ifdef BOARD_LT_V1
     // #define USED_RAMTRON   1
 
+    #define USED_TFCARD 1
+
     // #define USED_BMI055   1
     #define USED_BMI088     1
 

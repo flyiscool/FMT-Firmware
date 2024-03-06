@@ -535,12 +535,12 @@ void bsp_initialize(void)
     
     /* if no gps mag then use onboard mag */
 
-    // if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
-    //     console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
-    // } else {
-    //     console_println("drv_ist8310_init i2c2_dev1 success ~");
-    //     FMT_CHECK(register_sensor_mag("mag0", 0));
-    // }
+    if (drv_ist8310_init("i2c2_dev1", "mag0") != FMT_EOK) {
+        console_println("!!!!!!drv_ist8310_init i2c2_dev1 faild~!!!!");
+    } else {
+        console_println("drv_ist8310_init i2c2_dev1 success ~");
+        FMT_CHECK(register_sensor_mag("mag0", 0));
+    }
 
     #ifdef USED_MMC5983MA
     if (drv_mmc5983ma_init("i2c2_dev2", "mag1") != FMT_EOK) {
@@ -560,21 +560,6 @@ void bsp_initialize(void)
     }
     #endif
 
-    #ifdef USED_QMC5883L
-    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
-    } else {
-        FMT_CHECK(register_sensor_mag("mag0", 0));
-    }
-    #endif
-
-    #ifdef USED_QMC5883L
-    if (drv_qmc5883l_init("i2c2_dev2", "mag0") != FMT_EOK) {
-        console_println("!!!!!!qmc5883l i2c2_dev2 faild~!!!!");
-    } else {
-        FMT_CHECK(register_sensor_mag("mag0", 0));
-    }
-    #endif
 
     RT_CHECK(gps_ubx_init("serial1", "gps"));
 
@@ -758,3 +743,13 @@ void bmi055_rotate_to_frd(float val[3])
 }
 
 #endif
+
+
+_EXT_ITCM1
+void ist8310_rotate_to_frd(float val[3])
+{
+    /* do nothing */
+    float* x = val;
+    *x       = -*x;
+}
+
